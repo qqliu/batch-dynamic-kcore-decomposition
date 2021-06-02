@@ -12,7 +12,7 @@ to our k-core decomposition algorithms, including how to run the experiments
 from our paper, while the README within `gbbs-dynamic-k-core` explains details about GBBS overall, notably
 the required graph input formats for static benchmarks.
 
-To run our script within [`gbbs-dynamic-k-core/scripts/'](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/scripts):
+To run our script within [`gbbs-dynamic-k-core/scripts/`](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/scripts):
 
 ```
 python3 test_approx_kcore.py
