@@ -1,5 +1,16 @@
 # GBBS: Graph Based Benchmark Suite
 
+K-core Decomposition Algorithms
+--------
+
+This repository contains code for our parallel batch-dynamic k-core
+decomposition algorithms. It uses the structure of the 
+[Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs). 
+The `benchmarks/EdgeOrientation/` directory contains all relevant information 
+to our k-core decomposition algorithms, including how to run the experiments 
+from our paper, while the following explains details about GBBS overall, notably
+the required graph input formats for static benchmarks.
+
 Organization
 --------
 
@@ -37,7 +48,7 @@ implementations of the following parallel graph algorithms:
 * Single-Source Widest Path
 * k-Spanner
 
-The code for these applications is located in the `benchmark` directory. The
+The code for these applications is located in the `benchmarks` directory. The
 implementations are based on the Ligra/Ligra+/Julienne graph processing
 frameworks. The framework code is located in the `src` directory.
 
