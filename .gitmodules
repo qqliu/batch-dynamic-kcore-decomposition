@@ -4,3 +4,9 @@
 [submodule "parlaylib"]
 	path = parlaylib
 	url = git@github.com:cmuparlay/parlaylib.git
+[submodule "hua-et-all-code"]
+	path = hua-et-all-code
+	url = git@github.com:qqliu/hua-et-all-code.git
+[submodule "sun-et-all-sequential-code"]
+	path = sun-et-all-sequential-code
+	url = https://github.com/yushangdi/DynHyperCoreDecomp.git
