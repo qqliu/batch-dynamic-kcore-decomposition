@@ -1,5 +1,5 @@
 Input graph directory:
-Dynamic graphs:
+Dynamic graphs: dblp_insertion_edges
 Output directory: ./
 Benchmarks: ParallelLDS, LDS, KCore
 Numbers of workers: 60

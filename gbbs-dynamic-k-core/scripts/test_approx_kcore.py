@@ -13,7 +13,7 @@ def shellGetOutput(str) :
   process = subprocess.Popen(str,shell=True,stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
   output, err = process.communicate()
-  
+
   if (len(err) > 0):
     raise NameError(str+"\n"+output.decode('utf-8')+err.decode('utf-8'))
   return output.decode('utf-8')
@@ -70,9 +70,19 @@ def main():
           stats = "-stats"
         else:
           stats = ""
+      elif line.startswith("Output sizes"):
+        if split[1] == "True":
+          size = "-size"
+        else:
+          size = ""
+      elif line.startswith("Opt"):
+        if split[1] == "True":
+          opt = "-opt"
+        else:
+          opt = ""
   # Setup other parameters
   program_dir = "../benchmarks/"
-  empty = "empty_h"
+  empty = "../benchmarks/EdgeOrientation/ParallelLDS/empty_h"
   for program in programs:
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
@@ -89,7 +99,7 @@ def main():
               program_path = os.path.join(program_dir, program)
               ss = ("PARLAY_NUM_THREADS=" + str(nw) + " " + program_path + " "
               "-s -i " + read_dir + filename + " -eps " + e + " "
-              "-delta " + d + " -b " + b + " " + stats + " "
+              "-delta " + d + " -b " + b + " " + stats + " " + size + " " + opt + " " +
               "-rounds " + str(num_rounds) + " " + empty)
               out = shellGetOutput(ss)
               appendToFile(out, out_filename)
