@@ -101,6 +101,7 @@ def main():
               "-s -i " + read_dir + filename + " -eps " + e + " "
               "-delta " + d + " -b " + b + " " + stats + " " + size + " " + opt + " " +
               "-rounds " + str(num_rounds) + " " + empty)
+              print(shellGetOutput("git init .."))
               out = shellGetOutput(ss)
               appendToFile(out, out_filename)
 
