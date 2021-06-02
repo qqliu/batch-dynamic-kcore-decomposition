@@ -6,7 +6,7 @@ PLDS Algorithm and Experiments
 
 This repository contains code for our parallel batch-dynamic k-core
 decomposition algorithms. Our code for our parallel batch-dynamic data
-structures uses the structure of the [Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs).
+structures uses the framework of the [Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs).
 The `gbbs-dynamic-k-core/benchmarks/EdgeOrientation/` directory [EdgeOrientation Directory Link](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/benchmarks/EdgeOrientation) contains all relevant information
 to our k-core decomposition algorithms, including how to run the experiments
 from our paper, while the README within `gbbs-dynamic-k-core' explains details about GBBS overall, notably
@@ -18,7 +18,8 @@ Hua et al. Code
 The first author of the work [``Faster Parallel Core Maintenance Algorithms in
 Dynamic Graph''](https://ieeexplore.ieee.org/document/8935160) provided us with
 the experimental code they used to run their experiments. We included their code
-in the `hua-et-all-code' directory.
+in the `hua-et-all-code' directory and also the small number of modifications we
+made to their original code to fit our experimental environment.
 
 Sun et al. Code
 --------
