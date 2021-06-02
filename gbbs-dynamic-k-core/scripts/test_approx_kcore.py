@@ -41,7 +41,7 @@ def benchmarkToIsDynamic(benchmark):
 def main():
   git_init_process = subprocess.Popen("git init ..",shell=True,stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
-  output, err = process.communicate()
+  output, err = git_init_process.communicate()
 
   # Read parameters from setup file
   with open('approx_kcore_setup.txt') as parameters_file:
