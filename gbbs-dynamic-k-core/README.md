@@ -6,7 +6,8 @@ K-core Decomposition Algorithms
 This repository contains code for our parallel batch-dynamic k-core
 decomposition algorithms. It uses the structure of the
 [Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs).
-The `benchmarks/EdgeOrientation/` directory [EdgeOrientation Directory Link](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/benchmarks/EdgeOrientation) contains all relevant information
+The `benchmarks/EdgeOrientation/` directory [EdgeOrientation Directory Link](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/benchmarks/EdgeOrientation/)
+contains all relevant information
 to our k-core decomposition algorithms, including how to run the experiments
 from our paper, while the following explains details about GBBS overall, notably
 the required graph input formats for static benchmarks.

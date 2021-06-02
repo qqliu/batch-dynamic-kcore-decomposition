@@ -17,8 +17,9 @@ implementation of the same algorithm.
 ![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cdelta%29)-approximate
 k-core decomposition algorithm.
 
-`scripts/test_approx_kcore.py` is a script to run tests for ParallelLDS, 
-LDS, and KCore.
+`scripts/test_approx_kcore.py` is a script to run tests for ParallelLDS,
+LDS, and KCore. The scripts can be found [in this
+directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/scripts).
 
 To run our script within [`gbbs-dynamic-k-core/scripts/`](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/scripts):
 
@@ -59,21 +60,28 @@ more than 2^32 edges, the `LONG` command-line parameter should be set.
 ### Using Testing Script
 
 To run the script `scripts/test_approx_kcore.py`, Python 3.5 or higher is
-required. Also, `scripts/approx_kcore_setup.txt` should be configured
+required. Also,
+[`scripts/approx_kcore_setup.txt`](https://github.com/qqliu/batch-dynamic-kcore-decomposition/blob/master/gbbs-dynamic-k-core/scripts/approx_kcore_setup.txt) should be configured
 as follows.
 
 The entries `Input graph directory` and `Output directory` contain
-the directory where the dynamic graph files are stored and the desired output 
+the directory where the dynamic graph files are stored and the desired output
 directory respectively. `Dynamic graphs` contains a comma-separated
-list of the dynamic graph filenames.
+list of the dynamic graph filenames. We included a sample input graph file in
+this directory for you to test.
 
-The `Benchmarks` entry is a comma-separated list of the desired programs 
+The `Benchmarks` entry is a comma-separated list of the desired programs
 to run: ParallelLDS, LDS, or KCore.
 
 The `Numbers of workers`, `Epsilons`, `Lambdas/Deltas`, and `Batch sizes`
 entries are comma-separated lists of the desired input parameters
 on which to run the programs. The `Output stats` entry is either True or
 False, depending on if comparisons to exact k-core values is desired.
+The `Output sizes' entry is either True or False, depending on if the size (in
+bytes) of the PLDS data structure should be printed. The `Opt' entry is either
+True or False, depending on if you want to run the algorithm with less levels
+(faster but slightly worse approximation) or with the theoretically-optimal
+number of levels (slower but slightly better approximation).
 
 Note that the script runs KCore given a dynamic graph, although KCore
 can be independently run using a static graph as well.
@@ -100,7 +108,7 @@ the appropriate compile definition as below.
 
 ### Graph Format
 
-The applications take dynamic graphs as input (in all three benchmarks) or 
+The applications take dynamic graphs as input (in all three benchmarks) or
 static graphs as input (in the static benchmark).
 
 For the static graph format, we support the adjacency graph format used by
