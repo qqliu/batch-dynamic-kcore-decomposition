@@ -20,7 +20,7 @@ k-core decomposition algorithm.
 `scripts/test_approx_kcore.py` is a script to run tests for ParallelLDS, 
 LDS, and KCore.
 
-To run our script within [`gbbs-dynamic-k-core/scripts/'](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/scripts):
+To run our script within [`gbbs-dynamic-k-core/scripts/`](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/scripts):
 
 ```
 python3 test_approx_kcore.py
