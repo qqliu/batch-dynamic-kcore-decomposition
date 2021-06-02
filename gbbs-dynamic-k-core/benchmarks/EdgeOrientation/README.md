@@ -77,8 +77,8 @@ The `Numbers of workers`, `Epsilons`, `Lambdas/Deltas`, and `Batch sizes`
 entries are comma-separated lists of the desired input parameters
 on which to run the programs. The `Output stats` entry is either True or
 False, depending on if comparisons to exact k-core values is desired.
-The `Output sizes' entry is either True or False, depending on if the size (in
-bytes) of the PLDS data structure should be printed. The `Opt' entry is either
+The `Output sizes` entry is either True or False, depending on if the size (in
+bytes) of the PLDS data structure should be printed. The `Opt` entry is either
 True or False, depending on if you want to run the algorithm with less levels
 (faster but slightly worse approximation) or with the theoretically-optimal
 number of levels (slower but slightly better approximation).
