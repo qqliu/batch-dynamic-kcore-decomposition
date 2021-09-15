@@ -1,0 +1,93 @@
+UNAME := $(shell uname)
+ifeq ($(UNAME), Linux)
+  OS := linux
+else ifeq ($(UNAME), Darwin)
+  OS := mac
+endif
+
+ifeq (, $(shell which jemalloc-config))
+JEMALLOC =
+else
+JEMALLOCLD = $(shell jemalloc-config --libdir)
+JEMALLOC = -L$(JEMALLOCLD) -ljemalloc
+endif
+
+# Always compile with LONG (note that timings on small graphs may be a bit
+# faster w/o this flag).
+INTT = -DLONG
+
+ifdef EDGELONG
+INTE = -DEDGELONG
+endif
+
+#OPT = -O3 -DNDEBUG
+OPT = -O3 -g -DNDEBUG
+#OPT = -O0 -g -DUSE_PAM
+#OPT = -O0 -g -DUSE_PAM
+#OPT = -O0 -g
+
+CFLAGS = \
+	-U_FORTIFY_SOURCE \
+	'-D__DATE__="redacted"' \
+	'-D__TIMESTAMP__="redacted"' \
+	'-D__TIME__="redacted"' \
+	-fno-omit-frame-pointer \
+	-fstack-protector \
+	-fPIC \
+	-Wall \
+	-Wextra \
+	-Wcast-qual \
+	-Wno-builtin-macro-redefined \
+	-Wno-unused-parameter \
+	-Wpointer-arith \
+	-Wvla \
+	-std=c++17 \
+	-march=native \
+	-mcx16 \
+	$(OPT) \
+	$(INTT) \
+	$(INTE) \
+	$(CONCEPTS) \
+	-DAMORTIZEDPD \
+	$(JEMALLOC)
+#	-DPARLAY_USE_STD_ALLOC \
+# Add GCC-specific and Clang-specific flags
+ifeq ($(OS), linux)
+  CFLAGS += \
+	-Wno-free-nonheap-object \
+	-Wunused-but-set-parameter
+else ifeq ($(OS), mac)
+endif
+
+OMPFLAGS = -DPARLAY_OPENMP -fopenmp
+CILKFLAGS = -DPARLAY_CILK -fcilkplus
+HGFLAGS = -pthread
+SERIALFLAGS = -DPARLAY_SEQUENTIAL
+
+ifdef CLANG
+CC = clang++
+PFLAGS = $(CILKFLAGS)
+else ifdef PARLAY_CILK
+CC = g++
+PFLAGS = $(CILKFLAGS)
+LFLAGS = -lcilkrts
+else ifdef PARLAY_OPENMP
+CC = g++
+PFLAGS = $(OMPFLAGS)
+LFLAGS = -fopenmp
+else ifdef PARLAY_SEQUENTIAL
+CC = g++
+PFLAGS = $(SERIALFLAGS)
+else # default is homegrown
+CC = g++
+PFLAGS = $(HGFLAGS)
+endif
+
+ifeq ($(OS), linux)
+  LINKER_START_GROUP := -Wl,--start-group
+  LINKER_END_GROUP := -Wl,--end-group
+else ifeq ($(OS), mac)
+  # macOS's default linker doesn't use the --start-group and --end-group flags.
+  LINKER_START_GROUP :=
+  LINKER_END_GROUP :=
+endif
