@@ -3,7 +3,7 @@
 Organization
 --------
 
-This repository contains code for our SPAA paper "Theoretically Efficient
+This repository contains code for the SPAA paper "Theoretically Efficient
 Parallel Graph Algorithms Can Be Fast and Scalable" (SPAA'18). It includes
 implementations of the following parallel graph algorithms:
 
@@ -47,7 +47,7 @@ which are part of ongoing work.
 
 * experimental/KTruss
 
-If you use our work, please cite our [paper](https://arxiv.org/abs/1805.05208):
+If you use this work, please cite the [paper](https://arxiv.org/abs/1805.05208):
 
 ```
 @inproceedings{dhulipala2018theoretically,
