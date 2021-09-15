@@ -23,31 +23,6 @@ programs: `ParallelLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
 `LDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
 `KCore_dblp_insertion_edges_0.4_3_1000000_60_.out`.
 
-<!--
-Hua et al. Code
---------
-
-The first author of the work [``Faster Parallel Core Maintenance Algorithms in
-Dynamic Graph''](https://ieeexplore.ieee.org/document/8935160) provided us with
-the experimental code they used to run their experiments. We included their code
-in the `hua-et-all-code' directory and also the small number of modifications we
-made to their original code to fit our experimental environment. Because we do
-not hold the copyright to their code, we cannot share it via a public
-repository. Please contact the authors of the work for their code or
-quanquan@mit.edu for access to the private repository containing the code
-(linked under the hua-et-all-code submodule) if you would like to run your own
-benchmarks.
-
-Sun et al. Code
---------
-
-The authors of [``Fully Dynamic Approximate k-Core Decomposition in
-Hypergraphs''](https://dl.acm.org/doi/10.1145/3385416) has a public repository
-containing their code. We included our fork of the directory (as well as
-additional changes to fit our experimental environment) in the
-`sun-et-all-sequential-code' directory.
--->
-
 Obtaining Input Graphs
 --------
 
