@@ -69,9 +69,7 @@ Compiler:
 * g++ &gt;= 7.4.0 with pthread support (Homemade Scheduler)
 
 Build system:
-* [Bazel](https://docs.bazel.build/versions/master/install.html) 2.1.0
-* Make --- though our primary build system is Bazel, we also maintain Makefiles
-  for those who wish to run benchmarks without installing Bazel.
+* Make
 
 The default compilation uses a lightweight scheduler developed at CMU (Homemade)
 for parallelism, which results in comparable performance to Cilk Plus. The
@@ -90,33 +88,25 @@ parameter should be set. If the graph has more than 2^32 vertices, the
 been tested with more than 2^32 vertices, so if any issues arise please contact
 [Laxman Dhulipala](mailto:ldhulipa@cs.cmu.edu).
 
-To compile with the Cilk Plus scheduler instead of the Homegrown scheduler, use
-the Bazel configuration `--config=cilk`. To compile using OpenMP instead, use
-the Bazel configuration `--config=openmp`. To compile serially instead, use the
-Bazel configuration `--config=serial`. (For the Makefiles, instead set the
-environment variables `CILK`, `OPENMP`, or `SERIAL` respectively.)
+To compile with the Cilk Plus scheduler instead of the Homegrown scheduler, set the
+environment variable `CILK`. To compile using OpenMP instead, set the
+environment variable `OPENMP`. To compile serially instead, set the
+environment variable `SERIAL`. 
 
 To build:
 ```sh
-# For Bazel:
-$ bazel build  //...  # compiles all benchmarks
-
 # For Make:
 # First set the appropriate environment variables, e.g., first run
 # `export CILK=1` to compile with Cilk Plus.
 # After that, build using `make`.
-$ cd benchmarks/BFS/NonDeterministicBFS  # go to a benchmark
+$ cd benchmarks/KCore/JulienneDBS17/  # go to a benchmark
 $ make
 ```
-Note that the default compilation mode in bazel is to build optimized binaries
-(stripped of debug symbols). You can compile debug binaries by supplying `-c
-dbg` to the bazel build command.
+Note that the default compilation mode is to build optimized binaries
+(stripped of debug symbols). 
 
 The following commands cleans the directory:
 ```sh
-# For Bazel:
-$ bazel clean  # removes all executables
-
 # For Make:
 $ make clean  # removes executables for the current directory
 ```
@@ -128,10 +118,6 @@ flag "-s" to indicate a symmetric graph.  Symmetric graphs should be
 called with the "-s" flag for better performance. For example:
 
 ```sh
-# For Bazel:
-$ bazel run //benchmarks/BFS/NonDeterministicBFS:BFS_main -- -s -src 10 ~/gbbs/inputs/rMatGraph_J_5_100
-$ bazel run //benchmarks/IntegralWeightSSSP/JulienneDBS17:wBFS_main -- -s -w -src 15 ~/gbbs/inputs/rMatGraph_WJ_5_100
-
 # For Make:
 $ ./BFS -s -src 10 ../../../inputs/rMatGraph_J_5_100
 $ ./wBFS -s -w -src 15 ../../../inputs/rMatGraph_WJ_5_100
@@ -143,11 +129,7 @@ be changed by passing the `-rounds` flag followed by an integer indicating the
 number of runs.
 
 On NUMA machines, adding the command "numactl -i all " when running
-the program may improve performance for large graphs. For example:
-
-```sh
-$ numactl -i all bazel run [...]
-```
+the program may improve performance for large graphs. 
 
 Running code on compressed graphs
 -----------
@@ -158,10 +140,6 @@ provided a converter utility which takes as input an uncompressed graph and
 outputs a bytePDA graph. The converter can be used as follows:
 
 ```sh
-# For Bazel:
-bazel run //utils:compressor -- -s -o ~/gbbs/inputs/rMatGraph_J_5_100.bytepda ~/gbbs/inputs/rMatGraph_J_5_100
-bazel run //utils:compressor -- -s -w -o ~/gbbs/inputs/rMatGraph_WJ_5_100.bytepda ~/gbbs/inputs/rMatGraph_WJ_5_100
-
 # For Make:
 ./compressor -s -o ../inputs/rMatGraph_J_5_100.bytepda ../inputs/rMatGraph_J_5_100
 ./compressor -s -w -o ../inputs/rMatGraph_WJ_5_100.bytepda ../inputs/rMatGraph_WJ_5_100
@@ -172,9 +150,6 @@ applications can be run on it by passing in the usual command-line flags, with
 an additional `-c` flag.
 
 ```sh
-# For Bazel:
-$ bazel run //benchmarks/BFS/NonDeterministicBFS:BFS_main -- -s -c -src 10 ~/gbbs/inputs/rMatGraph_J_5_100.bytepda
-
 # For Make:
 $ ./BFS -s -c -src 10 ../../../inputs/rMatGraph_J_5_100.bytepda
 $ ./wBFS -s -w -c -src 15 ../../../inputs/rMatGraph_WJ_5_100.bytepda
@@ -233,10 +208,8 @@ graph format to the adjacency graph format that GBBS accepts. Usage example:
 wget https://snap.stanford.edu/data/wiki-Vote.txt.gz
 gzip --decompress ${PWD}/wiki-Vote.txt.gz
 # Run the SNAP-to-adjacency-graph converter.
-# Run with Bazel:
-bazel run //utils:snap_converter -- -s -i ${PWD}/wiki-Vote.txt -o <output file>
-# Or run with Make:
-#   cd utils
-#   make snap_converter
-#   ./snap_converter -s -i <input file> -o <output file>
+# Run with Make:
+   cd utils
+   make snap_converter
+   ./snap_converter -s -i <input file> -o <output file>
 ```

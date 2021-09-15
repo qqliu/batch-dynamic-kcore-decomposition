@@ -7,12 +7,12 @@ PLDS Algorithm and Experiments
 This repository contains code for our parallel batch-dynamic k-core
 decomposition algorithms. Our code for our parallel batch-dynamic data
 structures uses the framework of the [Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs).
-The `gbbs-dynamic-k-core/benchmarks/EdgeOrientation/` directory [EdgeOrientation Directory Link](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/benchmarks/EdgeOrientation) contains all relevant information
+The `gbbs/benchmarks/EdgeOrientation/` directory [EdgeOrientation Directory Link](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation) contains all relevant information
 to our k-core decomposition algorithms, including how to run the experiments
-from our paper, while the README within `gbbs-dynamic-k-core` explains details about GBBS overall, notably
+from our paper, while the README within `gbbs` explains details about GBBS overall, notably
 the required graph input formats for static benchmarks.
 
-To run our script within [`gbbs-dynamic-k-core/scripts/`](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs-dynamic-k-core/scripts):
+To run our script within [`gbbs/scripts/`](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/scripts):
 
 ```
 python3 test_approx_kcore.py
