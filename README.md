@@ -23,6 +23,7 @@ programs: `ParallelLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
 `LDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
 `KCore_dblp_insertion_edges_0.4_3_1000000_60_.out`.
 
+<!--
 Hua et al. Code
 --------
 
@@ -45,6 +46,7 @@ Hypergraphs''](https://dl.acm.org/doi/10.1145/3385416) has a public repository
 containing their code. We included our fork of the directory (as well as
 additional changes to fit our experimental environment) in the
 `sun-et-all-sequential-code' directory.
+-->
 
 Obtaining Input Graphs
 --------
