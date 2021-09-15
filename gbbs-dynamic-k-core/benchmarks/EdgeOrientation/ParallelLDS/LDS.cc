@@ -22,6 +22,9 @@
 //     -size : option for getting the size of the data structure in bytes
 //     -opt : indicates whether to divide the number of levels by 50; faster
 //     runtime, subtle decrease in accuracy
+//     -init_graph_file: initial graph for which the additional edge updates
+//     occur on; initial graph should follow the same format as the input to -i
+//     (i.e. all edges should be prepended with '+')
 // Note: The static graph is ignored if -i is specified.
 
 #include "LDS.h"
@@ -45,13 +48,13 @@ double LDS_runner(Graph& G, commandLine P) {
   bool compare_exact = P.getOption("-stats");
   bool optimized_insertion = P.getOption("-ins-opt");
   bool get_size = P.getOption("-size");
-  bool optimized_all = P.getOption("-opt");
 
   // Options for the approximation algorithm
   double eps = P.getOptionDoubleValue("-eps", 3);
   double delta = P.getOptionDoubleValue("-delta", 9);
+  size_t optimized_all = P.getOptionIntValue("-opt", 1);
 
-  // Options not exposed to general users
+  // Option for starting with a non-empty graph
   const char* const init_graph_file(P.getOptionValue("-init_graph_file"));
 
   // Load the dynamic graph

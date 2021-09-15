@@ -320,12 +320,12 @@ struct LDS {
   parlay::sequence<LDSVertex> L_seq;
   LDSVertex* L;
 
-  LDS(size_t _n, bool _optimized_insertion, bool _optimize_all) : n(_n),
+  LDS(size_t _n, bool _optimized_insertion, size_t _optimize_all) : n(_n),
     optimized_insertion(_optimized_insertion) {
     if (optimized_insertion)
         UpperConstant = 1.1;
-    if (_optimize_all)
-        levels_per_group = ceil(log(n) / 50 * log(OnePlusEps));
+    if (_optimize_all > 1)
+        levels_per_group = ceil(log(n) / size_t(_optimize_all) * log(OnePlusEps));
     else
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(n);
@@ -333,15 +333,15 @@ struct LDS {
   }
 
   LDS(size_t _n, double _eps, double _delta, bool _optimized_insertion,
-          bool _optimize_all) : n(_n), eps(_eps),
+          size_t _optimize_all) : n(_n), eps(_eps),
         delta(_delta), optimized_insertion(_optimized_insertion){
     OnePlusEps = (1 + _eps);
     if (optimized_insertion)
         UpperConstant = 1.1;
     else
         UpperConstant = 2 + ((double) 3 / _delta);
-    if (_optimize_all)
-        levels_per_group = ceil(log(n) / 50 * log(OnePlusEps));
+    if (_optimize_all > 1)
+        levels_per_group = ceil(log(n) / size_t(_optimize_all) * log(OnePlusEps));
     else
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(_n);
@@ -1476,31 +1476,31 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     size_t max_degree = 0;
     // First, insert / delete everything up to offset
     if (offset != 0) {
-      for (size_t i = 0; i < offset; i += batch_size) {
-        auto end_size = std::min(i + batch_size, offset);
-        auto insertions = parlay::filter(parlay::make_slice(batch.begin() + i,
+        for (size_t i = 0; i < offset; i += 1000000) {
+            auto end_size = std::min(i + 1000000, offset);
+            auto insertions = parlay::filter(parlay::make_slice(batch.begin() + i,
                     batch.begin() + end_size), [&] (const DynamicEdge<W>& edge){
-            return edge.insert;
-        });
-        auto deletions = parlay::filter(parlay::make_slice(batch.begin() + i,
+                return edge.insert;
+            });
+            auto deletions = parlay::filter(parlay::make_slice(batch.begin() + i,
                     batch.begin() + end_size), [&] (const DynamicEdge<W>& edge){
-            return !edge.insert;
-        });
-        auto batch_insertions = parlay::delayed_seq<std::pair<uintE, uintE>>(insertions.size(),
+                return !edge.insert;
+            });
+            auto batch_insertions = parlay::delayed_seq<std::pair<uintE, uintE>>(insertions.size(),
                 [&] (size_t i) {
-            uintE vert1 = insertions[i].from;
-            uintE vert2 = insertions[i].to;
-            return std::make_pair(vert1, vert2);
-        });
-        auto batch_deletions = parlay::delayed_seq<std::pair<uintE, uintE>>(deletions.size(),
+                uintE vert1 = insertions[i].from;
+                uintE vert2 = insertions[i].to;
+                return std::make_pair(vert1, vert2);
+            });
+            auto batch_deletions = parlay::delayed_seq<std::pair<uintE, uintE>>(deletions.size(),
             [&] (size_t i) {
-            uintE vert1 = deletions[i].from;
-            uintE vert2 = deletions[i].to;
-            return std::make_pair(vert1, vert2);
-        });
-        num_insertion_flips += layers.batch_insertion(batch_insertions);
-        num_deletion_flips += layers.batch_deletion(batch_deletions);
-      }
+                uintE vert1 = deletions[i].from;
+                uintE vert2 = deletions[i].to;
+                return std::make_pair(vert1, vert2);
+            });
+            num_insertion_flips += layers.batch_insertion(batch_insertions);
+            num_deletion_flips += layers.batch_deletion(batch_deletions);
+        }
     }
 
     for (size_t i = offset; i < batch.size(); i += batch_size) {
@@ -1610,7 +1610,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 template <class Graph, class W>
 inline void RunLDS(Graph& G, BatchDynamicEdges<W> batch_edge_list, long batch_size,
         bool compare_exact, double eps, double delta, bool optimized_insertion,
-        size_t offset, bool get_size, bool optimized_all) {
+        size_t offset, bool get_size, size_t optimized_all) {
     uintE max_vertex = std::max(uintE{G.n}, batch_edge_list.max_vertex);
     auto layers = LDS(max_vertex, eps, delta, optimized_insertion, optimized_all);
     if (G.n > 0) RunLDS(G, optimized_insertion, optimized_all);
