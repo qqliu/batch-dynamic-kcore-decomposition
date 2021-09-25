@@ -155,5 +155,5 @@ youtube_initial
 
 `_insertion_edges` contain edges formatted for insertions. `_deletion_edges`
 contain edges formatted for deletions. `_initial` contain the initial graph for our
-mixed batch experiments. `_batch` contains the batch of edge updates used
+mixed batch experiments. `_batch` contain the batch of edge updates used
 in our mixed batch (1/2 insertions and 1/2 deletions) experiments.
