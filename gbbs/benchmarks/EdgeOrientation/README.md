@@ -9,7 +9,8 @@ approximate k-core algorithm. Specifically, `ParallelLDS` (PLDS) contains the
 implementation for our parallel batch-dynamic
 ![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cvarepsilon%29)-approximate
 k-core decomposition algorithm, while `LDS` contains our implementation of the sequential 
-level data structure of Henzinger, Neumann, and Wiese but adapted to output core numbers.
+level data structure of [Henzinger, Neumann, and Wiese](https://arxiv.org/abs/2002.10142) 
+but adapted to output core numbers.
 
 `benchmarks/KCore/ApproximateKCore` contains the implementation for our static
 ![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cvarepsilon%29)-approximate
