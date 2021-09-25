@@ -33,10 +33,10 @@ You can change the parameters of the experiments by changing the
 
 The inputs within the file are as follows:
 
-`Input graph directory:` The directory used to store your input graph files.
+`Input graph directory:` The directory used to store your input graph files.\\
 `Dynamic graphs:` Comma separated list of file names for your batches of
-updates, e.g., `dblp_insertion_edges, livejournal_insertion_edges`.
-`Output directory:` Directory to write the outputs of the experiments.
+updates, e.g., `dblp_insertion_edges, livejournal_insertion_edges`.\\
+`Output directory:` Directory to write the outputs of the experiments.\\
 `Benchmarks:` Comma separated list of benchmarks you want to test. The available benchmarks
 are `PLDS`, `LDS`, `EKCore` (ExactKCore), and `AKCore` (ApproxKCore).
 `Numbers of workers:` Comma separated list of number of hyper-threads you want
