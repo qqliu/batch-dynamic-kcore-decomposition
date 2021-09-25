@@ -7,12 +7,12 @@ approximate k-core algorithms.
 `benchmarks/EdgeOrientation/` contains the implementations for our batch-dynamic
 approximate k-core algorithm. Specifically, `ParallelLDS` (PLDS) contains the
 implementation for our parallel batch-dynamic
-![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cdelta%29)-approximate
+![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cvarepsilon%29)-approximate
 k-core decomposition algorithm, while `LDS` contains our implementation of the sequential 
 level data structure of Henzinger, Neumann, and Wiese but adapted to output core numbers.
 
 `benchmarks/KCore/ApproximateKCore` contains the implementation for our static
-![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cdelta%29)-approximate
+![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cvarepsilon%29)-approximate
 k-core decomposition algorithm.
 
 `scripts/test_approx_kcore.py` is a script to run tests for ParallelLDS, 
