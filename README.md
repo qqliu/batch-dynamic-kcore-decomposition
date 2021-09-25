@@ -1,4 +1,4 @@
-Dynamic K-Core Decomposition Algorithms
+# Dynamic K-Core Decomposition Algorithms
 --------
 
 PLDS Algorithm and Experiments
