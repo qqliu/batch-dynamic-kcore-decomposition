@@ -24,18 +24,18 @@ def appendToFile(out, filename):
 
 def benchmarkToProgramPath(benchmark):
   benchmark_dict = {
+    "PLDS" : "EdgeOrientation/ParallelLDS/LDS",
     "LDS" : "EdgeOrientation/LDS/LDS",
-    "ParallelLDS" : "EdgeOrientation/ParallelLDS/LDS",
-    "KCore" : "KCore/ApproximateKCore/KCore",
+    "AKCore" : "KCore/ApproximateKCore/KCore",
     "EKCore" : "KCore/JulienneDBS17/KCore"
   }
   return benchmark_dict.get(benchmark)
 
 def benchmarkToIsDynamic(benchmark):
   benchmark_dict = {
+    "PLDS" : True,
     "LDS" : True,
-    "ParallelLDS" : True,
-    "KCore" : False,
+    "AKCore" : False,
     "EKCore" : False
   }
   return benchmark_dict.get(benchmark)
