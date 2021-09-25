@@ -71,11 +71,11 @@ def main():
         program_pres = params.copy()
       elif line.startswith("Numbers of workers"):
         num_workers = params.copy()
-      elif line.startswith("Epsilons"):
+      elif line.startswith("Deltas"):
         epss = params.copy()
       elif line.startswith("Initial Graph File"):
         initial_graphs = params.copy()
-      elif line.startswith("Lambdas/Deltas"):
+      elif line.startswith("Lambdas"):
         deltas = params.copy()
       elif line.startswith("Number of Levels Divisor"):
         divisors = params.copy()

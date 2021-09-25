@@ -3,8 +3,8 @@ Dynamic graphs: dblp_insertion_edges
 Output directory:
 Benchmarks: PLDS, EKCore, AKCore, LDS
 Numbers of workers: 60
-Epsilons: 0.4
-Lambdas/Deltas: 3
+Deltas: 0.4
+Lambdas: 3
 Batch sizes: 1000000
 Output stats: False
 Output sizes: False
