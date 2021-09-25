@@ -63,15 +63,17 @@ to test, e.g., `30, 60`.
 `Initial Graph File:` Comma separated list of file names for experiments where
 an initial file is loaded and then batches of updates are applied. This is
 relevant for the deletion and mixed experiments. For the deletion experiments,
-the `[graph]_insertion_edges` file is input to this field. For the mixed
-experiments, the `[graph]_initial` file is input to this field. The comma
-separated list must be in the *same order* as the list under `Dynamic graphs:`.
+the `[graph]_insertion_edges` file is an input to this field. For the mixed
+experiments, the `[graph]_initial` file is an input to this field. The comma
+separated list must be in the *same order* as the list under `Dynamic graphs:` for the graphs 
+you want to test.
 
 `Number of Levels Divisor:` The divisor for the number of levels per group. The
 default, 50, is used in all of our experiments for PLDSOpt given in our paper.
 
 `Opt:` `True` if you want to use the heuristic where (2 + 3/\lambda) is set to
-1.1 (so \lambda = -10/3); note that this setting is not theoretically efficient.
+1.1 (so \lambda = -10/3); `False` if not. 
+Note that this setting is not theoretically time efficient.
 
 Obtaining Input Graphs
 --------
