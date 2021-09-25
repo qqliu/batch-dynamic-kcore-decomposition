@@ -44,6 +44,12 @@ def main():
   git_init_process = subprocess.Popen("git init ..",shell=True,stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
   output, err = git_init_process.communicate()
+  git_init_delete_process = subprocess.Popen("rm -rf ../.git/",shell=True,stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+  output, err = git_init_delete_process.communicate()
+  git_init_delete_process = subprocess.Popen("git submodule update --init --recursive",shell=True,stdout=subprocess.PIPE,
+                            stderr=subprocess.PIPE)
+  output, err = git_init_delete_process.communicate()
 
   # Read parameters from setup file
   with open('approx_kcore_setup.txt') as parameters_file:
