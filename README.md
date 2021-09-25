@@ -78,7 +78,7 @@ Note that this setting is not theoretically time efficient.
 Reading Outputs
 --------
 
-You can read the outputs of the experiments by running:
+You can read the outputs of the experiments by running within [`gbbs/scripts/`](./gbbs/scripts):
 
 
 ```
