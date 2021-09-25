@@ -92,8 +92,8 @@ default, 50, is used in all of our experiments for PLDSOpt given in our paper.
 1.1 (so \lambda = -10/3); `False` if not. 
 Note that this setting is not theoretically time efficient.
 
-Note that the script runs KCore given a dynamic graph, although KCore
-can be independently run using a static graph as well.
+Note that the script runs ApproxKCore and ExactKCore given a dynamic graph, 
+although both can be independently run using a static graph as well.
 
 ### Using Standard Library Allocator
 
