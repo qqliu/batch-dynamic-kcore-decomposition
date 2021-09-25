@@ -1,6 +1,4 @@
-# Parallel Batch-Dynamic k-Core Decomposition and Low Out-Degree Orientation
-
-Organization
+# Parallel Batch-Dynamic k-Core Decomposition
 --------
 
 This repository contains the implementations for our
