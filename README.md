@@ -1,4 +1,4 @@
-#Dynamic K-Core Decomposition Algorithms
+Dynamic K-Core Decomposition Algorithms
 --------
 
 PLDS Algorithm and Experiments
@@ -74,6 +74,25 @@ default, 50, is used in all of our experiments for PLDSOpt given in our paper.
 `Opt:` `True` if you want to use the heuristic where (2 + 3/\lambda) is set to
 1.1 (so \lambda = -10/3); `False` if not. 
 Note that this setting is not theoretically time efficient.
+
+Reading Outputs
+--------
+
+You can read the outputs of the experiments by running:
+
+
+```
+python3 read_approx_kcore_results.py
+```
+
+The result of the experiments is printed in your terminal as a comma-separated list of values. 
+A value is `N/A` if the a setting is set to False.
+
+The order of the output is as follows:
+
+```
+Program, Dynamic graph file name, Delta, Lambda, Batch size, Number of hyper-threads, Levels divisor, Average runtime, Max runtime, Total runtime, Space (in Bytes)[or N/A], Average error [or N/A], Max error [or N/A]
+```
 
 Obtaining Input Graphs
 --------
