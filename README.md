@@ -86,7 +86,8 @@ python3 read_approx_kcore_results.py
 ```
 
 The result of the experiments is printed in your terminal as a comma-separated list of values. 
-A value is `N/A` if the a setting is set to False.
+A value is `N/A` if a setting is set to False. Note that this script reads the results of the 
+experiments configured by the `approx_kcore_setup.txt` file.
 
 The order of the output is as follows:
 
