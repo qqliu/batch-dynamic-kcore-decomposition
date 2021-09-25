@@ -1,10 +1,9 @@
 # Parallel Static Approximate k-Core Decomposition
 --------
 
-This repository contains the implementations for our
-approximate, static k-core algorithm.
+This repository contains the implementations for parallel static k-core decomposition algorithms.
 
-`ApproxKCore/` contains the implementations for our parallel, static,
+`ApproximateKCore/` contains the implementations for our parallel, static,
 approximate k-core algorithm. Specifically, it contains the
 implementation for our parallel, static,
 ![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cvarepsilon%29)-approximate
