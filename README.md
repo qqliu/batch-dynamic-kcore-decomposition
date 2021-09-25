@@ -7,10 +7,9 @@ PLDS Algorithm and Experiments
 This repository contains code for our parallel batch-dynamic k-core
 decomposition algorithms. Our code for our parallel batch-dynamic data
 structures uses the framework of the [Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs).
-The `gbbs/benchmarks/EdgeOrientation/` directory [EdgeOrientation Directory Link](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation) contains all relevant information
+The `gbbs/benchmarks/EdgeOrientation/` directory ([EdgeOrientation Directory Link](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation)) contains all relevant information
 to our k-core decomposition algorithms, including how to run the experiments
-from our paper, while the README within `gbbs` explains details about GBBS overall, notably
-the required graph input formats for static benchmarks.
+from our paper, while the README within `gbbs` explains details about GBBS overall.
 
 To run our script within [`gbbs/scripts/`](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/scripts):
 
@@ -19,9 +18,11 @@ python3 test_approx_kcore.py
 ```
 
 The script outputs three different output files for each of the three different
-programs: `ParallelLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
+programs: `PLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
 `LDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
-`KCore_dblp_insertion_edges_0.4_3_1000000_60_.out`.
+`AKCore_dblp_insertion_edges_0.4_3_1000000_60_.out`, and an additional
+`EKCore_dblp_insertion_edges_0.4_3_1000000_60_.out` for the ExactKCore
+benchmark.
 
 Obtaining Input Graphs
 --------
@@ -35,30 +36,50 @@ wget https://storage.googleapis.com/k-core-decomposition/edge_orientation_exps/<
 The following graphs are available for download:
 
 ```
+brain_batch
 brain_deletion_edges
 brain_insertion_edges
+brain_initial
+ctr_batch
 ctr_deletion_edges
 ctr_insertion_edges
+ctr_initial
+dblp_batch
 dblp_deletion_edges
-dblp_edges
 dblp_insertion_edges
+dblp_initial
+friendster_batch
 friendster_deletion_edges
 friendster_insertion_edges
+friendster_initial
+livejournal_batch
 livejournal_deletion_edges
-livejournal_edges
 livejournal_insertion_edges
+livejournal_initial
+orkut_batch
 orkut_deletion_edges
 orkut_insertion_edges
+orkut_initial
+stackoverflow_batch
 stackoverflow_deletion_edges
 stackoverflow_insertion_edges
+stackoverflow_initial
+twitter_batch
 twitter_deletion_edges
 twitter_insertion_edges
+twitter_initial
+usa_batch
 usa_deletion_edges
 usa_insertion_edges
+usa_initial
+wiki_batch
 wiki_deletion_edges
 wiki_insertion_edges
+wiki_initial
+youtube_batch
 youtube_deletion_edges
 youtube_insertion_edges
+youtube_initial
 ```
 
 `_insertion_edges` contain edges formatted for insertions. `_deletion_edges`
