@@ -31,6 +31,36 @@ You can change the parameters of the experiments by changing the
 [`approx_kcore_setup.txt`](./gbbs/scripts/approx_kcore_setup.txt) file within
 [`gbbs/scripts/`](./gbbs/scripts).
 
+The inputs within the file are as follows:
+
+`Input graph directory:` The directory used to store your input graph files.
+`Dynamic graphs:` Comma separated list of file names for your batches of
+updates, e.g., `dblp_insertion_edges, livejournal_insertion_edges`.
+`Output directory:` Directory to write the outputs of the experiments.
+`Benchmarks:` Comma separated list of benchmarks you want to test. The available benchmarks
+are `PLDS`, `LDS`, `EKCore` (ExactKCore), and `AKCore` (ApproxKCore).
+`Numbers of workers:` Comma separated list of number of hyper-threads you want
+to test, e.g., `30, 60`.
+`Deltas:` Comma separated list of deltas you want to test, e.g., `0.4, 0.8,
+1.6`. (Can only accomodate positive values.)
+`Lambdas:` Comma separated list of lambdas you want to test, e.g., `3, 6, 12`.
+(Can only accomodate positive values.)
+`Batch sizes:` Comma separated list of batch sizes you want to test, e.g.,
+`1000000, 10000000`
+`Output stats:` `True` if you want to output the error ratios; `False` if not.
+`Output sizes:` `True` if you want to output the sizes of the data structures;
+`False` if not.
+`Initial Graph File:` Comma separated list of file names for experiments where
+an initial file is loaded and then batches of updates are applied. This is
+relevant for the deletion and mixed experiments. For the deletion experiments,
+the `[graph]_insertion_edges` file is input to this field. For the mixed
+experiments, the `[graph]_initial` file is input to this field. The comma
+separated list must be in the *same order* as the list under `Dynamic graphs:`.
+`Number of Levels Divisor:` The divisor for the number of levels per group. The
+default, 50, is used in all of our experiments for PLDSOpt given in our paper.
+`Opt:` `True` if you want to use the heuristic where (2 + 3/\lambda) is set to
+1.1 (so \lambda = -10/3); note that this setting is not theoretically efficient.
+
 Obtaining Input Graphs
 --------
 
