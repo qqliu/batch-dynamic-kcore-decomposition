@@ -3,8 +3,7 @@
 
 This repository contains the implementations for parallel static k-core decomposition algorithms.
 
-`ApproximateKCore/` contains the implementations for our parallel, static,
-approximate k-core algorithm. Specifically, it contains the
+`ApproximateKCore/` contains the
 implementation for our parallel, static,
 ![equation](https://latex.codecogs.com/gif.latex?%282&plus;%5Cvarepsilon%29)-approximate
 k-core decomposition algorithm, while `JulienneDBS17` contains the implementation of the parallel,
