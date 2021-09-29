@@ -7,7 +7,7 @@ PLDS Algorithm and Experiments
 This repository contains code for our parallel batch-dynamic k-core
 decomposition algorithms. Our code for our parallel batch-dynamic data
 structures uses the framework of the [Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs).
-The `gbbs/benchmarks/EdgeOrientation/` directory ([EdgeOrientation Directory Link](./gbbs/benchmarks/EdgeOrientation)) contains all relevant information
+The `gbbs/benchmarks/EdgeOrientation/` directory ([EdgeOrientation Directory Link](./gbbs/benchmarks/EdgeOrientation/README.md)) contains all relevant information
 to our k-core decomposition algorithms, including how to run the experiments
 from our paper, while the README within `gbbs` explains details about GBBS overall.
 
@@ -65,14 +65,14 @@ an initial file is loaded and then batches of updates are applied. This is
 relevant for the deletion and mixed experiments. For the deletion experiments,
 the `[graph]_insertion_edges` file is an input to this field. For the mixed
 experiments, the `[graph]_initial` file is an input to this field. The comma
-separated list must be in the *same order* as the list under `Dynamic graphs:` for the graphs 
+separated list must be in the *same order* as the list under `Dynamic graphs:` for the graphs
 you want to test.
 
 `Number of Levels Divisor:` The divisor for the number of levels per group. The
 default, 50, is used in all of our experiments for PLDSOpt given in our paper.
 
 `Opt:` `True` if you want to use the heuristic where (2 + 3/\lambda) is set to
-1.1 (so \lambda = -10/3); `False` if not. 
+1.1 (so \lambda = -10/3); `False` if not.
 Note that this setting is not theoretically time efficient.
 
 Reading Outputs
@@ -85,8 +85,8 @@ You can read the outputs of the experiments by running within [`gbbs/scripts/`](
 python3 read_approx_kcore_results.py
 ```
 
-The result of the experiments is printed in your terminal as a comma-separated list of values. 
-A value is `N/A` if a setting is set to False. Note that this script reads the results of the 
+The result of the experiments is printed in your terminal as a comma-separated list of values.
+A value is `N/A` if a setting is set to False. Note that this script reads the results of the
 experiments configured by the `approx_kcore_setup.txt` file.
 
 The order of the output is as follows:
