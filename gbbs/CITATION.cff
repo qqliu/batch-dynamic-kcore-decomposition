@@ -1,0 +1,30 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: >-
+  Parallel Batch-Dynamic Algorithms for $k$-Core
+  Decomposition and Related Graph Problems
+message: Please cite this software using these metadata.
+type: software
+authors:
+  - given-names: 'Quanquan C. '
+    family-names: Liu
+    email: quanquan@northwestern.edu
+    affiliation: Northwestern University
+  - given-names: Jessica
+    family-names: Shi
+    email: jeshi@mit.edu
+    affiliation: MIT
+  - given-names: Shangdi
+    family-names: Yu
+    email: shangdiy@mit.edu
+    affiliation: MIT
+  - given-names: 'Laxman '
+    family-names: Dhulipala
+    email: laxmandhulipala@gmail.com
+    affiliation: Google Research
+  - given-names: Julian
+    family-names: Shun
+    email: jshun@mit.edu
+    affiliation: MIT
