@@ -28,3 +28,4 @@ authors:
     family-names: Shun
     email: jshun@mit.edu
     affiliation: MIT
+repository-code: "https://github.com/qqliu/batch-dynamic-kcore-decomposition"
