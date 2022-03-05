@@ -24,6 +24,15 @@ programs: `PLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
 `EKCore_dblp_insertion_edges_0.4_3_1000000_60_.out` for the ExactKCore
 benchmark.
 
+Updating Submodules
+--------
+
+Our code uses the [parlaylib](https://github.com/cmuparlay/parlaylib) library as a submodule. Please run the below command to update this submodule:
+
+```
+git submodule update --init --recursive
+```
+
 Customizing Experiments
 --------
 
