@@ -3,6 +3,7 @@ import sys
 import signal
 import time
 import subprocess
+import statistics
 
 def signal_handler(signal,frame):
   print("bye")
@@ -69,6 +70,8 @@ def main():
         deltas = params.copy()
       elif line.startswith("Number of Levels Divisor"):
         divisors = params.copy()
+      elif line.startswith("Num Reader Threads"):
+        num_reader_threads = params.copy()
       elif line.startswith("Batch sizes"):
         batch_sizes = params.copy()
       elif line.startswith("Output stats"):
@@ -96,19 +99,22 @@ def main():
           for divisor in divisors:
             for b in batch_sizes:
               for nw in num_workers:
-                num_rounds = 4
-                out_path_components = [program_pres[program_idx], filename, e,
-                        d, b, nw, divisor, ".out"]
-                read_filename = os.path.join(write_dir, "_".join(out_path_components))
+                for nt in num_reader_threads:
+                  num_rounds = 11
+                  out_path_components = [program_pres[program_idx], filename, e,
+                        d, b, nw, divisor, nt, ".out"]
+                  read_filename = os.path.join(write_dir, "_".join(out_path_components))
 
-                best_avg_time = 0
-                best_max_time = 0
-                best_total_time = 0
-                best_avg_error = 0
-                best_max_error = 0
-                best_space = 0
+                  best_avg_time = 0
+                  best_max_time = 0
+                  best_total_time = 0
+                  best_avg_error = 0
+                  best_max_error = 0
+                  best_space = 0
 
-                with open(read_filename, "r") as read_file:
+                  throughputs = []
+
+                  with open(read_filename, "r") as read_file:
                     cur_max_time = 0
                     cur_total_time = 0
                     num_iterations = 0
@@ -147,8 +153,12 @@ def main():
                             elif split[0].startswith("### Per Vertex Max"):
                                 if float(split[1]) > cur_max_error:
                                     cur_max_error = float(split[1])
+
                             elif split[0].startswith("### Size"):
                                 cur_best_space = float(split[1])
+
+                            elif split[0].startswith("### Throughput"):
+                                throughputs.append(float(split[1]))
 
                     cur_avg_time = cur_total_time / num_iterations
                     if best_avg_time == 0 or cur_avg_time < best_avg_time:
@@ -158,21 +168,25 @@ def main():
                         best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
                         best_max_error = cur_max_error
                         best_space = cur_best_space
-                for param in out_path_components:
+                  for param in out_path_components:
                     if not param == ".out":
                         print(str(param), end = ",")
-                print(str(best_avg_time), end = ",")
-                print(str(best_max_time), end = ",")
-                print(str(best_total_time), end = ",")
-                if not best_space == 0:
+                  '''print(str(best_avg_time), end = ",")
+                  print(str(best_max_time), end = ",")
+                  print(str(best_total_time), end = ",")
+                  if not best_space == 0:
                     print(str(best_space), end = ",")
-                else:
+                  else:
                     print("N/A", end = ",")
-                if not best_avg_error == 0:
+                  if not best_avg_error == 0:
                     print(str(best_avg_error), end=",")
-                    print(str(best_max_error), end="\n")
-                else:
-                    print("N/A,N/A", end = "\n")
+                    print(str(best_max_error), end=",")
+                  else:
+                    print("N/A,N/A", end = ",")'''
+                  print(str(statistics.median(throughputs)), end=", ")
+                  print(str(statistics.mean(throughputs)), end=", ")
+                  print(str(min(throughputs)), end=", ")
+                  print(str(max(throughputs)), end="\n")
 
 if __name__ == "__main__":
   main()

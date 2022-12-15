@@ -86,6 +86,8 @@ def main():
           stats = "-stats"
         else:
           stats = ""
+      elif line.startswith("Num Reader Threads"):
+          num_reader_threads = params.copy()
       elif line.startswith("Output sizes"):
         if split[1] == "True":
           size = "-size"
@@ -111,22 +113,24 @@ def main():
           for divisor in divisors:
             for b in batch_sizes:
               for nw in num_workers:
-                num_rounds = 3
-                out_path_components = [program_pres[program_idx], filename, e,
-                        d, b, nw, divisor, ".out"]
-                out_filename = os.path.join(write_dir, "_".join(out_path_components))
-                program_path = os.path.join(program_dir, program)
-                ss = ("PARLAY_NUM_THREADS=" + str(nw) + " " + program_path + " "
-                "-s -i " + read_dir + filename + " -eps " + e + " "
-                "-delta " + d + " -b " + b + " " + stats + " " + size + " " +
-                opt + " -opt "  + str(divisor) + " " +
-                "-rounds " + str(num_rounds))
-                if len(initial_graphs) > file_idx and len(initial_graphs[file_idx]) > 0:
-                    ss += " -init_graph_file " + read_dir + initial_graphs[file_idx]
-                ss += " " + empty
-                print(ss)
-                out = shellGetOutput(ss)
-                appendToFile(out, out_filename)
+                  for nt in num_reader_threads:
+                        num_rounds = 11
+                        out_path_components = [program_pres[program_idx], filename, e,
+                            d, b, nw, divisor, nt, ".out"]
+                        out_filename = os.path.join(write_dir, "_".join(out_path_components))
+                        program_path = os.path.join(program_dir, program)
+                        ss = (program_path + " "
+                        "-s -i " + read_dir + filename + " -eps " + e + " "
+                        "-delta " + d + " -b " + b + " " + "-readers " + nt + " "
+                        + stats + " " + size + " " +
+                        opt + " -opt "  + str(divisor) + " " +
+                        "-rounds " + str(num_rounds))
+                        if len(initial_graphs) > file_idx and len(initial_graphs[file_idx]) > 0:
+                            ss += " -init_graph_file " + read_dir + initial_graphs[file_idx]
+                        ss += " " + empty
+                        print(ss)
+                        out = shellGetOutput(ss)
+                        appendToFile(out, out_filename)
 
 if __name__ == "__main__":
   main()

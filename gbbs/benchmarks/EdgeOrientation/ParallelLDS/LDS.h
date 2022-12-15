@@ -1,5 +1,7 @@
 #include <unordered_set>
 #include <stack>
+//#include <barrier>
+#include <pthread.h>
 
 #include "gbbs/gbbs.h"
 #include "gbbs/dynamic_graph_io.h"
@@ -17,6 +19,8 @@ struct LDS {
   double OnePlusEps = 1 + eps;
   bool optimized_insertion = false;
 
+  volatile uintE batch_num = 0;
+
   static constexpr uintE kUpLevel = UINT_E_MAX;
   // Used to indicate that this vertex is not moving.
   static constexpr uintE kNotMoving = UINT_E_MAX;
@@ -25,6 +29,19 @@ struct LDS {
   using down_neighbors = parlay::sequence<levelset>;
   using up_neighbors = levelset;
   using edge_type = std::pair<uintE, uintE>;
+
+  struct descriptor {
+    uintE root;
+    uintE batch_num;
+    uintE old_level;
+    uintE new_level;
+
+    descriptor(): root(UINT_E_MAX), batch_num(UINT_E_MAX), old_level(UINT_E_MAX),
+        new_level(UINT_E_MAX) {}
+
+    descriptor(uintE r, uintE b, uintE ol, uintE nl): root(r), batch_num(b), old_level(ol),
+        new_level(nl) {}
+  };
 
   struct LDSVertex {
     uintE level;         // The level of this vertex.
@@ -263,6 +280,8 @@ struct LDS {
   size_t levels_per_group;  // number of inner-levels per group,  O(\log n) many.
   parlay::sequence<LDSVertex> L_seq;
   LDSVertex* L;
+  parlay::sequence<std::pair<uintE, bool>> root_array;
+  parlay::sequence<descriptor> descriptor_array;
 
   LDS(size_t _n, bool _optimized_insertion, size_t _optimize_all) : n(_n),
     optimized_insertion(_optimized_insertion) {
@@ -274,6 +293,8 @@ struct LDS {
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(n);
     L = L_seq.begin();
+    root_array = parlay::sequence<std::pair<uintE, bool>>(_n, std::make_pair(UINT_MAX, false));
+    descriptor_array = parlay::sequence<descriptor>(_n);
   }
 
   LDS(size_t _n, double _eps, double _delta, bool _optimized_insertion,
@@ -290,6 +311,8 @@ struct LDS {
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(_n);
     L = L_seq.begin();
+    root_array = parlay::sequence<std::pair<uintE, bool>>(_n, std::make_pair(UINT_MAX, false));
+    descriptor_array = parlay::sequence<descriptor>(_n);
   }
 
   uintE get_level(uintE ngh) {
@@ -432,7 +455,8 @@ struct LDS {
 
   // Input: sequence of vertex_ids
   template <class Seq, class Levels>
-  void update_levels(Seq&& possibly_dirty, Levels& levels) {
+  void update_levels(Seq&& possibly_dirty, Levels& levels, sparse_set<uintE>& roots,
+          bool initialize_roots = false) {
     using level_and_vtx = std::pair<uintE, uintE>;
 
     // Compute dirty vertices, which have either lower / upper threshold
@@ -447,12 +471,39 @@ struct LDS {
         if (our_level >= levels.size() || !levels[our_level].contains(v)) {
           level = our_level;
         }
+        if (root_array[v].second == true) {
+            root_array[v].second = false;
+            if (descriptor_array[v].root != UINT_E_MAX) {
+                descriptor_array[v].root = root_array[v].first;
+                descriptor_array[v].old_level = our_level;
+                descriptor_array[v].new_level = our_level;
+                descriptor_array[v].batch_num = batch_num;
+            }
+        }
+      } else {
+          if (root_array[v].second == true) {
+            root_array[v] = std::make_pair(UINT_MAX, false);
+          }
       }
       return std::make_pair(level, v);
     });
+
+    //if (initialize_roots) {
+        //std::cout << "@@@@@@@@@@@@@@@@@@@@@@@@ Adjacent Vertices: " << level_and_vtx_seq.size() << std::endl;
+        //roots.resize(level_and_vtx_seq.size());
+    //}
+
     auto dirty = parlay::filter(level_and_vtx_seq, [&] (const level_and_vtx& lv) {
       return lv.first != UINT_E_MAX;
     });
+
+    if  (initialize_roots) {
+        //TODO: start here next time; complicated procedure we need to implement
+        //std::cout << "**************** Num Roots: " << dirty.size() << std::endl;
+        parallel_for(0, dirty.size(), [&](size_t i) {
+            root_array[dirty[i].second] = std::make_pair(dirty[i].second, false);
+        });
+    }
 
     if (dirty.size() == 0) return;
 
@@ -573,14 +624,15 @@ struct LDS {
       return total_moved;
 
     while (cur_level_id < levels.size()) {
-    auto& cur_level = levels[cur_level_id];
-    if (cur_level.num_elms() == 0) {
-      cur_level_id++;
-      continue;
-    }
+        auto& cur_level = levels[cur_level_id];
+        if (cur_level.num_elms() == 0) {
+            cur_level_id++;
+            continue;
+        }
 
     // Figure out the desire_level for each vertex in cur_level.
     // Sets the desire level for each vertex with a valid desire_level in L.
+    auto moved_vertices = parlay::sequence<size_t>(cur_level.size(), 0);
     parallel_for(0, cur_level.size(), [&] (size_t i) {
       uintE v = cur_level.table[i];
       uintE desire_level = UINT_E_MAX;
@@ -590,11 +642,13 @@ struct LDS {
 
         desire_level = L[v].get_desire_level_upwards(v, L, levels_per_group, UpperConstant, eps);
         L[v].desire_level = desire_level;
+        moved_vertices[i] = 1;
 
         assert(L[v].level == cur_level_id);
         assert(desire_level > cur_level_id);
       }
     });
+    total_moved += parlay::scan_inplace(parlay::make_slice(moved_vertices));
 
     size_t outer_level_sizes = 0;
     for (size_t i = 0; i < cur_level.size(); i++) {
@@ -670,6 +724,21 @@ struct LDS {
       return (i == 0) || (i == flipped.size()) || (std::get<0>(flipped[i-1]) != std::get<0>(flipped[i]));
     });
     auto starts = parlay::pack_index(bool_seq);
+
+    // Compute the parent with the smallest root ID
+    parallel_for(0, starts.size() - 1, [&] (size_t i){
+        size_t idx = starts[i];
+        size_t end_idx = starts[i+1];
+
+        auto parents_roots = parlay::sequence<uintE>(end_idx - idx);
+        parallel_for(0, end_idx-idx, [&](size_t cur_idx) {
+            parents_roots[cur_idx] = root_array[flipped[cur_idx + idx].second].first;
+        });
+        auto min_root = parlay::reduce(parents_roots, parlay::minm<uintE>());
+        if (root_array[flipped[idx].first].first == UINT_MAX) {
+            root_array[flipped[idx].first] = std::make_pair(min_root, true);
+        }
+    });
 
     // Save the vertex ids (we will use this in update_levels).
     auto affected = sequence<uintE>::from_function(starts.size() - 1, [&] (size_t i) {
@@ -766,7 +835,7 @@ struct LDS {
       }
     });
 
-    total_moved += parlay::scan_inplace(parlay::make_slice(num_flips));
+    //total_moved += parlay::scan_inplace(parlay::make_slice(num_flips));
     // Update current level for the dirty vertices, and reset
     // the desire_level.
     parallel_for(0, dirty_seq.size(), [&] (size_t i) {
@@ -775,7 +844,8 @@ struct LDS {
       L[v].desire_level = UINT_E_MAX;
     });
 
-    update_levels(std::move(affected), levels);
+    sparse_set<uintE> empty_roots = sparse_set<uintE>();
+    update_levels(std::move(affected), levels, empty_roots);
 
     cur_level_id++;
     }
@@ -1001,6 +1071,7 @@ struct LDS {
 
   template <class Seq>
   size_t batch_insertion(const Seq& insertions_unfiltered) {
+    root_array = parlay::sequence<std::pair<uintE, bool>>(n, std::make_pair(UINT_MAX, false));
     // Remove edges that already exist from the input.
     auto insertions_filtered = parlay::filter(parlay::make_slice(insertions_unfiltered),
         [&] (const edge_type& e) { return !edge_exists(e); });
@@ -1072,9 +1143,11 @@ struct LDS {
     // Interface: supply vertex seq -> process will settle everything.
     using dirty_elts = sparse_set<uintE>;
     sequence<dirty_elts> levels;
+    dirty_elts root_set = sparse_set<uintE>();
 
     // Place the affected vertices into levels based on their current level.
-    update_levels(std::move(affected), levels);
+    update_levels(std::move(affected), levels, root_set, 1);
+    //std::cout << "!!!!!!!!!!!!!!! Number of roots: " << root_set.num_elms() << std::endl;
 
     // Update the level structure (basically a sparse bucketing structure).
     size_t total_moved = rebalance_insertions(std::move(levels), 0);
@@ -1174,6 +1247,27 @@ struct LDS {
     // Update the level structure (basically a sparse bucketing structure).
     size_t total_moved = rebalance_deletions(std::move(levels), 0);
 
+    auto filtered_roots = parlay::filter(parlay::make_slice(root_array), [&] (std::pair<uintE, bool> root_pair){
+        return (root_pair.first != UINT_MAX) && (root_pair.second == false);
+    });
+    auto root_values = parlay::sequence<uintE>(filtered_roots.size());
+    parallel_for(0, filtered_roots.size(), [&] (size_t idx) {
+        root_values[idx] = filtered_roots[idx].first;
+    });
+    parlay::sort_inplace(parlay::make_slice(root_values));
+    auto root_bool = parlay::delayed_seq<bool>(root_values.size() + 1, [&] (size_t idx) {
+     if (idx < root_values.size())
+        assert(root_values[idx].first != UINT_E_MAX);
+      return (idx == 0) || (idx == root_values.size()) || (root_values[idx] != root_values[idx-1]);
+    });
+    auto root_starts = parlay::pack_index(root_bool);
+    auto dag_sizes = parlay::sequence<uintE>(root_starts.size() - 1);
+    parallel_for(0, dag_sizes.size(), [&](size_t idx){
+        dag_sizes[idx] = root_starts[idx+1] - root_starts[idx];
+    });
+    auto max_size = parlay::reduce(dag_sizes, parlay::maxm<uintE>());
+    //std::cout << "Num in DAG: " << root_array.size() << ", " << filtered_roots.size() << std::endl;
+    //std::cout << "Largest DAG: " << max_size << std::endl;
     return total_moved;
   }
 
@@ -1219,12 +1313,90 @@ struct LDS {
   }
 };
 
+struct barrier_t {
+  pthread_cond_t complete;
+  pthread_mutex_t mutex;
+  int count;
+  int crossing;
+};
+
+static inline void barrier_init(barrier_t *b, int n) {
+    pthread_cond_init(&b->complete, NULL);
+    pthread_mutex_init(&b->mutex, NULL);
+    b->count = n;
+    b->crossing = 0;
+}
+
+static inline void barrier_cross(barrier_t *b) {
+    pthread_mutex_lock(&b->mutex);
+    /* One more thread through */
+    b->crossing++;
+    /* If not all here, wait */
+    if (b->crossing < b->count) {
+        pthread_cond_wait(&b->complete, &b->mutex);
+    } else {
+        pthread_cond_broadcast(&b->complete);
+        /* Reset for next time */
+        b->crossing = 0;
+    }
+    pthread_mutex_unlock(&b->mutex);
+}
+
+
 template <class W>
-inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool compare_exact, LDS& layers, bool optimized_insertion, size_t offset, bool get_size) {
+inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool compare_exact, LDS& layers, bool optimized_insertion, size_t offset, bool get_size, size_t num_reader_threads) {
     auto batch = batch_edge_list.edges;
     size_t num_insertion_flips = 0;
     size_t num_deletion_flips = 0;
     size_t max_degree = 0;
+
+    parlay::random rng = parlay::random();
+
+    std::cout << "Barrier is initializing" << std::endl;
+    volatile struct {
+        volatile uint64_t flag = 0;
+        char padding[64 - sizeof(uint64_t)];
+    } stop;
+    std::cout << "size of stop: " << sizeof(stop) << std::endl;
+
+    std::atomic<int> counter_seq[num_reader_threads];
+    std::thread read_thread_seq[num_reader_threads];
+
+    size_t main_counter = 0;
+    barrier_t* sync_point = new barrier_t();
+    barrier_t* sync_point_end = new barrier_t();
+    barrier_init(sync_point, num_reader_threads + 1);
+    barrier_init(sync_point_end, num_reader_threads + 1);
+
+    //std::mutex iomutex;
+    for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
+        read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
+                &layers, &rng, &stop, &counter_seq, thread_i] {
+            std::cout << "Thread " << thread_i << " is waiting" << std::endl;
+            barrier_cross(sync_point);
+            std::cout << "Thread " << thread_i << " is running" << std::endl;
+            auto my_counter = 0;
+
+            rng.fork(thread_i);
+            //while (true) {
+            while (stop.flag == 0) {
+            //while (!stop.load(std::memory_order_acquire)) {
+                auto random_vertex = rng.rand() % layers.n;
+                rng = rng.next();
+
+                //std::this_thread::sleep_for(std::chrono::milliseconds(200));
+                my_counter++;
+            }
+            counter_seq[thread_i].store(my_counter, std::memory_order_release);
+            //std::cout << "Counter for thread " << thread_i << ": " << my_counter << std::endl;
+            barrier_cross(sync_point_end);
+        });
+        cpu_set_t cpuset;
+        CPU_ZERO(&cpuset);
+        CPU_SET(thread_i, &cpuset);
+        pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(), sizeof(cpu_set_t), &cpuset);
+    }
+
     // First, insert / delete everything up to offset
     if (offset != 0) {
         for (size_t i = 0; i < offset; i += 1000000) {
@@ -1250,11 +1422,20 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 return std::make_pair(vert1, vert2);
             });
             num_insertion_flips += layers.batch_insertion(batch_insertions);
+            //std::cout << "Num Moved Batch: " << i << layers.batch_insertion(batch_insertions);
             num_deletion_flips += layers.batch_deletion(batch_deletions);
         }
     }
 
+    stop.flag = 0;
+    std::cout << "Main thread batch is waiting" << std::endl;
+    timer overall_timer; overall_timer.start();
+    barrier_cross(sync_point);
+    std::cout << "Main thread batch started" << std::endl;
+
+    //sync_point.arrive_and_wait();
     for (size_t i = offset; i < batch.size(); i += batch_size) {
+        layers.batch_num++;
         timer t; t.start();
         auto end_size = std::min(i + batch_size, batch.size());
         auto insertions = parlay::filter(parlay::make_slice(batch.begin() + i,
@@ -1282,7 +1463,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             return std::make_pair(vert1, vert2);
         });
 
-        num_insertion_flips += layers.batch_insertion(batch_insertions);
+        num_insertion_flips += 0;
+        layers.batch_insertion(batch_insertions);
+        //std::cout << "Num Moved Batch: " << i << " " << layers.batch_insertion(batch_insertions) << std::endl;
         double insertion_time = t.stop();
 
         t.start();
@@ -1356,15 +1539,30 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             std::cout << "### Per Vertex Max Coreness Error: " << max_error << std::endl; fflush(stdout);
         }
     }
+    stop.flag = 1;
+    //stop.store(true, std::memory_order_release);
+    double overall_time = overall_timer.stop();
+    barrier_cross(sync_point_end);
+    for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+        read_thread_seq[t_i].join();
+    }
+
+    std::cout << "### Total Time: " << overall_time << std::endl;
+    for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+        main_counter += counter_seq[t_i].load(std::memory_order_acquire);
+    }
+    std::cout << "### Main Counter: " << main_counter << std::endl;
+    std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
+    std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
 }
 
 template <class Graph, class W>
 inline void RunLDS(Graph& G, BatchDynamicEdges<W> batch_edge_list, long batch_size,
         bool compare_exact, double eps, double delta, bool optimized_insertion,
-        size_t offset, bool get_size, size_t optimized_all) {
+        size_t offset, bool get_size, size_t optimized_all, size_t num_reader_threads) {
     uintE max_vertex = std::max(uintE{G.n}, batch_edge_list.max_vertex);
     auto layers = LDS(max_vertex, eps, delta, optimized_insertion, optimized_all);
-    if (batch_edge_list.max_vertex > 0) RunLDS(batch_edge_list, batch_size, compare_exact, layers, optimized_insertion, offset, get_size);
+    if (batch_edge_list.max_vertex > 0) RunLDS(batch_edge_list, batch_size, compare_exact, layers, optimized_insertion, offset, get_size, num_reader_threads);
 }
 
 }  // namespace gbbs

@@ -53,6 +53,7 @@ double LDS_runner(Graph& G, commandLine P) {
   double eps = P.getOptionDoubleValue("-eps", 3);
   double delta = P.getOptionDoubleValue("-delta", 9);
   size_t optimized_all = P.getOptionIntValue("-opt", 1);
+  size_t reader_threads = P.getOptionIntValue("-readers", 1);
 
   // Option for starting with a non-empty graph
   const char* const init_graph_file(P.getOptionValue("-init_graph_file"));
@@ -75,7 +76,7 @@ double LDS_runner(Graph& G, commandLine P) {
   // Run LDS
   timer t; t.start();
   RunLDS(G, batch_edge_list, batch_size, compare_exact, eps, delta,
-          optimized_insertion, offset, get_size, optimized_all);
+          optimized_insertion, offset, get_size, optimized_all, reader_threads);
   double tt = t.stop();
 
   std::cout << "### Running Time: " << tt << std::endl;
