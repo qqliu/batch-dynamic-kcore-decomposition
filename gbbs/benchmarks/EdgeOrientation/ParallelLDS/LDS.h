@@ -463,6 +463,8 @@ struct LDS {
     // violated. Output this vertex as dirty only if it is not already in the
     // bucketing structure.
     auto level_and_vtx_seq = parlay::delayed_seq<level_and_vtx>(possibly_dirty.size(), [&] (size_t i) {
+      // Get moved vertex here; I remember implementing the new change
+      // before...somewhere...
       uintE v = possibly_dirty[i];
       uintE level = UINT_E_MAX;
       if (L[v].is_dirty(levels_per_group, UpperConstant, eps, optimized_insertion)) {
@@ -474,17 +476,17 @@ struct LDS {
         if (root_array[v].second == true) {
             root_array[v].second = false;
             if (descriptor_array[v].root != UINT_E_MAX) {
-                std::vector<uintE>dirty_up_neighbors = {};
                 auto my_up_neighbors = L[v].up.entries();
+                auto min_root = UINT_MAX;
 
                 for (size_t i = 0; i < my_up_neighbors.size(); i++) {
                     if (L[my_up_neighbors[i]].is_dirty(levels_per_group, UpperConstant,
                                 eps, optimized_insertion) && root_array[my_up_neighbors[i]].second = true) {
-                        my_up_neighbors.push_back(root_array[my_up_neighbors[i]].first);
+                        if (root_array[my_up_neighbors[i]].first < min_root)
+                            min_root = root_array[my_up_neighbors[i]];
                     }
                 }
 
-                auto min_root = std::min_element(dirty_up_neighbors.begin(), dirty_up_neighbors.end());
                 min_root = std::min(root_array[v].first, min_root);
 
                 descriptor_array[v].root = min_root;
