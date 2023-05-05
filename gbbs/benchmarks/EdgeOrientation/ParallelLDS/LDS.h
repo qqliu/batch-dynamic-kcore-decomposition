@@ -474,7 +474,20 @@ struct LDS {
         if (root_array[v].second == true) {
             root_array[v].second = false;
             if (descriptor_array[v].root != UINT_E_MAX) {
-                descriptor_array[v].root = root_array[v].first;
+                std::vector<uintE>dirty_up_neighbors = {};
+                auto my_up_neighbors = L[v].up.entries();
+
+                for (size_t i = 0; i < my_up_neighbors.size(); i++) {
+                    if (L[my_up_neighbors[i]].is_dirty(levels_per_group, UpperConstant,
+                                eps, optimized_insertion) && root_array[my_up_neighbors[i]].second = true) {
+                        my_up_neighbors.push_back(root_array[my_up_neighbors[i]].first);
+                    }
+                }
+
+                auto min_root = std::min_element(dirty_up_neighbors.begin(), dirty_up_neighbors.end());
+                min_root = std::min(root_array[v].first, min_root);
+
+                descriptor_array[v].root = min_root;
                 descriptor_array[v].old_level = our_level;
                 descriptor_array[v].new_level = our_level;
                 descriptor_array[v].batch_num = batch_num;
