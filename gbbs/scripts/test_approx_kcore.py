@@ -114,7 +114,7 @@ def main():
             for b in batch_sizes:
               for nw in num_workers:
                   for nt in num_reader_threads:
-                        num_rounds = 11
+                        num_rounds = 1
                         out_path_components = [program_pres[program_idx], filename, e,
                             d, b, nw, divisor, nt, ".out"]
                         out_filename = os.path.join(write_dir, "_".join(out_path_components))

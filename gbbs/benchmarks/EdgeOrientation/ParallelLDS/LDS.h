@@ -31,16 +31,12 @@ struct LDS {
   using edge_type = std::pair<uintE, uintE>;
 
   struct descriptor {
-    uintE root;
-    uintE batch_num;
+    std::pair<uintE, bool> root;
     uintE old_level;
-    uintE new_level;
 
-    descriptor(): root(UINT_E_MAX), batch_num(UINT_E_MAX), old_level(UINT_E_MAX),
-        new_level(UINT_E_MAX) {}
+    descriptor(): root(std::make_pair(UINT_E_MAX, false)), old_level(UINT_E_MAX) {}
 
-    descriptor(uintE r, uintE b, uintE ol, uintE nl): root(r), batch_num(b), old_level(ol),
-        new_level(nl) {}
+    descriptor(uintE r, uintE ol): root(std::make_pair(r, true)), old_level(ol) {}
   };
 
   struct LDSVertex {
@@ -280,7 +276,6 @@ struct LDS {
   size_t levels_per_group;  // number of inner-levels per group,  O(\log n) many.
   parlay::sequence<LDSVertex> L_seq;
   LDSVertex* L;
-  parlay::sequence<std::pair<uintE, bool>> root_array;
   parlay::sequence<descriptor> descriptor_array;
 
   LDS(size_t _n, bool _optimized_insertion, size_t _optimize_all) : n(_n),
@@ -293,7 +288,6 @@ struct LDS {
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(n);
     L = L_seq.begin();
-    root_array = parlay::sequence<std::pair<uintE, bool>>(_n, std::make_pair(UINT_MAX, false));
     descriptor_array = parlay::sequence<descriptor>(_n);
   }
 
@@ -311,7 +305,6 @@ struct LDS {
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(_n);
     L = L_seq.begin();
-    root_array = parlay::sequence<std::pair<uintE, bool>>(_n, std::make_pair(UINT_MAX, false));
     descriptor_array = parlay::sequence<descriptor>(_n);
   }
 
@@ -473,31 +466,32 @@ struct LDS {
         if (our_level >= levels.size() || !levels[our_level].contains(v)) {
           level = our_level;
         }
-        if (root_array[v].second == true) {
-            root_array[v].second = false;
-            if (descriptor_array[v].root != UINT_E_MAX) {
+        descriptor_array[v].old_level = our_level;
+        if (descriptor_array[v].root.second == true) {
+            descriptor_array[v].root.second = false;
+            if (descriptor_array[v].root.first != UINT_E_MAX) {
                 auto my_up_neighbors = L[v].up.entries();
                 auto min_root = UINT_MAX;
 
                 for (size_t i = 0; i < my_up_neighbors.size(); i++) {
                     if (L[my_up_neighbors[i]].is_dirty(levels_per_group, UpperConstant,
-                                eps, optimized_insertion) && root_array[my_up_neighbors[i]].second = true) {
-                        if (root_array[my_up_neighbors[i]].first < min_root)
-                            min_root = root_array[my_up_neighbors[i]];
+                                eps, optimized_insertion)
+                            && descriptor_array[my_up_neighbors[i]].root.second == true) {
+                        if (descriptor_array[my_up_neighbors[i]].root.first < min_root)
+                            min_root = descriptor_array[my_up_neighbors[i]].root.first;
                     }
                 }
 
-                min_root = std::min(root_array[v].first, min_root);
+                min_root = std::min(descriptor_array[v].root.first, min_root);
 
-                descriptor_array[v].root = min_root;
+                descriptor_array[v].root.first = min_root;
+                descriptor_array[v].root.second = true;
                 descriptor_array[v].old_level = our_level;
-                descriptor_array[v].new_level = our_level;
-                descriptor_array[v].batch_num = batch_num;
             }
         }
       } else {
-          if (root_array[v].second == true) {
-            root_array[v] = std::make_pair(UINT_MAX, false);
+          if (descriptor_array[v].root.second == true) {
+            descriptor_array[v].root = std::make_pair(UINT_MAX, false);
           }
       }
       return std::make_pair(level, v);
@@ -516,7 +510,7 @@ struct LDS {
         //TODO: start here next time; complicated procedure we need to implement
         //std::cout << "**************** Num Roots: " << dirty.size() << std::endl;
         parallel_for(0, dirty.size(), [&](size_t i) {
-            root_array[dirty[i].second] = std::make_pair(dirty[i].second, false);
+            descriptor_array[dirty[i].second].root = std::make_pair(dirty[i].second, false);
         });
     }
 
@@ -747,11 +741,11 @@ struct LDS {
 
         auto parents_roots = parlay::sequence<uintE>(end_idx - idx);
         parallel_for(0, end_idx-idx, [&](size_t cur_idx) {
-            parents_roots[cur_idx] = root_array[flipped[cur_idx + idx].second].first;
+            parents_roots[cur_idx] = descriptor_array[flipped[cur_idx + idx].second].root.first;
         });
         auto min_root = parlay::reduce(parents_roots, parlay::minm<uintE>());
-        if (root_array[flipped[idx].first].first == UINT_MAX) {
-            root_array[flipped[idx].first] = std::make_pair(min_root, true);
+        if (descriptor_array[flipped[idx].first].root.first == UINT_MAX) {
+            descriptor_array[flipped[idx].first].root = std::make_pair(min_root, false);
         }
     });
 
@@ -777,6 +771,10 @@ struct LDS {
 
       // (1) vtx (u) is a vertex moving from the current level.
       if (l_u == cur_level_id && L[u].desire_level != UINT_E_MAX) {
+        if (descriptor_array[u].root.first != UINT_MAX && descriptor_array[u].root.second == false) {
+            descriptor_array[u].root.second = true;
+            descriptor_array[u].old_level = L[u].level;
+        }
         uintE dl_u = L[u].desire_level;
         assert(dl_u != UINT_E_MAX);
         assert(dl_u > l_u);
@@ -1086,7 +1084,6 @@ struct LDS {
 
   template <class Seq>
   size_t batch_insertion(const Seq& insertions_unfiltered) {
-    root_array = parlay::sequence<std::pair<uintE, bool>>(n, std::make_pair(UINT_MAX, false));
     // Remove edges that already exist from the input.
     auto insertions_filtered = parlay::filter(parlay::make_slice(insertions_unfiltered),
         [&] (const edge_type& e) { return !edge_exists(e); });
@@ -1167,6 +1164,17 @@ struct LDS {
     // Update the level structure (basically a sparse bucketing structure).
     size_t total_moved = rebalance_insertions(std::move(levels), 0);
 
+    parallel_for(0, n, [&] (size_t i) {
+        if (descriptor_array[i].root.first == i) {
+            descriptor_array[i].root = std::make_pair(UINT_E_MAX, false);
+            descriptor_array[i].old_level = UINT_E_MAX;
+        }
+    });
+
+    parallel_for(0, n, [&] (size_t i) {
+        descriptor_array[i].root = std::make_pair(UINT_E_MAX, false);
+        descriptor_array[i].old_level = UINT_E_MAX;
+    });
     return total_moved;
   }
 
@@ -1262,7 +1270,7 @@ struct LDS {
     // Update the level structure (basically a sparse bucketing structure).
     size_t total_moved = rebalance_deletions(std::move(levels), 0);
 
-    auto filtered_roots = parlay::filter(parlay::make_slice(root_array), [&] (std::pair<uintE, bool> root_pair){
+    /*auto filtered_roots = parlay::filter(parlay::make_slice(root_array), [&] (std::pair<uintE, bool> root_pair){
         return (root_pair.first != UINT_MAX) && (root_pair.second == false);
     });
     auto root_values = parlay::sequence<uintE>(filtered_roots.size());
@@ -1282,7 +1290,7 @@ struct LDS {
     });
     auto max_size = parlay::reduce(dag_sizes, parlay::maxm<uintE>());
     //std::cout << "Num in DAG: " << root_array.size() << ", " << filtered_roots.size() << std::endl;
-    //std::cout << "Largest DAG: " << max_size << std::endl;
+    //std::cout << "Largest DAG: " << max_size << std::endl;*/
     return total_moved;
   }
 
@@ -1308,6 +1316,12 @@ struct LDS {
     uintE group = group_for_level(l);
     if (l % levels_per_group != levels_per_group - 1 && group != 0) group--;
     return ceil(L[v].group_degree(group, eps));
+  }
+
+  uintE get_core_from_level(uintE l) const {
+    uintE group = group_for_level(l);
+    if (l % levels_per_group != levels_per_group - 1 && group != 0) group--;
+    return ceil(pow((1 + eps), group));
   }
 
   uintE max_degree() const {
@@ -1396,9 +1410,45 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             //while (true) {
             while (stop.flag == 0) {
             //while (!stop.load(std::memory_order_acquire)) {
+                auto retry = true;
                 auto random_vertex = rng.rand() % layers.n;
                 rng = rng.next();
 
+                while(retry) {
+                    auto b1 = layers.batch_num;
+                    auto l1 = layers.L[random_vertex].level;
+
+                    auto checking_DAG = true;
+                    auto cur_root = UINT_E_MAX;
+                    while(checking_DAG) {
+                        cur_root = layers.descriptor_array[random_vertex].root.first;
+                        if (cur_root == UINT_E_MAX || cur_root == random_vertex)
+                            checking_DAG = false;
+                    }
+
+                    auto l2 = layers.L[random_vertex].level;
+                    auto b2 = layers.batch_num;
+
+                    if (b1 != b2)
+                        continue;
+
+                    if (cur_root != UINT_E_MAX) {
+                        std::cout << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
+                        retry = false;
+
+                        if (cur_root != layers.descriptor_array[random_vertex].root.first)
+                            layers.descriptor_array[random_vertex].root.first = cur_root;
+                    }
+
+                    else {
+                        if (l1 == l2) {
+                            std::cout << layers.get_core_from_level(l1) << std::endl;
+                            retry = false;
+                        }
+                        else
+                            continue;
+                    }
+                }
                 //std::this_thread::sleep_for(std::chrono::milliseconds(200));
                 my_counter++;
             }
