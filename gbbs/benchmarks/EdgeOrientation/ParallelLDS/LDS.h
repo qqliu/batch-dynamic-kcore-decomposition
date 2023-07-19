@@ -1433,7 +1433,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         continue;
 
                     if (cur_root != UINT_E_MAX) {
-                        std::cout << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
+                        //std::cout << random_vertex << " " << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
                         retry = false;
 
                         if (cur_root != layers.descriptor_array[random_vertex].root.first)
@@ -1442,7 +1442,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                     else {
                         if (l1 == l2) {
-                            std::cout << layers.get_core_from_level(l1) << std::endl;
+                            //std::cout << random_vertex << " " << layers.get_core_from_level(l1) << std::endl;
                             retry = false;
                         }
                         else
@@ -1494,12 +1494,19 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     stop.flag = 0;
     std::cout << "Main thread batch is waiting" << std::endl;
-    timer overall_timer; overall_timer.start();
     barrier_cross(sync_point);
     std::cout << "Main thread batch started" << std::endl;
 
     //sync_point.arrive_and_wait();
     for (size_t i = offset; i < batch.size(); i += batch_size) {
+        timer overall_timer; overall_timer.start();
+        std::cout << "Batch: " << i << std::endl;
+
+        for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+            read_thread_seq[t_i].join();
+        }
+        std::cout << "Read threads have join." << std::endl;
+
         layers.batch_num++;
         timer t; t.start();
         auto end_size = std::min(i + batch_size, batch.size());
@@ -1549,6 +1556,20 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         std::cout << "### Number Insertion Flips: " << num_insertion_flips << std::endl;
         std::cout << "### Number Deletion Flips: " << num_deletion_flips << std::endl;
         std::cout << "### Max Outdegree: " << max_degree << std::endl;
+
+        stop.flag = 1;
+        //stop.store(true, std::memory_order_release);
+        double overall_time = overall_timer.stop();
+        std::cout << "### Total Time: " << overall_time << std::endl;
+        for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+            main_counter += counter_seq[t_i].load(std::memory_order_acquire);
+        }
+        std::cout << "### Main Counter: " << main_counter << std::endl;
+        std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
+        std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
+
+        barrier_cross(sync_point_end);
+
         if (get_size) {
             auto size = layers.get_size();
             std::cout << "### Size: " << size << std::endl;
@@ -1604,21 +1625,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             std::cout << "### Per Vertex Max Coreness Error: " << max_error << std::endl; fflush(stdout);
         }
     }
-    stop.flag = 1;
-    //stop.store(true, std::memory_order_release);
-    double overall_time = overall_timer.stop();
-    barrier_cross(sync_point_end);
-    for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        read_thread_seq[t_i].join();
-    }
-
-    std::cout << "### Total Time: " << overall_time << std::endl;
-    for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        main_counter += counter_seq[t_i].load(std::memory_order_acquire);
-    }
-    std::cout << "### Main Counter: " << main_counter << std::endl;
-    std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
-    std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
 }
 
 template <class Graph, class W>
