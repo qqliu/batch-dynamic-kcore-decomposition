@@ -31,12 +31,12 @@ struct LDS {
   using edge_type = std::pair<uintE, uintE>;
 
   struct descriptor {
-    std::pair<uintE, bool> root;
+    uintE root;
     uintE old_level;
 
-    descriptor(): root(std::make_pair(UINT_E_MAX, false)), old_level(UINT_E_MAX) {}
+    descriptor(): root(UINT_E_MAX, old_level(UINT_E_MAX) {}
 
-    descriptor(uintE r, uintE ol): root(std::make_pair(r, true)), old_level(ol) {}
+    descriptor(uintE r, uintE ol): root(r, old_level(ol) {}
   };
 
   struct LDSVertex {
@@ -467,33 +467,27 @@ struct LDS {
           level = our_level;
         }
         descriptor_array[v].old_level = our_level;
-        if (descriptor_array[v].root.second == true) {
-            descriptor_array[v].root.second = false;
-            if (descriptor_array[v].root.first != UINT_E_MAX) {
-                auto my_up_neighbors = L[v].up.entries();
-                auto min_root = UINT_MAX;
+        if (descriptor_array[v].root != UINT_E_MAX) {
+            auto my_up_neighbors = L[v].up.entries();
+            auto min_root = UINT_MAX;
 
-                // while loop for the compare and swap until it succeeds for the root
-                for (size_t i = 0; i < my_up_neighbors.size(); i++) {
-                    if (L[my_up_neighbors[i]].is_dirty(levels_per_group, UpperConstant,
-                                eps, optimized_insertion)
-                            && descriptor_array[my_up_neighbors[i]].root.second == true) {
-                        if (descriptor_array[my_up_neighbors[i]].root.first < min_root)
-                            min_root = descriptor_array[my_up_neighbors[i]].root.first;
+            // while loop for the compare and swap until it succeeds for the root
+            for (size_t i = 0; i < my_up_neighbors.size(); i++) {
+                if (L[my_up_neighbors[i]].is_dirty(levels_per_group, UpperConstant,
+                    eps, optimized_insertion)
+                        && descriptor_array[my_up_neighbors[i]].root.second == true) {
+                    if (descriptor_array[my_up_neighbors[i]].root.first < min_root)
+                        min_root = descriptor_array[my_up_neighbors[i]].root.first;
                     }
-                }
-
-                min_root = std::min(descriptor_array[v].root.first, min_root);
-
-                descriptor_array[v].root.first = min_root;
-                descriptor_array[v].root.second = true;
-                descriptor_array[v].old_level = our_level;
             }
+
+            min_root = std::min(descriptor_array[v].root.first, min_root);
+
+            descriptor_array[v].root = min_root;
+            descriptor_array[v].old_level = our_level;
         }
       } else {
-          if (descriptor_array[v].root.second == true) {
-            descriptor_array[v].root = std::make_pair(UINT_MAX, false);
-          }
+        descriptor_array[v].root = UINT_E_MAX;
       }
       return std::make_pair(level, v);
     });
@@ -736,7 +730,7 @@ struct LDS {
     auto starts = parlay::pack_index(bool_seq);
 
     // Compute the parent with the smallest root ID
-    parallel_for(0, starts.size() - 1, [&] (size_t i){
+    /*parallel_for(0, starts.size() - 1, [&] (size_t i){
         size_t idx = starts[i];
         size_t end_idx = starts[i+1];
 
@@ -748,7 +742,7 @@ struct LDS {
         if (descriptor_array[flipped[idx].first].root.first == UINT_MAX) {
             descriptor_array[flipped[idx].first].root = std::make_pair(min_root, false);
         }
-    });
+    });*/
 
     // Save the vertex ids (we will use this in update_levels).
     auto affected = sequence<uintE>::from_function(starts.size() - 1, [&] (size_t i) {
@@ -772,8 +766,8 @@ struct LDS {
 
       // (1) vtx (u) is a vertex moving from the current level.
       if (l_u == cur_level_id && L[u].desire_level != UINT_E_MAX) {
-        if (descriptor_array[u].root.first != UINT_MAX && descriptor_array[u].root.second == false) {
-            descriptor_array[u].root.second = true;
+        // Descriptor array only needed here.
+        if (descriptor_array[u].root.first != UINT_MAX) {
             descriptor_array[u].old_level = L[u].level;
         }
         uintE dl_u = L[u].desire_level;
