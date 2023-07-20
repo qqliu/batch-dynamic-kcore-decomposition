@@ -329,41 +329,60 @@ struct LDS {
     }
   }
 
-  inline uintE find_compress(uintE cur_node, parlay::sequence<descriptor> parents) {
+  inline uintE find_compress(uintE cur_node, descriptor* parents) {
     uintE j = cur_node;
-    if (parents[j].root == j)
-        return j;
+    /*std::cout << "Finding parent of: " << cur_node << std::endl;
+    std::cout << "parent root: " << parents[j].root << std::endl;*/
+    if (parents[j].root == j || parents[j].root == UINT_E_MAX)
+        return parents[j].root;
 
-    do {
+    //std::cout << "Going to while loop" << std::endl;
+    while (parents[j].root != j && j != UINT_E_MAX) {
+        //std::cout << "while parent loop " << parents[j].root << std::endl;
         j = parents[j].root;
-    } while (parents[j].root != j && parents[j].root != UINT_E_MAX);
+    }
+
+    //std::cout << "Found cur_parent of: " << cur_node << std::endl;
+
+    if (j == UINT_E_MAX) return j;
 
     uintE tmp;
-    while ((tmp = parents[cur_node].root) > j && tmp != UINT_E_MAX) {
+    while ((tmp = parents[cur_node].root) > j && cur_node != UINT_E_MAX && tmp != UINT_E_MAX) {
             parents[cur_node].root = j;
             cur_node = tmp;
     }
-
-    if (parents[j].root == UINT_E_MAX)
-        return UINT_E_MAX;
+    //std::cout << "Finished path compression of: " << cur_node << std::endl;
 
     return j;
   }
 
-  inline bool unite_impl(uintE u_orig, uintE v_orig, parlay::sequence<descriptor> parents) {
+  inline bool unite_impl(uintE u_orig, uintE v_orig, descriptor* parents) {
         auto u = u_orig;
         auto v = v_orig;
+
+        u = find_compress(u, parents);
+        v = find_compress(v, parents);
 
         while (u != v && u != UINT_E_MAX && v != UINT_E_MAX) {
                 u = find_compress(u, parents);
                 v = find_compress(v, parents);
 
-                if (u > v && parents[u].root == u && pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)){
+                if (u == UINT_E_MAX || v == UINT_E_MAX)
+                    return false;
+
+                std::cout << "u and v: " << u << ", " << v << std::endl;
+
+                if (u > v && parents[u].root == u &&
+                        pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)) {
+                        std::cout << "Finished CAS" << std::endl;
                         return true;
                 } else if (v > u && parents[v].root == v &&
                         pbbslib::atomic_compare_and_swap(&parents[v].root, v, u)) {
+                        std::cout << "Finished CAS" << std::endl;
                         return true;
                 }
+
+                return true;
         }
 
         return false;
@@ -511,7 +530,7 @@ struct LDS {
 
         // do compare and swap for all up neighbors until it succeeds for every pair
         parallel_for(i = 0, my_up_neighbors.size(), [&] (size_t i) {
-            unite_impl((uintE) v, (uintE) my_up_neighbors[i], descriptor_array);
+            unite_impl((uintE) v, (uintE) my_up_neighbors[i], descriptor_array.begin());
         });
       }
       return std::make_pair(level, v);
@@ -798,7 +817,7 @@ struct LDS {
 
         // parallel for loop for the compare and swap and merge with all pairs of up neighbors
         parallel_for (0, my_up_neighbors.size(), [&] (size_t i) {
-            unite_impl(u, my_up_neighbors[i], descriptor_array);
+            unite_impl(u, my_up_neighbors[i], descriptor_array.begin());
         });
 
         descriptor_array[u].old_level = L[u].level;
@@ -1442,13 +1461,17 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 auto random_vertex = rng.rand() % layers.n;
                 rng = rng.next();
 
+                //std::cout << "Random vertex: " << random_vertex << std::endl;
                 while(retry && stop.flag == 0) {
                     auto b1 = layers.batch_num;
                     auto l1 = layers.L[random_vertex].level;
 
-                    auto checking_DAG = true;
-                    auto root = layers.find_compress(random_vertex, layers.descriptor_array);
-
+                    /*std::cout << "Finding root for: " << random_vertex << std::endl;
+                    std::cout << "Descriptor array size: " << layers.descriptor_array.size() << std::endl;*/
+                    auto root = layers.find_compress(random_vertex, layers.descriptor_array.begin());
+                    //auto root = UINT_E_MAX;
+                    //std::cout << "Found root for: " << random_vertex << std::endl;
+                    retry = false;
                     auto l2 = layers.L[random_vertex].level;
                     auto b2 = layers.batch_num;
 
@@ -1456,13 +1479,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         continue;
 
                     if (root != UINT_E_MAX) {
-                        std::cout << random_vertex << " " << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
+                        //std::cout << random_vertex << " " << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
                         retry = false;
                     }
 
                     else {
                         if (l1 == l2) {
-                            std::cout << random_vertex << " " << layers.get_core_from_level(l1) << std::endl;
+                            //std::cout << random_vertex << " " << layers.get_core_from_level(l1) << std::endl;
                             retry = false;
                         } else
                             continue;
@@ -1523,6 +1546,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
         timer t; t.start();
         auto end_size = std::min(i + batch_size, batch.size());
+        std::cout << "Get insertions " << std::endl;
         auto insertions = parlay::filter(parlay::make_slice(batch.begin() + i,
                     batch.begin() + end_size), [&] (const DynamicEdge<W>& edge){
             return edge.insert;
@@ -1533,6 +1557,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             return !edge.insert;
         });
 
+        std::cout << "Batched insertions " << std::endl;
         auto batch_insertions = parlay::delayed_seq<std::pair<uintE, uintE>>(insertions.size(),
                 [&] (size_t i) {
             uintE vert1 = insertions[i].from;
@@ -1549,6 +1574,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         });
 
         num_insertion_flips += 0;
+        std::cout << "==================================Before insertions" << std::endl;
+
         layers.batch_insertion(batch_insertions);
         //std::cout << "Num Moved Batch: " << i << " " << layers.batch_insertion(batch_insertions) << std::endl;
         double insertion_time = t.stop();
