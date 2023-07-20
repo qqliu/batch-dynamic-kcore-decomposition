@@ -329,6 +329,42 @@ struct LDS {
     }
   }
 
+  inline uintE find_compress(uintE cur_node, parlay::sequence<descriptor> parents) {
+    uintE j = cur_node;
+    if (parents[j].root == j || parents[j].root == UINT_E_MAX)
+        return j;
+
+    do {
+        j = parents[j].root;
+    } while (parents[j].root != j && parents[j].root != UINT_E_MAX);
+
+    while ((tmp = parents[cur_node].root) > j && tmp != UINT_E_MAX) {
+            parents[cur_node].root = j;
+            cur_node = tmp;
+    }
+
+    return j;
+  }
+
+  inline bool unite_impl(uintE u_orig, uintE v_orig, parlay::sequence<descriptor> parents) {
+        auto u = u_orig;
+        auto v = v_orig;
+
+        while (u != v && u != UINT_E_MAX && v != UINT_E_MAX) {
+                u = find_compress(u, parents);
+                v = find_compress(v, parents);
+
+                if (u > v && parents[u].root == u && gbbs::atomic_compare_and_swap(&parents[u].root, u, v)){
+                        return true;
+                } else if (v > u && parents[v].root == v &&
+                        gbbs::atomic_compare_and_swap(&parents[v].root, v, u)) {
+                        return true;
+                }
+        }
+
+        return false;
+  }
+
   // Invariant checking for an edge e that we expect to exist
   bool check_both_directions(edge_type e) {
     auto [u, v] = e;
@@ -476,12 +512,12 @@ struct LDS {
                 if (L[my_up_neighbors[i]].is_dirty(levels_per_group, UpperConstant,
                     eps, optimized_insertion)
                         && descriptor_array[my_up_neighbors[i]].root.second == true) {
-                    if (descriptor_array[my_up_neighbors[i]].root.first < min_root)
-                        min_root = descriptor_array[my_up_neighbors[i]].root.first;
+                    if (descriptor_array[my_up_neighbors[i]].root < min_root)
+                        min_root = descriptor_array[my_up_neighbors[i]].root;
                     }
             }
 
-            min_root = std::min(descriptor_array[v].root.first, min_root);
+            min_root = std::min(descriptor_array[v].root, min_root);
 
             descriptor_array[v].root = min_root;
             descriptor_array[v].old_level = our_level;
@@ -767,8 +803,10 @@ struct LDS {
       // (1) vtx (u) is a vertex moving from the current level.
       if (l_u == cur_level_id && L[u].desire_level != UINT_E_MAX) {
         // Descriptor array only needed here.
-        if (descriptor_array[u].root.first != UINT_MAX) {
+        if (descriptor_array[u].root.first == UINT_MAX) {
             descriptor_array[u].old_level = L[u].level;
+            auto my_up_neighbors = L[u].up.entries();
+
         }
         uintE dl_u = L[u].desire_level;
         assert(dl_u != UINT_E_MAX);
