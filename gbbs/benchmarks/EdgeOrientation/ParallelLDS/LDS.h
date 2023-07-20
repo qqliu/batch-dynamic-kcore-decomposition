@@ -34,9 +34,9 @@ struct LDS {
     uintE root;
     uintE old_level;
 
-    descriptor(): root(UINT_E_MAX, old_level(UINT_E_MAX) {}
+    descriptor(): root(UINT_E_MAX), old_level(UINT_E_MAX) {}
 
-    descriptor(uintE r, uintE ol): root(r, old_level(ol) {}
+    descriptor(uintE r, uintE ol): root(r), old_level(ol) {}
   };
 
   struct LDSVertex {
@@ -338,6 +338,7 @@ struct LDS {
         j = parents[j].root;
     } while (parents[j].root != j && parents[j].root != UINT_E_MAX);
 
+    uintE tmp;
     while ((tmp = parents[cur_node].root) > j && tmp != UINT_E_MAX) {
             parents[cur_node].root = j;
             cur_node = tmp;
@@ -357,10 +358,10 @@ struct LDS {
                 u = find_compress(u, parents);
                 v = find_compress(v, parents);
 
-                if (u > v && parents[u].root == u && gbbs::atomic_compare_and_swap(&parents[u].root, u, v)){
+                if (u > v && parents[u].root == u && pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)){
                         return true;
                 } else if (v > u && parents[v].root == v &&
-                        gbbs::atomic_compare_and_swap(&parents[v].root, v, u)) {
+                        pbbslib::atomic_compare_and_swap(&parents[v].root, v, u)) {
                         return true;
                 }
         }
@@ -509,8 +510,8 @@ struct LDS {
         auto my_up_neighbors = L[v].up.entries();
 
         // do compare and swap for all up neighbors until it succeeds for every pair
-        parallel_for(i = 0, my_up_neighbors.size(), (size_t i) {
-            unite_impl(v, my_up_neighbors[i], descriptor_array);
+        parallel_for(i = 0, my_up_neighbors.size(), [&] (size_t i) {
+            unite_impl((uintE) v, (uintE) my_up_neighbors[i], descriptor_array);
         });
       }
       return std::make_pair(level, v);
@@ -529,7 +530,8 @@ struct LDS {
         //TODO: start here next time; complicated procedure we need to implement
         //std::cout << "**************** Num Roots: " << dirty.size() << std::endl;
         parallel_for(0, dirty.size(), [&](size_t i) {
-            descriptor_array[dirty[i].second].root = std::make_pair(dirty[i].second, false);
+            descriptor_array[dirty[i].second].root = dirty[i].second;
+            descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
         });
     }
 
@@ -1445,7 +1447,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     auto l1 = layers.L[random_vertex].level;
 
                     auto checking_DAG = true;
-                    auto root = find_compress(random_vertex, descriptor_array);
+                    auto root = layers.find_compress(random_vertex, layers.descriptor_array);
 
                     auto l2 = layers.L[random_vertex].level;
                     auto b2 = layers.batch_num;
@@ -1453,7 +1455,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     if (b1 != b2)
                         continue;
 
-                    if (cur_root != UINT_E_MAX) {
+                    if (root != UINT_E_MAX) {
                         std::cout << random_vertex << " " << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
                         retry = false;
                     }
