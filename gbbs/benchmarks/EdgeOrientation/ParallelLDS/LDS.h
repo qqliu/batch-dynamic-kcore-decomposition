@@ -331,7 +331,7 @@ struct LDS {
 
   inline uintE find_compress(uintE cur_node, parlay::sequence<descriptor> parents) {
     uintE j = cur_node;
-    if (parents[j].root == j || parents[j].root == UINT_E_MAX)
+    if (parents[j].root == j)
         return j;
 
     do {
@@ -342,6 +342,9 @@ struct LDS {
             parents[cur_node].root = j;
             cur_node = tmp;
     }
+
+    if (parents[j].root == UINT_E_MAX)
+        return UINT_E_MAX;
 
     return j;
   }
@@ -503,27 +506,12 @@ struct LDS {
           level = our_level;
         }
         descriptor_array[v].old_level = our_level;
-        if (descriptor_array[v].root != UINT_E_MAX) {
-            auto my_up_neighbors = L[v].up.entries();
-            auto min_root = UINT_MAX;
+        auto my_up_neighbors = L[v].up.entries();
 
-            // while loop for the compare and swap until it succeeds for the root
-            for (size_t i = 0; i < my_up_neighbors.size(); i++) {
-                if (L[my_up_neighbors[i]].is_dirty(levels_per_group, UpperConstant,
-                    eps, optimized_insertion)
-                        && descriptor_array[my_up_neighbors[i]].root.second == true) {
-                    if (descriptor_array[my_up_neighbors[i]].root < min_root)
-                        min_root = descriptor_array[my_up_neighbors[i]].root;
-                    }
-            }
-
-            min_root = std::min(descriptor_array[v].root, min_root);
-
-            descriptor_array[v].root = min_root;
-            descriptor_array[v].old_level = our_level;
-        }
-      } else {
-        descriptor_array[v].root = UINT_E_MAX;
+        // do compare and swap for all up neighbors until it succeeds for every pair
+        parallel_for(i = 0, my_up_neighbors.size(), (size_t i) {
+            unite_impl(v, my_up_neighbors[i], descriptor_array);
+        });
       }
       return std::make_pair(level, v);
     });
@@ -802,12 +790,17 @@ struct LDS {
 
       // (1) vtx (u) is a vertex moving from the current level.
       if (l_u == cur_level_id && L[u].desire_level != UINT_E_MAX) {
-        // Descriptor array only needed here.
-        if (descriptor_array[u].root.first == UINT_MAX) {
-            descriptor_array[u].old_level = L[u].level;
-            auto my_up_neighbors = L[u].up.entries();
+        // Get up neighbors.
+        auto my_up_neighbors = L[u].up.entries();
+        auto min_root = UINT_MAX;
 
-        }
+        // parallel for loop for the compare and swap and merge with all pairs of up neighbors
+        parallel_for (0, my_up_neighbors.size(), [&] (size_t i) {
+            unite_impl(u, my_up_neighbors[i], descriptor_array);
+        });
+
+        descriptor_array[u].old_level = L[u].level;
+
         uintE dl_u = L[u].desire_level;
         assert(dl_u != UINT_E_MAX);
         assert(dl_u > l_u);
@@ -1198,14 +1191,14 @@ struct LDS {
     size_t total_moved = rebalance_insertions(std::move(levels), 0);
 
     parallel_for(0, n, [&] (size_t i) {
-        if (descriptor_array[i].root.first == i) {
-            descriptor_array[i].root = std::make_pair(UINT_E_MAX, false);
+        if (descriptor_array[i].root == i) {
+            descriptor_array[i].root = UINT_E_MAX;
             descriptor_array[i].old_level = UINT_E_MAX;
         }
     });
 
     parallel_for(0, n, [&] (size_t i) {
-        descriptor_array[i].root = std::make_pair(UINT_E_MAX, false);
+        descriptor_array[i].root = UINT_E_MAX;
         descriptor_array[i].old_level = UINT_E_MAX;
     });
     return total_moved;
@@ -1452,12 +1445,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     auto l1 = layers.L[random_vertex].level;
 
                     auto checking_DAG = true;
-                    auto cur_root = UINT_E_MAX;
-                    while(checking_DAG && stop.flag == 0) {
-                        cur_root = layers.descriptor_array[random_vertex].root.first;
-                        if (cur_root == UINT_E_MAX || cur_root == random_vertex)
-                            checking_DAG = false;
-                    }
+                    auto root = find_compress(random_vertex, descriptor_array);
 
                     auto l2 = layers.L[random_vertex].level;
                     auto b2 = layers.batch_num;
@@ -1468,17 +1456,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     if (cur_root != UINT_E_MAX) {
                         std::cout << random_vertex << " " << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
                         retry = false;
-
-                        if (cur_root != layers.descriptor_array[random_vertex].root.first)
-                            layers.descriptor_array[random_vertex].root.first = cur_root;
                     }
 
                     else {
                         if (l1 == l2) {
                             std::cout << random_vertex << " " << layers.get_core_from_level(l1) << std::endl;
                             retry = false;
-                        }
-                        else
+                        } else
                             continue;
                     }
                 }
