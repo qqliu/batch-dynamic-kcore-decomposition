@@ -58,6 +58,9 @@ double LDS_runner(Graph& G, commandLine P) {
   // Option for starting with a non-empty graph
   const char* const init_graph_file(P.getOptionValue("-init_graph_file"));
 
+  // Option for computing approximation statistics using ground truth file
+  const char* const core_ground_truth(P.getOptionValue("-ground_truth_file"));
+
   // Load the dynamic graph
   using W = typename Graph::weight_type;
   bool use_dynamic = (input_file && input_file[0]);
@@ -73,8 +76,30 @@ double LDS_runner(Graph& G, commandLine P) {
     offset = prepend_dynamic_edge_list(batch_edge_list, init_graph_list);
   }
 
+  // Get the ground truth numbers
+  /*if (core_ground_truth) {
+    BatchDynamicEdges<W> core_ground = read_batch_dynamic_edge_list<W>(core_ground_truth);
+    auto core_ground_truth_vals = core_ground.edges;
+    uintE node_cores[core_ground_truth_vals.size()/G.n][G.n];
+
+    for (size_t batch_num = 0; batch_num < core_ground_truth_vals.size()/G.n; batch_num++) {
+        for (size_t node = 0; node < G.n; node++) {
+            node_cores[batch_num][node] = core_ground_truth_vals[batch_num * G.n + node].to;
+        }
+    }
+
+    uintE* startRows[core_ground_truth_vals.size()/G.n];
+    for (size_t b = 0; b < core_ground_truth_vals.size()/G.n; b++)
+        startRows[b] = node_cores[b];
+
+    RunLDS(G, batch_edge_list, batch_size, compare_exact, eps, delta,
+          optimized_insertion, offset, get_size, optimized_all, reader_threads, startRows);
+  }*/
+
   // Run LDS
+  uintE node_cores[1][1];
   timer t; t.start();
+  uintE* startRows[1] = {node_cores[0]};
   RunLDS(G, batch_edge_list, batch_size, compare_exact, eps, delta,
           optimized_insertion, offset, get_size, optimized_all, reader_threads);
   double tt = t.stop();
