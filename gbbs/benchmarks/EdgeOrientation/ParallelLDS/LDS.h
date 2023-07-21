@@ -337,7 +337,7 @@ struct LDS {
         return parents[j].root;
 
     //std::cout << "Going to while loop" << std::endl;
-    while (parents[j].root != j && j != UINT_E_MAX) {
+    while (j != UINT_E_MAX && parents[j].root != j) {
         //std::cout << "while parent loop " << parents[j].root << std::endl;
         j = parents[j].root;
     }
@@ -346,10 +346,11 @@ struct LDS {
 
     if (j == UINT_E_MAX) return j;
 
-    uintE tmp;
-    while ((tmp = parents[cur_node].root) > j && cur_node != UINT_E_MAX && tmp != UINT_E_MAX) {
+    uintE tmp = parents[cur_node].root;
+    while (cur_node != UINT_E_MAX && tmp != UINT_E_MAX && tmp > j) {
             parents[cur_node].root = j;
             cur_node = tmp;
+            tmp = parents[cur_node].root;
     }
     //std::cout << "Finished path compression of: " << cur_node << std::endl;
 
@@ -370,15 +371,20 @@ struct LDS {
                 if (u == UINT_E_MAX || v == UINT_E_MAX)
                     return false;
 
-                std::cout << "u and v: " << u << ", " << v << std::endl;
+                //std::cout << "u and v: " << u << ", " << v << std::endl;
 
-                if (u > v && parents[u].root == u &&
-                        pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)) {
-                        std::cout << "Finished CAS" << std::endl;
+                //std::cout << "Begin CAS" << std::endl;
+                if (u > v && parents[u].root == u//) {
+                    && pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)) {
+                        //std::cout << "switch u: " << u << std::endl;
+                        //parents[u].root = v;
+                        //std::cout << "Finished u CAS" << std::endl;
                         return true;
-                } else if (v > u && parents[v].root == v &&
-                        pbbslib::atomic_compare_and_swap(&parents[v].root, v, u)) {
-                        std::cout << "Finished CAS" << std::endl;
+                } else if (v > u && parents[v].root == v//) {
+                    && pbbslib::atomic_compare_and_swap(&parents[v].root, v, u)) {
+                        //std::cout << "switch v: " << v << std::endl;
+                        //parents[v].root = u;
+                        //std::cout << "Finished v CAS" << std::endl;
                         return true;
                 }
 
@@ -529,9 +535,11 @@ struct LDS {
         auto my_up_neighbors = L[v].up.entries();
 
         // do compare and swap for all up neighbors until it succeeds for every pair
+        //std::cout << "start uniting" << std::endl;
         parallel_for(i = 0, my_up_neighbors.size(), [&] (size_t i) {
             unite_impl((uintE) v, (uintE) my_up_neighbors[i], descriptor_array.begin());
         });
+        //std::cout << "finished uniting" << std::endl;
       }
       return std::make_pair(level, v);
     });
@@ -816,11 +824,14 @@ struct LDS {
         auto min_root = UINT_MAX;
 
         // parallel for loop for the compare and swap and merge with all pairs of up neighbors
+        //std::cout << "start uniting 2" << std::endl;
         parallel_for (0, my_up_neighbors.size(), [&] (size_t i) {
             unite_impl(u, my_up_neighbors[i], descriptor_array.begin());
         });
+        //std::cout << "finished uniting 2" << std::endl;
 
         descriptor_array[u].old_level = L[u].level;
+        //std::cout << "finished updating descriptor 2" << std::endl;
 
         uintE dl_u = L[u].desire_level;
         assert(dl_u != UINT_E_MAX);
@@ -861,6 +872,7 @@ struct LDS {
           insert_neighbors(u, lower_neighbors);
         }
         num_flips[i] = upstart;
+        //std::cout << "finished all of 2" << std::endl;
       } else if (l_u > cur_level_id) {
 
         // Map the incident edges to (level, neighbor_id).
@@ -1468,10 +1480,11 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                     /*std::cout << "Finding root for: " << random_vertex << std::endl;
                     std::cout << "Descriptor array size: " << layers.descriptor_array.size() << std::endl;*/
+                    //std::cout << "Reader started reading" << std::endl;
                     auto root = layers.find_compress(random_vertex, layers.descriptor_array.begin());
+                    //std::cout << "Reader stopped reading" << std::endl;
                     //auto root = UINT_E_MAX;
                     //std::cout << "Found root for: " << random_vertex << std::endl;
-                    retry = false;
                     auto l2 = layers.L[random_vertex].level;
                     auto b2 = layers.batch_num;
 
@@ -1479,13 +1492,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         continue;
 
                     if (root != UINT_E_MAX) {
-                        //std::cout << random_vertex << " " << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
+                        std::cout << "UINT_E_MAX " << random_vertex << " " << layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level) << std::endl;
                         retry = false;
                     }
 
                     else {
                         if (l1 == l2) {
-                            //std::cout << random_vertex << " " << layers.get_core_from_level(l1) << std::endl;
+                            std::cout << random_vertex << " " << layers.get_core_from_level(l1) << std::endl;
                             retry = false;
                         } else
                             continue;
