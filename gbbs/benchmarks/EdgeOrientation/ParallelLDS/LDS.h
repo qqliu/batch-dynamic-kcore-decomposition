@@ -17,7 +17,7 @@ struct ground_truth_struct{
     ground_truth_struct() {}
 
     ground_truth_struct(size_t batches, uintE n) {
-        ground_truth = sequence<sequence<uintE>>(batches, sequence<uintE>(n));
+        ground_truth = sequence<sequence<uintE>>(batches, sequence<uintE>(n, 0));
     }
 };
 
@@ -1534,10 +1534,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         if (compare_exact) {
                                 //std::cout << layers.batch_num << std::endl;
                                 //std::cout << random_vertex << std::endl;
-                                uintE exact_core = ground_truth_container.ground_truth[layers.batch_num][random_vertex];
+                                uintE exact_core = ground_truth_container.ground_truth[b1][random_vertex];
                                 auto approx_core = layers.get_core_from_level(layers.descriptor_array[random_vertex].old_level);
-                                std::cout << "approx core: " << approx_core << std::endl;
-                                std::cout << "exact core: " << exact_core << std::endl;
+                                //std::cout << "approx core: " << approx_core << std::endl;
+                                //std::cout << "exact core: " << exact_core << std::endl;
 
                                 if (exact_core > 0 && approx_core > 0) {
                                     approx_error_total += (exact_core > approx_core) ?
@@ -1552,14 +1552,14 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     else {
                         if (l1 == l2) {
                             if (compare_exact) {
-                                auto exact_core = ground_truth_container.ground_truth[layers.batch_num][random_vertex];
+                                auto exact_core = ground_truth_container.ground_truth[b1][random_vertex];
                                 auto approx_core = layers.get_core_from_level(l1);
                                 if (exact_core > 0 && approx_core > 0) {
                                     approx_error_total += (exact_core > approx_core) ?
                                         (float) exact_core / (float) approx_core :
                                         (float) approx_core / (float) exact_core;
                                 }
-                                std::cout << approx_error_total << std::endl;
+                                //std::cout << approx_error_total << std::endl;
                             }
 
                                 //std::cout << random_vertex << " " << layers.get_core_from_level(l1) << std::endl;
@@ -1575,9 +1575,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             if (my_counter > 0) {
                 double average_error = ((double)approx_error_total)/((double)my_counter);
                 std::cout << average_error << std::endl;
-                error_seq[thread_i].store((double) average_error, std::memory_order_release);
+                error_seq[thread_i] = (double) average_error; //, std::memory_order_release);
             } else {
-                error_seq[thread_i].store((double) 100000, std::memory_order_release);
+                error_seq[thread_i] = (double) 100000; //, std::memory_order_release);
             }
             counter_seq[thread_i].store(my_counter, std::memory_order_release);
 
@@ -1685,7 +1685,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         std::cout << "### Number Deletion Flips: " << num_deletion_flips << std::endl;
         std::cout << "### Max Outdegree: " << max_degree << std::endl;
 
-        layers.batch_num++;
+        if (layers.batch_num * batch_size <= batch.size() - batch_size - 2)
+            layers.batch_num++;
 
         if (get_size) {
             auto size = layers.get_size();
