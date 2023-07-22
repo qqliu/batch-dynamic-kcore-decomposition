@@ -46,12 +46,14 @@ double LDS_runner(Graph& G, commandLine P) {
   const char* const input_file{P.getOptionValue(kInputFlag)};
   long batch_size = P.getOptionLongValue("-b", 1);
   bool compare_exact = P.getOption("-stats");
+  bool nonlinearizable = P.getOption("-nonlin");
   bool optimized_insertion = P.getOption("-ins-opt");
   bool get_size = P.getOption("-size");
 
   // Options for the approximation algorithm
   double eps = P.getOptionDoubleValue("-eps", 3);
   double delta = P.getOptionDoubleValue("-delta", 9);
+  double percentile = P.getOptionDoubleValue("-percentile", 0.9);
   size_t optimized_all = P.getOptionIntValue("-opt", 1);
   size_t reader_threads = P.getOptionIntValue("-readers", 1);
 
@@ -101,7 +103,8 @@ double LDS_runner(Graph& G, commandLine P) {
   timer t; t.start();
   uintE* startRows[1] = {node_cores[0]};
   RunLDS(G, batch_edge_list, batch_size, compare_exact, eps, delta,
-          optimized_insertion, offset, get_size, optimized_all, reader_threads);
+          optimized_insertion, offset, get_size, optimized_all, reader_threads, nonlinearizable,
+          percentile);
   double tt = t.stop();
 
   std::cout << "### Running Time: " << tt << std::endl;

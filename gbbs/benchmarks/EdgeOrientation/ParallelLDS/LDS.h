@@ -1429,8 +1429,9 @@ static inline void barrier_cross(barrier_t *b) {
 
 
 template <class W>
-inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool compare_exact, LDS& layers, bool optimized_insertion, size_t offset, bool get_size,
-        size_t num_reader_threads, bool nonlinearizable = false) {
+inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool compare_exact,
+        LDS& layers, bool optimized_insertion, size_t offset, bool get_size,
+        size_t num_reader_threads, bool nonlinearizable, double percentile) {
     auto batch = batch_edge_list.edges;
     size_t num_insertion_flips = 0;
     size_t num_deletion_flips = 0;
@@ -1464,7 +1465,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     std::atomic<int> counter_seq[num_reader_threads];
     std::atomic<double> error_seq[num_reader_threads];
-    std::atomic<double> latency_seq[num_reader_threads];
+    gbbs::sequence<std::vector<double>> latency_seq
+        = gbbs::sequence<std::vector<double>>(num_reader_threads);
     std::thread read_thread_seq[num_reader_threads];
 
     size_t main_counter = 0;
@@ -1476,7 +1478,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
                 &layers, &rng, &stop, &counter_seq, &ground_truth_container, &compare_exact,
-                &error_seq, &nonlinearizable, thread_i] {
+                &error_seq, &nonlinearizable, &latency_seq, thread_i] {
             std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
             std::cout << "Thread " << thread_i << " is running" << std::endl;
@@ -1564,6 +1566,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             } else {
                 error_seq[thread_i] = (double) 1000000; //, std::memory_order_release);
             }
+
+            latency_seq[thread_i] = all_latency;
             counter_seq[thread_i].store(my_counter, std::memory_order_release);
 
             barrier_cross(sync_point_end);
@@ -1676,29 +1680,50 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     std::cout << "### Total Time: " << overall_time << std::endl;
     double total_error = 0;
+    size_t latency_sequence_size = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
         main_counter += counter_seq[t_i].load(std::memory_order_acquire);
         total_error += error_seq[t_i].load(std::memory_order_acquire);
+        latency_sequence += latency_seq[t_i].size();
+    }
+
+    gbbs::sequence<double> latencies = gbbs::sequence<double>(latency_sequence, 0);
+
+    size_t cur_count = 0;
+    for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+        parallel_for(0, latency_seq[t_i].size(), [&] (size_t j){
+            latencies[cur_count + j] = latency_seq[t_i][j];
+        });
+
+        cur_count += latency_seq[t_i].size();
     }
 
     if (num_reader_threads > 0) {
+        parlay::sort_inplace(parlay::make_slice(latencies));
+        size_t index_percentile = floor(percentile * latencies.size());
+        auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
+
         std::cout << "### Average Error: " << total_error/num_reader_threads << std::endl;
         std::cout << "### Main Counter: " << main_counter << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
+        std::cout << "### Latency Percentile " << percentile << ": "
+            << latencies[index_percentile] << std::endl;
+        std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
     }
 }
 
 template <class Graph, class W>
 inline void RunLDS(Graph& G, BatchDynamicEdges<W> batch_edge_list, long batch_size,
         bool compare_exact, double eps, double delta, bool optimized_insertion,
-        size_t offset, bool get_size, size_t optimized_all, size_t num_reader_threads) {
+        size_t offset, bool get_size, size_t optimized_all, size_t num_reader_threads,
+        bool nonlinearizable = false, double percentile = 0.9) {
         //uintE** core_ground_truth) {
     uintE max_vertex = std::max(uintE{G.n}, batch_edge_list.max_vertex);
     auto layers = LDS(max_vertex, eps, delta, optimized_insertion, optimized_all);
     if (batch_edge_list.max_vertex > 0)
         RunLDS(batch_edge_list, batch_size, compare_exact, layers, optimized_insertion,
-                offset, get_size, num_reader_threads);
+                offset, get_size, num_reader_threads, nonlinearizable, percentile);
 }
 
 }  // namespace gbbs
