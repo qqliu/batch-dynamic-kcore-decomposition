@@ -1476,7 +1476,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
                 &layers, &rng, &stop, &counter_seq, &ground_truth_container, &compare_exact,
-                &error_seq, thread_i] {
+                &error_seq, &nonlinearizable, thread_i] {
             std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
             std::cout << "Thread " << thread_i << " is running" << std::endl;
