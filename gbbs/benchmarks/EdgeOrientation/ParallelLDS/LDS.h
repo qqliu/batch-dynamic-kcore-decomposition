@@ -571,13 +571,13 @@ struct LDS {
     }
 
     parallel_for(0, dirty.size(), [&] (size_t i) {
-        auto v = dirty[i];
+        auto v = dirty[i].second;
         descriptor_array[v].old_level = L[v].level;
         auto my_up_neighbors = L[v].up.entries();
 
         // do merging the dependency trees using
         // compare and swap for all up neighbors until it succeeds for every pair
-        parallel_for(j = 0, my_up_neighbors.size(), [&] (size_t j) {
+        parallel_for(0, my_up_neighbors.size(), [&] (size_t j) {
             unite_impl((uintE) v, (uintE) my_up_neighbors[j], descriptor_array.begin());
         });
     });
@@ -1500,12 +1500,16 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         layers.get_core_from_level(layers.L[random_vertex].level);
                     if (compare_exact) {
                         uintE exact_core =
-                            ground_truth_container.ground_truth[b1][random_vertex];
+                            ground_truth_container.ground_truth[layers.batch_num][random_vertex];
 
                         if (exact_core > 0 && approx_core > 0) {
                             approx_error_total += (exact_core > approx_core) ?
                             (float) exact_core / (float) approx_core :
                             (float) approx_core / (float) exact_core;
+                        }
+
+                        if (exact_core > 0 || approx_core > 0) {
+                           approx_error_total += std::max(std::max(exact_core, approx_core), (uintE) 1);
                         }
                     }
                 }
@@ -1554,14 +1558,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                             continue;
                     }
                 }
-                double read_latency = read_timer.end();
+                double read_latency = read_timer.stop();
                 all_latency.push_back(read_latency);
                 my_counter++;
             }
 
             if (my_counter > 0) {
                 double average_error = ((double)approx_error_total)/((double)my_counter);
-                std::cout << average_error << std::endl;
                 error_seq[thread_i] = (double) average_error; //, std::memory_order_release);
             } else {
                 error_seq[thread_i] = (double) 1000000; //, std::memory_order_release);
@@ -1684,10 +1687,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
         main_counter += counter_seq[t_i].load(std::memory_order_acquire);
         total_error += error_seq[t_i].load(std::memory_order_acquire);
-        latency_sequence += latency_seq[t_i].size();
+        latency_sequence_size += latency_seq[t_i].size();
     }
 
-    gbbs::sequence<double> latencies = gbbs::sequence<double>(latency_sequence, 0);
+    gbbs::sequence<double> latencies = gbbs::sequence<double>(latency_sequence_size, 0);
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
