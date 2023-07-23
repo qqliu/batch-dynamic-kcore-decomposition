@@ -1463,7 +1463,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         char padding[64 - sizeof(uint64_t)];
     } stop;
 
-    std::atomic<int> counter_seq[num_reader_threads];
+    std::atomic<uintE> counter_seq[num_reader_threads];
     std::atomic<double> error_seq[num_reader_threads];
     gbbs::sequence<std::vector<double>> latency_seq
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
@@ -1506,10 +1506,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                             approx_error_total += (exact_core > approx_core) ?
                             (float) exact_core / (float) approx_core :
                             (float) approx_core / (float) exact_core;
-                        }
-
-                        if (exact_core > 0 || approx_core > 0) {
-                           approx_error_total += std::max(std::max(exact_core, approx_core), (uintE) 1);
+                        } else {
+                            approx_error_total +=
+                            std::max(std::max(exact_core, approx_core), (uintE) 1);
                         }
                     }
                 }
@@ -1536,6 +1535,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                     approx_error_total += (exact_core > approx_core) ?
                                         (float) exact_core / (float) approx_core :
                                         (float) approx_core / (float) exact_core;
+                                } else {
+                                    approx_error_total +=
+                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
                                 }
                         }
                         retry = false;
@@ -1550,6 +1552,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                     approx_error_total += (exact_core > approx_core) ?
                                         (float) exact_core / (float) approx_core :
                                         (float) approx_core / (float) exact_core;
+                                } else {
+                                    approx_error_total +=
+                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
                                 }
                             }
 
@@ -1564,11 +1569,12 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             }
 
             if (my_counter > 0) {
-                double average_error = ((double)approx_error_total)/((double)my_counter);
-                error_seq[thread_i] = (double) average_error; //, std::memory_order_release);
-            } else {
-                error_seq[thread_i] = (double) 1000000; //, std::memory_order_release);
+                error_seq[thread_i] = (double) approx_error_total;
+                //error_seq[thread_i] = (double) average_error; //, std::memory_order_release);
             }
+            /*else {
+                error_seq[thread_i] = (double) 1000000; //, std::memory_order_release);
+            }*/
 
             latency_seq[thread_i] = all_latency;
             counter_seq[thread_i].store(my_counter, std::memory_order_release);
@@ -1706,7 +1712,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         size_t index_percentile = floor(percentile * latencies.size());
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
 
-        std::cout << "### Average Error: " << total_error/num_reader_threads << std::endl;
+        std::cout << "### Average Error: " << total_error/main_counter << std::endl;
         std::cout << "### Main Counter: " << main_counter << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
