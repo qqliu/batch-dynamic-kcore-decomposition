@@ -1,6 +1,7 @@
 #include <unordered_set>
 #include <stack>
 #include <pthread.h>
+#include <ctime>
 
 #include "gbbs/gbbs.h"
 #include "gbbs/dynamic_graph_io.h"
@@ -1442,20 +1443,29 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     if (compare_exact) {
         for (size_t batch_i = 0; batch_i < batch.size(); batch_i += batch_size) {
             auto graph = dynamic_edge_list_to_symmetric_graph(batch_edge_list,
-                    std::min(batch.size(),
-                    batch_i + batch_size));
+                    std::min(batch.size(), batch_i + batch_size));
 
             // Run kcore on graph
             auto cores = KCore(graph, 16);
 
+            auto max_core = parlay::reduce(cores, parlay::maxm<uintE>());
+            std::cout << "### Coreness Exact: " << max_core << std::endl;
+
             parallel_for (0, layers.n, [&] (size_t cur_node_index) {
-                auto b = (size_t) ceil(batch_i/(batch_size * 1.0));
-                ground_truth_container.ground_truth[b][cur_node_index] = cores[cur_node_index];
+                auto b = (size_t) floor(batch_i/(batch_size * 1.0));
+                if (cur_node_index >= cores.size())
+                    ground_truth_container.ground_truth[b][cur_node_index] = UINT_E_MAX;
+                if (cur_node_index == 425956) {
+                    std::cout << "WHY DOES THE CORE EQUAL THE INDEX???? " << layers.n
+                        << ", " << cores.size() << std::endl;
+                }
+                if (cores[cur_node_index] == 425956)
+                    std::cout << "NOOOOOOOOOOOO!" << std::endl;
             });
         }
     }
 
-    parlay::random rng = parlay::random();
+    parlay::random rng = parlay::random(time(0));
 
     std::cout << "Barrier is initializing" << std::endl;
     volatile struct {
@@ -1499,9 +1509,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     retry = false;
                     auto approx_core =
                         layers.get_core_from_level(layers.L[random_vertex].level);
+                    auto old_level = layers.L[random_vertex].level;
+                    auto old_batch = layers.batch_num;
                     if (compare_exact) {
+                        auto new_batch = layers.batch_num;
                         uintE exact_core =
-                            ground_truth_container.ground_truth[layers.batch_num][random_vertex];
+                            ground_truth_container.ground_truth[new_batch][random_vertex];
+                        auto new_level = layers.L[random_vertex].level;
 
                         double cur_error = 0.0;
                         if (exact_core > 0 && approx_core > 0) {
@@ -1518,9 +1532,16 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                 std::max(std::max(exact_core, approx_core), (uintE) 1);
                         }
 
-                        if (cur_error == 101) {
-                            std::cout << "101 Cur Error: " << exact_core << ", " << approx_core << std::endl;
+                        if (cur_error > 1000) {
+                            std::cout << "Large Cur Error: " << cur_error << ", " << exact_core
+                                << ", " << approx_core << std::endl;
+                            std::cout << "Random vertex, old batch, new batch, old level, new level: "
+                                << random_vertex << ", " << old_batch << ", " << new_batch
+                                << ", " << old_level << ", "
+                                << new_level << std::endl;
                         }
+                        if (exact_core == UINT_E_MAX)
+                            cur_error = 1;
                         error_seq[thread_i].push_back(cur_error);
                     }
                 }
@@ -1541,8 +1562,12 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                             layers.get_core_from_level(
                                     layers.descriptor_array[random_vertex].old_level);
 
+                        size_t old_batch = (size_t) 0;
+                        if (b1 > 0)
+                            old_batch = b1 - 1;
+
                         if (compare_exact) {
-                                uintE exact_core = ground_truth_container.ground_truth[b1][random_vertex];
+                                uintE exact_core = ground_truth_container.ground_truth[old_batch][random_vertex];
                                 double cur_error = 0.0;
                                 if (exact_core > 0 && approx_core > 0) {
                                     cur_error = (exact_core > approx_core) ?
@@ -1558,9 +1583,11 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                     /*approx_error_total +=
                                         std::max(std::max(exact_core, approx_core), (uintE) 1);*/
                                 }
-                                if (cur_error == 101) {
+                                if (exact_core == 101) {
                                     std::cout << "101 Cur Error: " << exact_core << ", " << approx_core << std::endl;
                                 }
+                                if (exact_core == UINT_E_MAX)
+                                    cur_error = 1;
                                 error_seq[thread_i].push_back(cur_error);
                         }
                         retry = false;
@@ -1589,6 +1616,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                 /*if (cur_error == 101) {
                                     std::cout << "101 Cur Error: " << exact_core << ", " << approx_core << std::endl;
                                 }*/
+                                if (exact_core == UINT_E_MAX)
+                                    cur_error = 1;
                                 error_seq[thread_i].push_back(cur_error);
                             }
 
@@ -1711,6 +1740,57 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         if (get_size) {
             auto size = layers.get_size();
             std::cout << "### Size: " << size << std::endl;
+        }
+
+        if (compare_exact) {
+            auto graph = dynamic_edge_list_to_symmetric_graph(batch_edge_list, std::min(batch.size(),
+                        i + batch_size));
+
+            // Run kcore on graph
+            auto cores = KCore(graph, 16);
+
+            auto max_core = parlay::reduce(cores, parlay::maxm<uintE>());
+            std::cout << "### Coreness Exact: " << max_core << std::endl;
+
+            // Compare cores[v] to layers.core(v)
+            auto approximation_error = parlay::delayed_seq<float>(batch_edge_list.max_vertex,
+                    [&] (size_t j) -> float {
+                auto exact_core = j >= graph.n ? 0 : cores[j];
+                auto approx_core = layers.core(j);
+                if (exact_core == 0 || approx_core == 0) {
+                    return 0;
+                }
+                return (exact_core > approx_core) ? (float) exact_core / (float) approx_core :
+                       (float) approx_core / (float) exact_core;
+            });
+
+            double mult_appx = (2 + 2*layers.eps);
+            float bad = parlay::reduce(parlay::delayed_seq<float>(batch_edge_list.max_vertex, [&](size_t j) -> float{
+                auto true_core = j >= graph.n ? 0 : cores[j];
+                auto appx_core = layers.core(j);
+                return (appx_core > (mult_appx * true_core)) + (appx_core < (true_core/mult_appx));
+            }), parlay::addm<float>());
+
+            // Output min, max, and average error
+            float sum_error = parlay::reduce(approximation_error, parlay::addm<float>());
+            float max_error = parlay::reduce(approximation_error, parlay::maxm<float>());
+            float min_error = parlay::reduce(approximation_error,
+              parlay::make_monoid([](float l, float r){
+                if (l == 0) return r;
+                if (r == 0) return l;
+                return std::min(r, l);
+            }, (float) 0));
+            float denominator = parlay::reduce(parlay::delayed_seq<float>(batch_edge_list.max_vertex,
+                        [&] (size_t j) -> float{
+                auto exact_core = j >= graph.n ? 0 : cores[j];
+                auto approx_core = layers.core(j);
+                return (exact_core != 0) && (approx_core != 0);
+            }), parlay::addm<float>());
+            auto avg_error = (denominator == 0) ? 0 : sum_error / denominator;
+            std::cout << "### Num Bad: " << bad << std::endl;
+            std::cout << "### Per Vertex Average Coreness Error: " << avg_error << std::endl; fflush(stdout);
+            std::cout << "### Per Vertex Min Coreness Error: " << min_error << std::endl; fflush(stdout);
+            std::cout << "### Per Vertex Max Coreness Error: " << max_error << std::endl; fflush(stdout);
         }
     }
 
