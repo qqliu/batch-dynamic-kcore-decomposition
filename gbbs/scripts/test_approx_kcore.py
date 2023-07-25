@@ -73,6 +73,8 @@ def main():
         num_workers = params.copy()
       elif line.startswith("Deltas"):
         epss = params.copy()
+      elif line.startswith("Percentile"):
+        percentiles = params.copy()
       elif line.startswith("Initial Graph File"):
         initial_graphs = params.copy()
       elif line.startswith("Lambdas"):
@@ -86,6 +88,11 @@ def main():
           stats = "-stats"
         else:
           stats = ""
+      elif line.startswith("Nonlinearizable"):
+        if split[1] == "True":
+          nonlin = "-nonlin"
+        else:
+          nonlin = ""
       elif line.startswith("Num Reader Threads"):
           num_reader_threads = params.copy()
       elif line.startswith("Output sizes"):
@@ -104,8 +111,8 @@ def main():
   for program in programs:
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
-    sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
-    sub.wait()
+    #sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
+    #sub.wait()
   for file_idx, filename in enumerate(files):
     for program_idx, program in enumerate(programs):
       for e in epss:
@@ -114,15 +121,17 @@ def main():
             for b in batch_sizes:
               for nw in num_workers:
                   for nt in num_reader_threads:
+                      for percent in percentiles:
                         num_rounds = 1
                         out_path_components = [program_pres[program_idx], filename, e,
-                            d, b, nw, divisor, nt, ".out"]
+                            d, b, nw, divisor, nt, percent, nonlin, ".out"]
                         out_filename = os.path.join(write_dir, "_".join(out_path_components))
                         program_path = os.path.join(program_dir, program)
                         ss = (program_path + " "
                         "-s -i " + read_dir + filename + " -eps " + e + " "
                         "-delta " + d + " -b " + b + " " + "-readers " + nt + " "
-                        + stats + " " + size + " " +
+                        + stats + " " + nonlin + " " + size + " "
+                        + "-percentile " + str(percent) + " " +
                         opt + " -opt "  + str(divisor) + " " +
                         "-rounds " + str(num_rounds))
                         if len(initial_graphs) > file_idx and len(initial_graphs[file_idx]) > 0:

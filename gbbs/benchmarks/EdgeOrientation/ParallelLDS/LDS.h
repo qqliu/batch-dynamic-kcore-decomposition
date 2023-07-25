@@ -1785,26 +1785,29 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
         parallel_for(0, latency_seq[t_i].size(), [&] (size_t j){
             latencies[cur_count + j] = latency_seq[t_i][j];
-            errors[cur_count + j] = error_seq[t_i][j];
+            if (compare_exact)
+                errors[cur_count + j] = error_seq[t_i][j];
         });
 
         cur_count += latency_seq[t_i].size();
     }
 
-    auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
-        return error != UINT_E_MAX;
-    });
+    if (compare_exact) {
+        auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
+            return error != UINT_E_MAX;
+        });
+        auto max_error = pbbslib::reduce_max(non_zero_errors);
+        auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
+        std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
+        std::cout << "### Max Error: " << max_error << std::endl;
+    }
 
     if (num_reader_threads > 0) {
         parlay::sort_inplace(parlay::make_slice(latencies));
         size_t index_percentile = floor(percentile * latencies.size());
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
-        auto max_error = pbbslib::reduce_max(non_zero_errors);
-        auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
 
         std::cout << "### Main Counter: " << main_counter << std::endl;
-        std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
-        std::cout << "### Max Error: " << max_error << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
