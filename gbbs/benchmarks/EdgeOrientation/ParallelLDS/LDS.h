@@ -249,6 +249,9 @@ struct LDS {
         up_degree = upper_constant * group_degree(group, eps);
       else
         up_degree = 1.1 * group_degree(group, eps);
+
+      if (level == 0)
+          up_degree = 1;
       return up.num_elms() <= up_degree;
     }
 
@@ -286,6 +289,7 @@ struct LDS {
   size_t n;  // number of vertices
   size_t levels_per_group;  // number of inner-levels per group,  O(\log n) many.
   parlay::sequence<LDSVertex> L_seq;
+  parlay::sequence<LDSVertex> degree_seq;
   LDSVertex* L;
   parlay::sequence<descriptor> descriptor_array; // keep a descriptor for every node in the graph
 
@@ -1441,7 +1445,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             (size_t) ceil(batch.size()/(batch_size * 1.0)), layers.n);
 
     if (compare_exact) {
-        for (size_t batch_i = 0; batch_i < batch.size(); batch_i += batch_size) {
+        for (size_t batch_i = offset; batch_i < batch.size(); batch_i += batch_size) {
             auto graph = dynamic_edge_list_to_symmetric_graph(batch_edge_list,
                     std::min(batch.size(), batch_i + batch_size));
 
@@ -1452,15 +1456,11 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             std::cout << "### Coreness Exact: " << max_core << std::endl;
 
             parallel_for (0, layers.n, [&] (size_t cur_node_index) {
-                auto b = (size_t) floor(batch_i/(batch_size * 1.0));
+                auto b = (size_t) floor((batch_i - offset)/(batch_size * 1.0));
                 if (cur_node_index >= cores.size())
                     ground_truth_container.ground_truth[b][cur_node_index] = UINT_E_MAX;
-                if (cur_node_index == 425956) {
-                    std::cout << "WHY DOES THE CORE EQUAL THE INDEX???? " << layers.n
-                        << ", " << cores.size() << std::endl;
-                }
-                if (cores[cur_node_index] == 425956)
-                    std::cout << "NOOOOOOOOOOOO!" << std::endl;
+                else
+                    ground_truth_container.ground_truth[b][cur_node_index] = cores[cur_node_index];
             });
         }
     }
@@ -1495,7 +1495,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             std::cout << "Thread " << thread_i << " is running" << std::endl;
             size_t my_counter = 0;
 
-            //float approx_error_total = 0.0;
             std::vector<double> all_latency;
 
             rng.fork(thread_i);
@@ -1507,8 +1506,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 auto retry = true;
                 if (nonlinearizable) {
                     retry = false;
+                    auto cur_level = layers.L[random_vertex].level;
+
                     auto approx_core =
-                        layers.get_core_from_level(layers.L[random_vertex].level);
+                        layers.get_core_from_level(cur_level);
                     auto old_level = layers.L[random_vertex].level;
                     auto old_batch = layers.batch_num;
                     if (compare_exact) {
@@ -1522,26 +1523,15 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                             cur_error = (exact_core > approx_core) ?
                                 (float) exact_core / (float) approx_core :
                                 (float) approx_core / (float) exact_core;
-                            //approx_error_total += (exact_core > approx_core) ?
-                            //(float) exact_core / (float) approx_core :
-                            //(float) approx_core / (float) exact_core;
                         } else {
-                            /*approx_error_total +=
-                            std::max(std::max(exact_core, approx_core), (uintE) 1);*/
                             cur_error =
                                 std::max(std::max(exact_core, approx_core), (uintE) 1);
                         }
 
-                        if (cur_error > 1000) {
-                            std::cout << "Large Cur Error: " << cur_error << ", " << exact_core
-                                << ", " << approx_core << std::endl;
-                            std::cout << "Random vertex, old batch, new batch, old level, new level: "
-                                << random_vertex << ", " << old_batch << ", " << new_batch
-                                << ", " << old_level << ", "
-                                << new_level << std::endl;
-                        }
-                        if (exact_core == UINT_E_MAX)
-                            cur_error = 1;
+                        if (exact_core == UINT_E_MAX || exact_core == 0 ||
+                                approx_core == 0)
+                            cur_error = UINT_E_MAX;
+
                         error_seq[thread_i].push_back(cur_error);
                     }
                 }
@@ -1558,9 +1548,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         continue;
 
                     if (root != UINT_E_MAX) {
+                        auto cur_old_level = layers.descriptor_array[random_vertex].old_level;
                         auto approx_core =
-                            layers.get_core_from_level(
-                                    layers.descriptor_array[random_vertex].old_level);
+                            layers.get_core_from_level(cur_old_level);
 
                         size_t old_batch = (size_t) 0;
                         if (b1 > 0)
@@ -1574,20 +1564,14 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         (float) exact_core / (float) approx_core :
                                         (float) approx_core / (float) exact_core;
 
-                                    /*approx_error_total += (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;*/
                                 } else {
                                     cur_error =
                                         std::max(std::max(exact_core, approx_core), (uintE) 1);
-                                    /*approx_error_total +=
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);*/
                                 }
-                                if (exact_core == 101) {
-                                    std::cout << "101 Cur Error: " << exact_core << ", " << approx_core << std::endl;
-                                }
-                                if (exact_core == UINT_E_MAX)
-                                    cur_error = 1;
+                                if (exact_core == UINT_E_MAX || exact_core == 0
+                                        || approx_core == 0 || b1 == 0
+                                        || cur_old_level == 0)
+                                    cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
                         }
                         retry = false;
@@ -1604,20 +1588,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         (float) exact_core / (float) approx_core :
                                         (float) approx_core / (float) exact_core;
 
-                                    /*approx_error_total += (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;*/
                                 } else {
                                     cur_error =
                                         std::max(std::max(exact_core, approx_core), (uintE) 1);
-                                    /*approx_error_total +=
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);*/
                                 }
-                                /*if (cur_error == 101) {
-                                    std::cout << "101 Cur Error: " << exact_core << ", " << approx_core << std::endl;
-                                }*/
-                                if (exact_core == UINT_E_MAX)
-                                    cur_error = 1;
+                                if (exact_core == UINT_E_MAX || exact_core == 0
+                                        || approx_core == 0 || l1 == 0)
+                                    cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
                             }
 
@@ -1630,14 +1607,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 all_latency.push_back(read_latency);
                 my_counter++;
             }
-
-            /*if (my_counter > 0) {
-                error_seq[thread_i] = (double) approx_error_total;
-                //error_seq[thread_i] = (double) average_error; //, std::memory_order_release);
-            }
-            else {
-                error_seq[thread_i] = (double) 1000000; //, std::memory_order_release);
-            }*/
 
             latency_seq[thread_i] = all_latency;
             counter_seq[thread_i].store(my_counter, std::memory_order_release);
@@ -1734,7 +1703,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         std::cout << "### Number Deletion Flips: " << num_deletion_flips << std::endl;
         std::cout << "### Max Outdegree: " << max_degree << std::endl;
 
-        if (layers.batch_num * batch_size <= batch.size() - batch_size - 2)
+        if (layers.batch_num * batch_size + offset <= batch.size() - batch_size - 2)
             layers.batch_num++;
 
         if (get_size) {
@@ -1743,7 +1712,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         }
 
         if (compare_exact) {
-            auto graph = dynamic_edge_list_to_symmetric_graph(batch_edge_list, std::min(batch.size(),
+            auto graph = dynamic_edge_list_to_symmetric_graph(batch_edge_list,
+                    std::min(batch.size(),
                         i + batch_size));
 
             // Run kcore on graph
@@ -1802,11 +1772,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     std::cout << "### Total Time: " << overall_time << std::endl;
-    //double total_error = 0;
     size_t latency_sequence_size = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
         main_counter += counter_seq[t_i].load(std::memory_order_acquire);
-        //total_error += error_seq[t_i].load(std::memory_order_acquire);
         latency_sequence_size += latency_seq[t_i].size();
     }
 
@@ -1823,15 +1791,19 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         cur_count += latency_seq[t_i].size();
     }
 
+    auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
+        return error != UINT_E_MAX;
+    });
+
     if (num_reader_threads > 0) {
         parlay::sort_inplace(parlay::make_slice(latencies));
         size_t index_percentile = floor(percentile * latencies.size());
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
-        auto max_error = pbbslib::reduce_max(errors);
-        auto total_error = parlay::scan_inplace(parlay::make_slice(errors));
+        auto max_error = pbbslib::reduce_max(non_zero_errors);
+        auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
 
         std::cout << "### Main Counter: " << main_counter << std::endl;
-        std::cout << "### Average Error: " << total_error/main_counter << std::endl;
+        std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
         std::cout << "### Max Error: " << max_error << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
@@ -1846,7 +1818,6 @@ inline void RunLDS(Graph& G, BatchDynamicEdges<W> batch_edge_list, long batch_si
         bool compare_exact, double eps, double delta, bool optimized_insertion,
         size_t offset, bool get_size, size_t optimized_all, size_t num_reader_threads,
         bool nonlinearizable = false, double percentile = 0.9) {
-        //uintE** core_ground_truth) {
     uintE max_vertex = std::max(uintE{G.n}, batch_edge_list.max_vertex);
     auto layers = LDS(max_vertex, eps, delta, optimized_insertion, optimized_all);
     if (batch_edge_list.max_vertex > 0)
