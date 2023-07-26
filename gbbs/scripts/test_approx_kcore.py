@@ -122,9 +122,9 @@ def main():
               for nw in num_workers:
                   for nt in num_reader_threads:
                       for percent in percentiles:
-                        num_rounds = 1
+                        num_rounds = 11
                         out_path_components = [program_pres[program_idx], filename, e,
-                            d, b, nw, divisor, nt, percent, nonlin, ".out"]
+                            d, b, nw, divisor, nt, percent, nonlin, stats, ".out"]
                         out_filename = os.path.join(write_dir, "_".join(out_path_components))
                         program_path = os.path.join(program_dir, program)
                         ss = (program_path + " "
