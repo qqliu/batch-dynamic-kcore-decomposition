@@ -1465,8 +1465,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         }
     }
 
-    parlay::random rng = parlay::random(time(0));
-
     std::cout << "Barrier is initializing" << std::endl;
     volatile struct {
         volatile uint64_t flag = 0;
@@ -1497,11 +1495,14 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
             std::vector<double> all_latency;
 
+            parlay::random rng = parlay::random(time(0));
+
             rng.fork(thread_i);
             while (stop.flag == 0) {
-                timer read_timer; read_timer.start();
                 auto random_vertex = rng.rand() % layers.n;
                 rng = rng.next();
+
+                timer read_timer; read_timer.start();
 
                 auto retry = true;
                 if (nonlinearizable) {
