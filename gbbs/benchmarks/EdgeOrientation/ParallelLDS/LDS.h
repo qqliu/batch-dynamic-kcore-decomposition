@@ -1485,12 +1485,17 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     barrier_init(sync_point_end, num_reader_threads + 1);
 
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
-        read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
-                &layers, &rng, &stop, &counter_seq, &ground_truth_container, &compare_exact,
+        read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end, &read_thread_seq,
+                &layers, &stop, &counter_seq, &ground_truth_container, &compare_exact,
                 &error_seq, &nonlinearizable, &latency_seq, thread_i] {
             std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
             std::cout << "Thread " << thread_i << " is running" << std::endl;
+            cpu_set_t cpuset;
+            CPU_ZERO(&cpuset);
+            CPU_SET(thread_i, &cpuset);
+            pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(), sizeof(cpu_set_t), &cpuset);
+
             size_t my_counter = 0;
 
             std::vector<double> all_latency;
@@ -1614,10 +1619,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
             barrier_cross(sync_point_end);
         });
-        cpu_set_t cpuset;
-        CPU_ZERO(&cpuset);
-        CPU_SET(thread_i, &cpuset);
-        pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(), sizeof(cpu_set_t), &cpuset);
     }
 
     // First, insert / delete everything up to offset
