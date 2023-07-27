@@ -1516,7 +1516,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                     auto approx_core =
                         layers.get_core_from_level(cur_level);
-                    auto old_level = layers.L[random_vertex].level;
                     if (compare_exact) {
                         auto old_batch = layers.batch_num;
                         auto new_batch = layers.batch_num;
@@ -1524,10 +1523,12 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                             new_batch--;
 
                         uintE exact_core_lower = 0;
-                        if (old_batch > 0)
+                        if (new_batch > 0)
                             exact_core_lower =
                                 ground_truth_container.ground_truth[new_batch][random_vertex];
-                        auto new_level = layers.L[random_vertex].level;
+                        else
+                            exact_core_lower = 1;
+
                         uintE exact_core_upper =
                             ground_truth_container.ground_truth[old_batch][random_vertex];
 
@@ -1549,8 +1550,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                         if (cur_error_upper < UINT_E_MAX || cur_error_lower < UINT_E_MAX)
                             cur_error = std::min((float) cur_error_upper, (float) cur_error_lower);
-
-                        if (exact_core_upper == UINT_E_MAX && exact_core_lower == UINT_E_MAX)
+                        else
                             cur_error = UINT_E_MAX;
 
                         error_seq[thread_i].push_back(cur_error);
@@ -1826,7 +1826,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     if (compare_exact) {
         auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
-            return error != UINT_E_MAX;
+            return (uintE) error <= UINT_E_MAX/2.0;
         });
         auto max_error = pbbslib::reduce_max(non_zero_errors);
         auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
