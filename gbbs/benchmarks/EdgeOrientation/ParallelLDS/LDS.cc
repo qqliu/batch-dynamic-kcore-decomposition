@@ -56,6 +56,7 @@ double LDS_runner(Graph& G, commandLine P) {
   double percentile = P.getOptionDoubleValue("-percentile", 0.9);
   size_t optimized_all = P.getOptionIntValue("-opt", 1);
   size_t reader_threads = P.getOptionIntValue("-readers", 1);
+  size_t max_reads = P.getOptionIntValue("-max_reads", 1000000);
 
   // Option for starting with a non-empty graph
   const char* const init_graph_file(P.getOptionValue("-init_graph_file"));
@@ -102,9 +103,10 @@ double LDS_runner(Graph& G, commandLine P) {
   uintE node_cores[1][1];
   timer t; t.start();
   uintE* startRows[1] = {node_cores[0]};
+  std::cout << "Max reads: " << max_reads << std::endl;
   RunLDS(G, batch_edge_list, batch_size, compare_exact, eps, delta,
           optimized_insertion, offset, get_size, optimized_all, reader_threads, nonlinearizable,
-          percentile);
+          percentile, max_reads);
   double tt = t.stop();
 
   std::cout << "### Running Time: " << tt << std::endl;

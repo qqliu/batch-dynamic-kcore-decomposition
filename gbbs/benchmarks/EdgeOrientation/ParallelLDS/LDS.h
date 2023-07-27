@@ -40,16 +40,6 @@ struct LDS {
   using up_neighbors = levelset;
   using edge_type = std::pair<uintE, uintE>;
 
-  // The descriptor contains the parent for our dependency DAG and the old level
-  struct descriptor {
-    uintE root;
-    uintE old_level;
-
-    descriptor(): root(UINT_E_MAX), old_level(UINT_E_MAX) {}
-
-    descriptor(uintE r, uintE ol): root(r), old_level(ol) {}
-  };
-
   struct LDSVertex {
     uintE level;         // The level of this vertex.
     uintE desire_level;  // The desire level of this vertex (set only when moving this vertex).
@@ -291,7 +281,6 @@ struct LDS {
   parlay::sequence<LDSVertex> L_seq;
   parlay::sequence<LDSVertex> degree_seq;
   LDSVertex* L;
-  parlay::sequence<descriptor> descriptor_array; // keep a descriptor for every node in the graph
 
   LDS(size_t _n, bool _optimized_insertion, size_t _optimize_all) : n(_n),
     optimized_insertion(_optimized_insertion) {
@@ -303,7 +292,6 @@ struct LDS {
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(n);
     L = L_seq.begin();
-    descriptor_array = parlay::sequence<descriptor>(_n);
   }
 
   LDS(size_t _n, double _eps, double _delta, bool _optimized_insertion,
@@ -320,7 +308,6 @@ struct LDS {
         levels_per_group = ceil(log(n) / log(OnePlusEps));
     L_seq = parlay::sequence<LDSVertex>(_n);
     L = L_seq.begin();
-    descriptor_array = parlay::sequence<descriptor>(_n);
   }
 
   uintE get_level(uintE ngh) {
@@ -342,59 +329,6 @@ struct LDS {
       }
       return L[v].up.contains(u);
     }
-  }
-
-  // Find the root of the dependency DAG for a node
-  inline uintE find_compress(uintE cur_node, descriptor* parents) {
-    uintE j = cur_node;
-
-    // Stop if the parent node is the same as the current node or if it is unmarked
-    if (parents[j].root == j || parents[j].root == UINT_E_MAX)
-        return parents[j].root;
-
-    // Otherwise, continue looking for the root
-    while (j != UINT_E_MAX && parents[j].root != j) {
-        j = parents[j].root;
-    }
-
-    // Do path compression up to the root
-    uintE tmp = parents[cur_node].root;
-    while (cur_node != UINT_E_MAX && tmp != UINT_E_MAX && (tmp > j || j == UINT_E_MAX)) {
-            parents[cur_node].root = j;
-            cur_node = tmp;
-            tmp = parents[cur_node].root;
-    }
-
-    if (tmp == UINT_E_MAX)
-        j = UINT_E_MAX;
-    return j;
-  }
-
-  // Merging two dependency trees
-  inline bool unite_impl(uintE u_orig, uintE v_orig, descriptor* parents) {
-        auto u = u_orig;
-        auto v = v_orig;
-
-        u = find_compress(u, parents);
-        v = find_compress(v, parents);
-
-        while (u != v && u != UINT_E_MAX && v != UINT_E_MAX) {
-                u = find_compress(u, parents);
-                v = find_compress(v, parents);
-
-                if (u == UINT_E_MAX || v == UINT_E_MAX)
-                    return false;
-
-                if (u > v && parents[u].root == u
-                    && pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)) {
-                        return true;
-                } else if (v > u && parents[v].root == v
-                    && pbbslib::atomic_compare_and_swap(&parents[v].root, v, u)) {
-                        return true;
-                }
-        }
-
-        return false;
   }
 
   // Invariant checking for an edge e that we expect to exist
@@ -444,32 +378,6 @@ struct LDS {
     });
 
     if (dirty.size() == 0) return;
-
-    if  (initialize_roots) {
-        parallel_for(0, dirty.size(), [&](size_t i) {
-            if (descriptor_array[dirty[i].second].root == UINT_E_MAX)
-                descriptor_array[dirty[i].second].root = dirty[i].second;
-            descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
-        });
-    }
-
-    parallel_for(0, dirty.size(), [&] (size_t i){
-        auto v = dirty[i].second;
-        descriptor_array[v].old_level = L[v].level;
-        if (descriptor_array[v].root == UINT_E_MAX)
-            descriptor_array[v].root = v;
-        else {
-            for (size_t j = 0; j < L[v].down.size(); j++) {
-                auto cur_neighbors = L[v].down[j].entries();
-                for (size_t k = 0; k < cur_neighbors.size(); k++) {
-                    if (cur_neighbors[k] != UINT_E_MAX) {
-                        unite_impl((uintE) v, (uintE) cur_neighbors[k],
-                                descriptor_array.begin());
-                    }
-                }
-            }
-        }
-    });
 
     // Compute the removals from previous desire_levels
     auto previous_desire_levels = parlay::delayed_seq<level_and_vtx>(dirty.size(), [&] (size_t i){
@@ -565,26 +473,6 @@ struct LDS {
 
     auto dirty = parlay::filter(level_and_vtx_seq, [&] (const level_and_vtx& lv) {
       return lv.first != UINT_E_MAX;
-    });
-
-    if  (initialize_roots) {
-        parallel_for(0, dirty.size(), [&](size_t i) {
-            if (descriptor_array[dirty[i].second].root == UINT_E_MAX)
-                descriptor_array[dirty[i].second].root = dirty[i].second;
-            descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
-        });
-    }
-
-    parallel_for(0, dirty.size(), [&] (size_t i) {
-        auto v = dirty[i].second;
-        descriptor_array[v].old_level = L[v].level;
-        auto my_up_neighbors = L[v].up.entries();
-
-        // do merging the dependency trees using
-        // compare and swap for all up neighbors until it succeeds for every pair
-        parallel_for(0, my_up_neighbors.size(), [&] (size_t j) {
-            unite_impl((uintE) v, (uintE) my_up_neighbors[j], descriptor_array.begin());
-        });
     });
 
     if (dirty.size() == 0) return;
@@ -831,14 +719,6 @@ struct LDS {
         // Get up neighbors.
         auto my_up_neighbors = L[u].up.entries();
 
-        // parallel for loop for the merge using compare and swap with all dependency DAGs of
-        // pairs of up neighbors
-        parallel_for (0, my_up_neighbors.size(), [&] (size_t i) {
-            unite_impl(u, my_up_neighbors[i], descriptor_array.begin());
-        });
-
-        descriptor_array[u].old_level = L[u].level;
-
         uintE dl_u = L[u].desire_level;
         assert(dl_u != UINT_E_MAX);
         assert(dl_u > l_u);
@@ -1055,24 +935,6 @@ struct LDS {
         }
       });
 
-      // Update descriptors of every node in nodes_to_move
-      parallel_for(0, nodes_to_move.size(), [&] (size_t cur_node_to_move){
-        descriptor_array[cur_node_to_move].old_level = L[cur_node_to_move].level;
-        if (descriptor_array[cur_node_to_move].root == UINT_E_MAX)
-            descriptor_array[cur_node_to_move].root = cur_node_to_move;
-        else {
-            for (size_t down_level = 0; down_level < L[cur_node_to_move].down.size(); down_level++) {
-                auto cur_neighbors = L[cur_node_to_move].down[down_level].entries();
-                for (size_t neighbor_index = 0; neighbor_index < cur_neighbors.size(); neighbor_index++) {
-                    if (cur_neighbors[neighbor_index] != UINT_E_MAX) {
-                        unite_impl((uintE) cur_node_to_move,
-                                (uintE) cur_neighbors[neighbor_index], descriptor_array.begin());
-                    }
-                }
-            }
-        }
-      });
-
       // Move vertices in nodes_to_move to cur_level. Update the data structures
       // of each moved vertex and neighbors in flipped.
       //
@@ -1246,17 +1108,6 @@ struct LDS {
     // Update the level structure (basically a sparse bucketing structure).
     size_t total_moved = rebalance_insertions(std::move(levels), 0);
 
-    parallel_for(0, n, [&] (size_t i) {
-        if (descriptor_array[i].root == i) {
-            descriptor_array[i].root = UINT_E_MAX;
-            descriptor_array[i].old_level = UINT_E_MAX;
-        }
-    });
-
-    parallel_for(0, n, [&] (size_t i) {
-        descriptor_array[i].root = UINT_E_MAX;
-        descriptor_array[i].old_level = UINT_E_MAX;
-    });
     return total_moved;
   }
 
@@ -1436,36 +1287,12 @@ static inline void barrier_cross(barrier_t *b) {
 template <class W>
 inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool compare_exact,
         LDS& layers, bool optimized_insertion, size_t offset, bool get_size,
-        size_t num_reader_threads, bool nonlinearizable, double percentile) {
+        size_t num_reader_threads, bool nonlinearizable, double percentile,
+        size_t max_reads) {
     auto batch = batch_edge_list.edges;
     size_t num_insertion_flips = 0;
     size_t num_deletion_flips = 0;
     size_t max_degree = 0;
-    auto ground_truth_container = ground_truth_struct(
-            (size_t) ceil(batch.size()/(batch_size * 1.0)), layers.n);
-
-    if (compare_exact) {
-        for (size_t batch_i = offset; batch_i < batch.size(); batch_i += batch_size) {
-            auto graph = dynamic_edge_list_to_symmetric_graph(batch_edge_list,
-                    std::min(batch.size(), batch_i + batch_size));
-
-            // Run kcore on graph
-            auto cores = KCore(graph, 16);
-
-            auto max_core = parlay::reduce(cores, parlay::maxm<uintE>());
-            std::cout << "### Coreness Exact: " << max_core << std::endl;
-
-            parallel_for (0, layers.n, [&] (size_t cur_node_index) {
-                auto b = (size_t) floor((batch_i - offset)/(batch_size * 1.0));
-                if (cur_node_index >= cores.size())
-                    ground_truth_container.ground_truth[b][cur_node_index] = UINT_E_MAX;
-                else
-                    ground_truth_container.ground_truth[b][cur_node_index] = cores[cur_node_index];
-            });
-        }
-    }
-
-    parlay::random rng = parlay::random(time(0));
 
     std::cout << "Barrier is initializing" << std::endl;
     volatile struct {
@@ -1473,9 +1300,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         char padding[64 - sizeof(uint64_t)];
     } stop;
 
-    std::atomic<uintE> counter_seq[num_reader_threads];
-    gbbs::sequence<std::vector<double>> error_seq
-        = gbbs::sequence<std::vector<double>>(num_reader_threads);
     gbbs::sequence<std::vector<double>> latency_seq
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
     std::thread read_thread_seq[num_reader_threads];
@@ -1488,135 +1312,41 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
-                &layers, &rng, &stop, &counter_seq, &ground_truth_container, &compare_exact,
-                &error_seq, &nonlinearizable, &latency_seq, thread_i] {
-            std::cout << "Thread " << thread_i << " is waiting" << std::endl;
+                &layers, &read_thread_seq, &latency_seq, &max_reads, thread_i] {
+            cpu_set_t cpuset;
+            CPU_ZERO(&cpuset);
+            CPU_SET(thread_i, &cpuset);
+            pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(),
+                    sizeof(cpu_set_t), &cpuset);
+
             barrier_cross(sync_point);
-            std::cout << "Thread " << thread_i << " is running" << std::endl;
             size_t my_counter = 0;
 
-            std::vector<double> all_latency;
+            std::vector<double> all_latency_prefix;
 
-            rng.fork(thread_i);
-            while (stop.flag == 0) {
-                timer read_timer; read_timer.start();
-                auto random_vertex = rng.rand() % layers.n;
-                rng = rng.next();
+            double total_time = 0.0;
 
-                auto retry = true;
-                if (nonlinearizable) {
-                    retry = false;
-                    auto cur_level = layers.L[random_vertex].level;
-
-                    auto approx_core =
-                        layers.get_core_from_level(cur_level);
-                    auto old_level = layers.L[random_vertex].level;
-                    auto old_batch = layers.batch_num;
-                    if (compare_exact) {
-                        auto new_batch = layers.batch_num;
-                        uintE exact_core =
-                            ground_truth_container.ground_truth[new_batch][random_vertex];
-                        auto new_level = layers.L[random_vertex].level;
-
-                        double cur_error = 0.0;
-                        if (exact_core > 0 && approx_core > 0) {
-                            cur_error = (exact_core > approx_core) ?
-                                (float) exact_core / (float) approx_core :
-                                (float) approx_core / (float) exact_core;
-                        } else {
-                            cur_error =
-                                std::max(std::max(exact_core, approx_core), (uintE) 1);
-                        }
-
-                        if (exact_core == UINT_E_MAX || exact_core == 0 ||
-                                approx_core == 0)
-                            cur_error = UINT_E_MAX;
-
-                        error_seq[thread_i].push_back(cur_error);
-                    }
-                }
-
-                while(retry && stop.flag == 0) {
-                    auto b1 = layers.batch_num;
-                    auto l1 = layers.L[random_vertex].level;
-
-                    auto root = layers.find_compress(random_vertex, layers.descriptor_array.begin());
-                    auto l2 = layers.L[random_vertex].level;
-                    auto b2 = layers.batch_num;
-
-                    if (b1 != b2)
-                        continue;
-
-                    if (root != UINT_E_MAX) {
-                        auto cur_old_level = layers.descriptor_array[random_vertex].old_level;
-                        auto approx_core =
-                            layers.get_core_from_level(cur_old_level);
-
-                        size_t old_batch = (size_t) 0;
-                        if (b1 > 0)
-                            old_batch = b1 - 1;
-
-                        if (compare_exact) {
-                                uintE exact_core = ground_truth_container.ground_truth[old_batch][random_vertex];
-                                double cur_error = 0.0;
-                                if (exact_core > 0 && approx_core > 0) {
-                                    cur_error = (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;
-
-                                } else {
-                                    cur_error =
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
-                                }
-                                if (exact_core == UINT_E_MAX || exact_core == 0
-                                        || approx_core == 0 || b1 == 0
-                                        || cur_old_level == 0)
-                                    cur_error = UINT_E_MAX;
-                                error_seq[thread_i].push_back(cur_error);
-                        }
-                        retry = false;
-                    }
-
-                    else {
-                        if (l1 == l2) {
-                            auto approx_core = layers.get_core_from_level(l1);
-                            if (compare_exact) {
-                                auto exact_core = ground_truth_container.ground_truth[b1][random_vertex];
-                                double cur_error = 0.0;
-                                if (exact_core > 0 && approx_core > 0) {
-                                    cur_error = (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;
-
-                                } else {
-                                    cur_error =
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
-                                }
-                                if (exact_core == UINT_E_MAX || exact_core == 0
-                                        || approx_core == 0 || l1 == 0)
-                                    cur_error = UINT_E_MAX;
-                                error_seq[thread_i].push_back(cur_error);
-                            }
-
-                            retry = false;
-                        } else
-                            continue;
-                    }
-                }
-                double read_latency = read_timer.stop();
-                all_latency.push_back(read_latency);
+            timer read_timer;
+            while (my_counter < max_reads) {
+                read_timer.start();
+                total_time += read_timer.stop();
+                all_latency_prefix.push_back(total_time);
                 my_counter++;
             }
 
+            std::vector<double> all_latency;
+
+            double max_time = 0;
+            for (size_t i = 0; i < max_reads; i++) {
+                all_latency.push_back(total_time - all_latency_prefix[i]);
+                if (total_time - all_latency_prefix[i] > max_time)
+                    max_time = total_time - all_latency_prefix[i];
+            }
+
             latency_seq[thread_i] = all_latency;
-            counter_seq[thread_i].store(my_counter, std::memory_order_release);
 
             barrier_cross(sync_point_end);
         });
-        cpu_set_t cpuset;
-        CPU_ZERO(&cpuset);
-        CPU_SET(thread_i, &cpuset);
-        pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(), sizeof(cpu_set_t), &cpuset);
     }
 
     // First, insert / delete everything up to offset
@@ -1648,7 +1378,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         }
     }
 
-    stop.flag = 0;
     std::cout << "Main thread batch is waiting" << std::endl;
     timer overall_timer; overall_timer.start();
     barrier_cross(sync_point);
@@ -1764,7 +1493,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         }
     }
 
-    stop.flag = 1;
     double overall_time = overall_timer.stop();
     barrier_cross(sync_point_end);
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
@@ -1772,46 +1500,28 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     std::cout << "### Total Time: " << overall_time << std::endl;
-    size_t latency_sequence_size = 0;
-    for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        main_counter += counter_seq[t_i].load(std::memory_order_acquire);
-        latency_sequence_size += latency_seq[t_i].size();
-    }
 
-    gbbs::sequence<double> latencies = gbbs::sequence<double>(latency_sequence_size, 0);
-    gbbs::sequence<double> errors = gbbs::sequence<double>(latency_sequence_size, 0);
+    gbbs::sequence<double> latencies = gbbs::sequence<double>(
+            num_reader_threads * max_reads, 0);
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        parallel_for(0, latency_seq[t_i].size(), [&] (size_t j){
+        for(size_t j = 0; j < max_reads; j++) {
             latencies[cur_count + j] = latency_seq[t_i][j];
-            if (compare_exact)
-                errors[cur_count + j] = error_seq[t_i][j];
-        });
+        }
 
         cur_count += latency_seq[t_i].size();
-    }
-
-    if (compare_exact) {
-        auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
-            return error != UINT_E_MAX;
-        });
-        auto max_error = pbbslib::reduce_max(non_zero_errors);
-        auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
-        std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
-        std::cout << "### Max Error: " << max_error << std::endl;
     }
 
     if (num_reader_threads > 0) {
         parlay::sort_inplace(parlay::make_slice(latencies));
         size_t index_percentile = floor(percentile * latencies.size());
-        auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
 
-        std::cout << "### Main Counter: " << main_counter << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
-        std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
             << latencies[index_percentile] << std::endl;
+
+        auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
         std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
     }
 }
@@ -1820,12 +1530,12 @@ template <class Graph, class W>
 inline void RunLDS(Graph& G, BatchDynamicEdges<W> batch_edge_list, long batch_size,
         bool compare_exact, double eps, double delta, bool optimized_insertion,
         size_t offset, bool get_size, size_t optimized_all, size_t num_reader_threads,
-        bool nonlinearizable = false, double percentile = 0.9) {
+        bool nonlinearizable = false, double percentile = 0.9, size_t max_reads=1000000) {
     uintE max_vertex = std::max(uintE{G.n}, batch_edge_list.max_vertex);
     auto layers = LDS(max_vertex, eps, delta, optimized_insertion, optimized_all);
     if (batch_edge_list.max_vertex > 0)
         RunLDS(batch_edge_list, batch_size, compare_exact, layers, optimized_insertion,
-                offset, get_size, num_reader_threads, nonlinearizable, percentile);
+                offset, get_size, num_reader_threads, nonlinearizable, percentile, max_reads);
 }
 
 }  // namespace gbbs
