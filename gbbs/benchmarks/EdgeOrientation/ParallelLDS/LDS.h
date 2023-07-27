@@ -1,5 +1,6 @@
 #include <unordered_set>
 #include <stack>
+#include <chrono>
 
 #include "gbbs/gbbs.h"
 #include "gbbs/dynamic_graph_io.h"
@@ -1219,12 +1220,105 @@ struct LDS {
   }
 };
 
+struct barrier_t {
+  pthread_cond_t complete;
+  pthread_mutex_t mutex;
+  int count;
+  int crossing;
+};
+
+static inline void barrier_init(barrier_t *b, int n) {
+    pthread_cond_init(&b->complete, NULL);
+    pthread_mutex_init(&b->mutex, NULL);
+    b->count = n;
+    b->crossing = 0;
+}
+
+static inline void barrier_cross(barrier_t *b) {
+    pthread_mutex_lock(&b->mutex);
+    /* One more thread through */
+    b->crossing++;
+    /* If not all here, wait */
+    if (b->crossing < b->count) {
+        pthread_cond_wait(&b->complete, &b->mutex);
+    } else {
+        pthread_cond_broadcast(&b->complete);
+        /* Reset for next time */
+        b->crossing = 0;
+    }
+    pthread_mutex_unlock(&b->mutex);
+}
+
 template <class W>
-inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool compare_exact, LDS& layers, bool optimized_insertion, size_t offset, bool get_size) {
+inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool compare_exact, LDS& layers, bool optimized_insertion, size_t offset, bool get_size, size_t num_reader_threads, size_t max_num_reads, double percentile) {
     auto batch = batch_edge_list.edges;
     size_t num_insertion_flips = 0;
     size_t num_deletion_flips = 0;
     size_t max_degree = 0;
+
+    std::cout << "Barrier is initializing" << std::endl;
+    volatile struct {
+        volatile uint64_t flag = 0;
+        char padding[64 - sizeof(uint64_t)];
+    } stop;
+
+    gbbs::sequence<std::vector<double>> timer_seq
+        = gbbs::sequence<std::vector<double>>(num_reader_threads, std::vector<double>(max_num_reads, 0));
+    std::thread read_thread_seq[num_reader_threads];
+
+    size_t main_counter = 0;
+    barrier_t* sync_point = new barrier_t();
+    barrier_t* sync_point_end = new barrier_t();
+    barrier_init(sync_point, num_reader_threads + 1);
+    barrier_init(sync_point_end, num_reader_threads + 1);
+    timer read_timer;
+
+    std::cout << "Threads are initializing" << std::endl;
+    for (size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
+        read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end, &thread_i,
+            &layers, &stop, &max_num_reads, &timer_seq, &read_timer] {
+
+            std::cout << "Thread " << thread_i << " is waiting" << std::endl;
+            barrier_cross(sync_point);
+            std::cout << "Thread " << thread_i << " is running" << std::endl;
+
+            /*if (thread_i > 9)
+                std::cout << "NOOOOOOOOO" << std::endl;
+            size_t my_counter = 0;
+
+            timer read_timer;
+            double add_durations[100000000];
+            read_timer.start();
+
+            while (my_counter < max_num_reads) {
+                add_durations[my_counter] = read_timer.stop();
+                read_timer.start();
+
+                my_counter++;
+            }
+
+            double last_time = read_timer.stop();
+            double total_so_far = 0.0;
+            double prefix_total[100000000];
+
+            for (size_t i = 0; i < max_num_reads; i++) {
+                total_so_far += add_durations[i];
+                prefix_total[i] = total_so_far;
+            }
+
+            for (size_t i = 0; i < max_num_reads; i++) {
+                timer_seq[thread_i][i] = total_so_far - prefix_total[i];
+            }*/
+            barrier_cross(sync_point_end);
+        });
+
+
+        cpu_set_t cpuset;
+        CPU_ZERO(&cpuset);
+        CPU_SET(thread_i, &cpuset);
+        pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(), sizeof(cpu_set_t), &cpuset);
+    }
+
     // First, insert / delete everything up to offset
     if (offset != 0) {
         for (size_t i = 0; i < offset; i += 1000000) {
@@ -1253,6 +1347,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             num_deletion_flips += layers.batch_deletion(batch_deletions);
         }
     }
+
+    std::cout << "Main thread batch is waiting" << std::endl;
+    barrier_cross(sync_point);
+    std::cout << "Main thread batch started" << std::endl;
 
     for (size_t i = offset; i < batch.size(); i += batch_size) {
         timer t; t.start();
@@ -1288,6 +1386,19 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         t.start();
         num_deletion_flips += layers.batch_deletion(batch_deletions);
 
+        barrier_cross(sync_point_end);
+        for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+            read_thread_seq[t_i].join();
+        }
+
+        gbbs::sequence<double> latencies = gbbs::sequence<double>(num_reader_threads * max_num_reads, 0);
+
+        parallel_for(0, i < num_reader_threads, [&] (size_t i){
+            parallel_for(0, max_num_reads, [&] (size_t j) {
+                latencies[i * max_num_reads + j] = timer_seq[i][j];
+            });
+        });
+
         max_degree = layers.max_degree();
 
         double deletion_time = t.stop();
@@ -1301,6 +1412,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         std::cout << "### Number Insertion Flips: " << num_insertion_flips << std::endl;
         std::cout << "### Number Deletion Flips: " << num_deletion_flips << std::endl;
         std::cout << "### Max Outdegree: " << max_degree << std::endl;
+
+        barrier_cross(sync_point_end);
+
         if (get_size) {
             auto size = layers.get_size();
             std::cout << "### Size: " << size << std::endl;
@@ -1355,16 +1469,28 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             std::cout << "### Per Vertex Min Coreness Error: " << min_error << std::endl; fflush(stdout);
             std::cout << "### Per Vertex Max Coreness Error: " << max_error << std::endl; fflush(stdout);
         }
+
+        if (num_reader_threads > 0) {
+            parlay::sort_inplace(parlay::make_slice(latencies));
+
+            size_t index_percentile = floor(percentile * latencies.size());
+            auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
+
+            std::cout << "### Latency Percentile " << percentile << ": "
+                            << latencies[index_percentile] << std::endl;
+            std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
+        }
     }
 }
 
 template <class Graph, class W>
 inline void RunLDS(Graph& G, BatchDynamicEdges<W> batch_edge_list, long batch_size,
         bool compare_exact, double eps, double delta, bool optimized_insertion,
-        size_t offset, bool get_size, size_t optimized_all) {
+        size_t offset, bool get_size, size_t optimized_all, size_t num_reader_threads, size_t max_reads,
+        double percentile = 0.9) {
     uintE max_vertex = std::max(uintE{G.n}, batch_edge_list.max_vertex);
     auto layers = LDS(max_vertex, eps, delta, optimized_insertion, optimized_all);
-    if (batch_edge_list.max_vertex > 0) RunLDS(batch_edge_list, batch_size, compare_exact, layers, optimized_insertion, offset, get_size);
+    if (batch_edge_list.max_vertex > 0) RunLDS(batch_edge_list, batch_size, compare_exact, layers, optimized_insertion, offset, get_size, num_reader_threads, max_reads, percentile);
 }
 
 }  // namespace gbbs
