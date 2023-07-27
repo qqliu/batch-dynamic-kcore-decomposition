@@ -1517,25 +1517,40 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     auto approx_core =
                         layers.get_core_from_level(cur_level);
                     auto old_level = layers.L[random_vertex].level;
-                    auto old_batch = layers.batch_num;
                     if (compare_exact) {
+                        auto old_batch = layers.batch_num;
                         auto new_batch = layers.batch_num;
-                        uintE exact_core =
-                            ground_truth_container.ground_truth[new_batch][random_vertex];
-                        auto new_level = layers.L[random_vertex].level;
+                        if (new_batch > 0)
+                            new_batch--;
 
-                        double cur_error = 0.0;
-                        if (exact_core > 0 && approx_core > 0) {
-                            cur_error = (exact_core > approx_core) ?
-                                (float) exact_core / (float) approx_core :
-                                (float) approx_core / (float) exact_core;
-                        } else {
-                            cur_error =
-                                std::max(std::max(exact_core, approx_core), (uintE) 1);
+                        uintE exact_core_lower = 0;
+                        if (old_batch > 0)
+                            exact_core_lower =
+                                ground_truth_container.ground_truth[new_batch][random_vertex];
+                        auto new_level = layers.L[random_vertex].level;
+                        uintE exact_core_upper =
+                            ground_truth_container.ground_truth[old_batch][random_vertex];
+
+                        float cur_error = UINT_E_MAX;
+                        float cur_error_upper = UINT_E_MAX;
+                        float cur_error_lower = UINT_E_MAX;
+
+                        if (exact_core_upper > 0 && approx_core > 0) {
+                            cur_error_upper = (exact_core_upper > approx_core) ?
+                                (float) exact_core_upper / (float) approx_core :
+                                (float) approx_core / (float) exact_core_upper;
                         }
 
-                        if (exact_core == UINT_E_MAX || exact_core == 0 ||
-                                approx_core == 0)
+                        if (exact_core_lower > 0 && approx_core > 0) {
+                            cur_error_lower = (exact_core_lower > approx_core) ?
+                                (float) exact_core_lower / (float) approx_core :
+                                (float) approx_core / (float) exact_core_lower;
+                        }
+
+                        if (cur_error_upper < UINT_E_MAX || cur_error_lower < UINT_E_MAX)
+                            cur_error = std::min((float) cur_error_upper, (float) cur_error_lower);
+
+                        if (exact_core_upper == UINT_E_MAX && exact_core_lower == UINT_E_MAX)
                             cur_error = UINT_E_MAX;
 
                         error_seq[thread_i].push_back(cur_error);
@@ -1587,18 +1602,33 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         if (l1 == l2) {
                             auto approx_core = layers.get_core_from_level(l1);
                             if (compare_exact) {
-                                auto exact_core = ground_truth_container.ground_truth[b1][random_vertex];
-                                double cur_error = 0.0;
-                                if (exact_core > 0 && approx_core > 0) {
-                                    cur_error = (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;
+                                auto exact_core_upper = ground_truth_container.ground_truth[b1][random_vertex];
+                                auto exact_core_lower = 0.0;
+                                if (b1 > 0)
+                                    exact_core_lower = ground_truth_container.ground_truth[b1-1][random_vertex];
 
-                                } else {
-                                    cur_error =
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
+                                double cur_error = UINT_E_MAX;
+                                double cur_error_upper = UINT_E_MAX;
+                                if (exact_core_upper > 0 && approx_core > 0) {
+                                    cur_error_upper = (exact_core_upper > approx_core) ?
+                                        (float) exact_core_upper / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_upper;
                                 }
-                                if (exact_core == UINT_E_MAX || exact_core == 0
+
+                                auto cur_error_lower = UINT_E_MAX;
+                                if (exact_core_lower > 0 && approx_core > 0) {
+                                    cur_error_lower = (exact_core_upper > approx_core) ?
+                                        (float) exact_core_lower / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_lower;
+                                }
+
+                                if (cur_error_upper > layers.OnePlusEps * layers.UpperConstant)
+                                    if (cur_error_upper < UINT_E_MAX || cur_error_lower < UINT_E_MAX)
+                                        cur_error = std::min((float) cur_error_upper, (float) cur_error_lower);
+                                else
+                                    cur_error = cur_error_upper;
+
+                                if (exact_core_upper == UINT_E_MAX || exact_core_upper == 0
                                         || approx_core == 0 || l1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
