@@ -1508,6 +1508,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 rng = rng.next();
 
                 timer read_timer; read_timer.start();
+                timer root_timer; root_timer.start();
+                timer if_timer; if_timer.start();
+                timer else_timer; else_timer.start();
+
+                double root_time;
+                double if_time;
+                double else_time;
 
                 auto retry = true;
                 if (nonlinearizable) {
@@ -1558,49 +1565,70 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 }
 
                 while(retry && stop.flag == 0) {
+                    root_timer.start();
+
                     auto b1 = layers.batch_num;
                     auto l1 = layers.L[random_vertex].level;
+                    auto old_level_1 = layers.descriptor_array[random_vertex].old_level;
 
                     auto root = layers.find_compress(random_vertex, layers.descriptor_array.begin());
                     auto l2 = layers.L[random_vertex].level;
+
+                    auto old_level_2 = layers.descriptor_array[random_vertex].old_level;
                     auto b2 = layers.batch_num;
 
                     if (b1 != b2)
                         continue;
 
+                    root_time = root_timer.stop();
                     if (root != UINT_E_MAX) {
-                        auto cur_old_level = layers.descriptor_array[random_vertex].old_level;
+                        if (old_level_1 != old_level_2)
+                            continue;
+                        if_timer.start();
+                        //auto cur_old_level = layers.descriptor_array[random_vertex].old_level;
                         auto approx_core =
-                            layers.get_core_from_level(cur_old_level);
+                            layers.get_core_from_level(old_level_1);
 
                         size_t old_batch = (size_t) 0;
                         if (b1 > 0)
                             old_batch = b1 - 1;
 
                         if (compare_exact) {
-                                uintE exact_core = ground_truth_container.ground_truth[old_batch][random_vertex];
-                                double cur_error = 0.0;
-                                if (exact_core > 0 && approx_core > 0) {
-                                    cur_error = (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;
+                                uintE exact_core_lower = ground_truth_container.ground_truth[old_batch][random_vertex];
+                                uintE exact_core_upper = ground_truth_container.ground_truth[b1][random_vertex];
+                                double cur_error_lower = UINT_E_MAX;
+                                double cur_error_upper = UINT_E_MAX;
+                                double cur_error = UINT_E_MAX;
 
-                                } else {
-                                    cur_error =
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
+                                if (exact_core_lower > 0 && approx_core > 0) {
+                                    cur_error_lower = (exact_core_lower > approx_core) ?
+                                        (float) exact_core_lower / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_lower;
                                 }
-                                if (exact_core == UINT_E_MAX || exact_core == 0
+
+                                if (exact_core_upper > 0 && approx_core > 0) {
+                                    cur_error_upper = (exact_core_upper > approx_core) ?
+                                        (float) exact_core_upper / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_upper;
+                                }
+
+                                if (cur_error_lower == UINT_E_MAX
+                                        || cur_error_upper == UINT_E_MAX
+                                        || exact_core_lower == 0
+                                        || exact_core_upper == 0
                                         || approx_core == 0 || b1 == 0
-                                        || cur_old_level == 0)
+                                        || old_level_1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
                         }
                         retry = false;
+                        if_time = if_timer.stop();
                     }
 
                     else {
-                        if (l1 == l2) {
-                            auto approx_core = layers.get_core_from_level(l1);
+                        else_timer.start();
+                        if (old_level_1 == old_level_2) {
+                            auto approx_core = layers.get_core_from_level(old_level_1);
                             if (compare_exact) {
                                 auto exact_core_upper = ground_truth_container.ground_truth[b1][random_vertex];
                                 auto exact_core_lower = 0.0;
@@ -1629,7 +1657,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                     cur_error = cur_error_upper;
 
                                 if (exact_core_upper == UINT_E_MAX || exact_core_upper == 0
-                                        || approx_core == 0 || l1 == 0)
+                                        || approx_core == 0 || l1 == 0 || b1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
                             }
@@ -1637,9 +1665,16 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                             retry = false;
                         } else
                             continue;
+                        else_time = else_timer.stop();
                     }
                 }
                 double read_latency = read_timer.stop();
+                /*if (9.5e-07 < read_latency < 9.6e-07) {
+                    std::cout << read_latency << std::endl;
+                    std::cout << root_time << std::endl;
+                    std::cout << if_time << std::endl;
+                    std::cout << else_time << std::endl;
+                }*/
                 all_latency.push_back(read_latency);
                 my_counter++;
             }
