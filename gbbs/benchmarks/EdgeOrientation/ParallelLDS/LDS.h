@@ -1300,6 +1300,11 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         char padding[64 - sizeof(uint64_t)];
     } stop;
 
+    volatile struct {
+        volatile uint64_t flag = 0;
+        char padding[64 - sizeof(uint64_t)];
+    } keep_reading;
+
     gbbs::sequence<std::vector<double>> latency_seq
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
     std::thread read_thread_seq[num_reader_threads];
@@ -1310,41 +1315,54 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     barrier_init(sync_point, num_reader_threads + 1);
     barrier_init(sync_point_end, num_reader_threads + 1);
 
+    barrier_t* batch_sync_point = new barrier_t();
+    barrier_init(batch_sync_point, num_reader_threads + 1);
+    barrier_t* batch_sync_point_end = new barrier_t();
+    barrier_init(batch_sync_point_end, num_reader_threads + 1);
+
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
-                &layers, &read_thread_seq, &latency_seq, &max_reads, thread_i] {
+                &layers, &read_thread_seq, &latency_seq, &max_reads,
+                &keep_reading, &stop, batch_sync_point, batch_sync_point_end,
+                thread_i] {
+
+            std::cout << "Thread " << thread_i << " is waiting" << std::endl;
+            barrier_cross(sync_point);
+            std::cout << "Thread " << thread_i << " is running" << std::endl;
+
             cpu_set_t cpuset;
             CPU_ZERO(&cpuset);
             CPU_SET(thread_i, &cpuset);
             pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(),
                     sizeof(cpu_set_t), &cpuset);
 
-            barrier_cross(sync_point);
             size_t my_counter = 0;
-
-            std::vector<double> all_latency_prefix;
-
-            double total_time = 0.0;
-
-            timer read_timer;
-            while (my_counter < max_reads) {
-                read_timer.start();
-                total_time += read_timer.stop();
-                all_latency_prefix.push_back(total_time);
-                my_counter++;
-            }
 
             std::vector<double> all_latency;
 
-            double max_time = 0;
-            for (size_t i = 0; i < max_reads; i++) {
-                all_latency.push_back(total_time - all_latency_prefix[i]);
-                if (total_time - all_latency_prefix[i] > max_time)
-                    max_time = total_time - all_latency_prefix[i];
+            if (keep_reading.flag) {
+                double total_time = 0.0;
+
+                std::vector<double> all_latency_prefix;
+                timer read_timer;
+                barrier_cross(batch_sync_point);
+
+                while (stop.flag) {
+                    std::cout << "Thread " << thread_i << " reading" << std::endl;
+                    read_timer.start();
+                    total_time += read_timer.stop();
+                    all_latency_prefix.push_back(total_time);
+                    my_counter++;
+                }
+
+                for (size_t i = 0; i < max_reads; i++) {
+                    all_latency.push_back(total_time - all_latency_prefix[i]);
+                }
+
+                barrier_cross(batch_sync_point_end);
             }
 
             latency_seq[thread_i] = all_latency;
-
             barrier_cross(sync_point_end);
         });
     }
@@ -1378,18 +1396,26 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         }
     }
 
+    keep_reading.flag = 1;
     std::cout << "Main thread batch is waiting" << std::endl;
     timer overall_timer; overall_timer.start();
     barrier_cross(sync_point);
     std::cout << "Main thread batch started" << std::endl;
 
     for (size_t i = offset; i < batch.size(); i += batch_size) {
+        barrier_cross(batch_sync_point);
+
         timer t; t.start();
+        stop.flag = 1;
+        std::cout << "flag started" << std::endl;
+
         auto end_size = std::min(i + batch_size, batch.size());
         auto insertions = parlay::filter(parlay::make_slice(batch.begin() + i,
                     batch.begin() + end_size), [&] (const DynamicEdge<W>& edge){
             return edge.insert;
         });
+
+        std::cout << "batch insertions started" << std::endl;
 
         auto deletions = parlay::filter(parlay::make_slice(batch.begin() + i,
                     batch.begin() + end_size), [&] (const DynamicEdge<W>& edge){
@@ -1415,22 +1441,18 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         layers.batch_insertion(batch_insertions);
         double insertion_time = t.stop();
 
+        std::cout << "batch insertions ended" << std::endl;
+
         t.start();
         num_deletion_flips += layers.batch_deletion(batch_deletions);
 
         max_degree = layers.max_degree();
 
         double deletion_time = t.stop();
-        double tt = insertion_time + deletion_time;
+        stop.flag = 0;
+        std::cout << "flag ended" << std::endl;
 
-        std::cout << "### Batch Running Time: " << tt << std::endl;
-        std::cout << "### Insertion Running Time: " << insertion_time << std::endl;
-        std::cout << "### Deletion Running Time: " << deletion_time << std::endl;
-        std::cout << "### Batch Num: " << end_size - offset << std::endl;
-        std::cout << "### Coreness Estimate: " << layers.max_coreness() << std::endl;
-        std::cout << "### Number Insertion Flips: " << num_insertion_flips << std::endl;
-        std::cout << "### Number Deletion Flips: " << num_deletion_flips << std::endl;
-        std::cout << "### Max Outdegree: " << max_degree << std::endl;
+        t.start();
 
         if (layers.batch_num * batch_size + offset <= batch.size() - batch_size - 2)
             layers.batch_num++;
@@ -1491,7 +1513,25 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             std::cout << "### Per Vertex Min Coreness Error: " << min_error << std::endl; fflush(stdout);
             std::cout << "### Per Vertex Max Coreness Error: " << max_error << std::endl; fflush(stdout);
         }
+
+        std::cout << "### Coreness Estimate: " << layers.max_coreness() << std::endl;
+        std::cout << "### Number Insertion Flips: " << num_insertion_flips << std::endl;
+        std::cout << "### Number Deletion Flips: " << num_deletion_flips << std::endl;
+        std::cout << "### Max Outdegree: " << max_degree << std::endl;
+
+        barrier_cross(batch_sync_point_end);
+        double reading_time = t.stop();
+
+        double tt = insertion_time + deletion_time + reading_time;
+        std::cout << "### Batch Running Time: " << tt << std::endl;
+        std::cout << "### Insertion Running Time: " << insertion_time + reading_time
+            << std::endl;
+        std::cout << "### Deletion Running Time: " << deletion_time + reading_time
+            << std::endl;
+        std::cout << "### Batch Num: " << end_size - offset << std::endl;
     }
+
+    keep_reading.flag = 0;
 
     double overall_time = overall_timer.stop();
     barrier_cross(sync_point_end);
