@@ -1309,7 +1309,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
     std::thread read_thread_seq[num_reader_threads];
 
-    size_t main_counter = 0;
     barrier_t* sync_point = new barrier_t();
     barrier_t* sync_point_end = new barrier_t();
     barrier_init(sync_point, num_reader_threads + 1);
@@ -1566,6 +1565,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
         std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
+        std::cout << "### Throughput: " << total_count/overall_time << std::endl;
     }
 }
 
