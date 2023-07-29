@@ -1533,15 +1533,13 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         if (new_batch > 0)
                             exact_core_lower =
                                 ground_truth_container.ground_truth[new_batch][random_vertex];
-                        else
-                            exact_core_lower = 1;
 
                         uintE exact_core_upper =
                             ground_truth_container.ground_truth[old_batch][random_vertex];
 
-                        float cur_error = UINT_E_MAX;
-                        float cur_error_upper = UINT_E_MAX;
-                        float cur_error_lower = UINT_E_MAX;
+                        double cur_error = UINT_E_MAX;
+                        double cur_error_upper = UINT_E_MAX;
+                        double cur_error_lower = UINT_E_MAX;
 
                         if (exact_core_upper > 0 && approx_core > 0) {
                             cur_error_upper = (exact_core_upper > approx_core) ?
@@ -1555,10 +1553,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                 (float) approx_core / (float) exact_core_lower;
                         }
 
-                        if (cur_error_upper < UINT_E_MAX || cur_error_lower < UINT_E_MAX)
-                            cur_error = std::min((float) cur_error_upper, (float) cur_error_lower);
-                        else
-                            cur_error = UINT_E_MAX;
+                        cur_error = std::min(cur_error_upper, cur_error_lower);
 
                         error_seq[thread_i].push_back(cur_error);
                     }
@@ -1585,7 +1580,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         if (old_level_1 != old_level_2)
                             continue;
                         if_timer.start();
-                        //auto cur_old_level = layers.descriptor_array[random_vertex].old_level;
                         auto approx_core =
                             layers.get_core_from_level(old_level_1);
 
@@ -1600,20 +1594,27 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                 double cur_error_upper = UINT_E_MAX;
                                 double cur_error = UINT_E_MAX;
 
-                                if (exact_core_lower > 0 && approx_core > 0) {
+                                if (exact_core_lower > 0 && approx_core > 0
+                                        && exact_core_upper != UINT_E_MAX) {
                                     cur_error_lower = (exact_core_lower > approx_core) ?
                                         (float) exact_core_lower / (float) approx_core :
                                         (float) approx_core / (float) exact_core_lower;
                                 }
 
-                                if (exact_core_upper > 0 && approx_core > 0) {
+                                if (exact_core_upper > 0 && approx_core > 0
+                                        && exact_core_upper != UINT_E_MAX) {
                                     cur_error_upper = (exact_core_upper > approx_core) ?
                                         (float) exact_core_upper / (float) approx_core :
                                         (float) approx_core / (float) exact_core_upper;
                                 }
 
-                                if (cur_error_lower == UINT_E_MAX
-                                        || cur_error_upper == UINT_E_MAX
+                                if (cur_error_upper > layers.OnePlusEps * layers.UpperConstant)
+                                    cur_error = std::min(cur_error_upper, cur_error_lower);
+                                else
+                                    cur_error = cur_error_upper;
+
+                                if (exact_core_lower == UINT_E_MAX
+                                        || exact_core_upper == UINT_E_MAX
                                         || exact_core_lower == 0
                                         || exact_core_upper == 0
                                         || approx_core == 0 || b1 == 0
@@ -1627,7 +1628,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                     else {
                         else_timer.start();
-                        if (old_level_1 == old_level_2) {
+                        if (l1 == l2) {
                             auto approx_core = layers.get_core_from_level(old_level_1);
                             if (compare_exact) {
                                 auto exact_core_upper = ground_truth_container.ground_truth[b1][random_vertex];
@@ -1637,27 +1638,33 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                                 double cur_error = UINT_E_MAX;
                                 double cur_error_upper = UINT_E_MAX;
-                                if (exact_core_upper > 0 && approx_core > 0) {
+                                if (exact_core_upper > 0 && approx_core > 0
+                                        && exact_core_upper != UINT_E_MAX) {
                                     cur_error_upper = (exact_core_upper > approx_core) ?
                                         (float) exact_core_upper / (float) approx_core :
                                         (float) approx_core / (float) exact_core_upper;
                                 }
 
                                 auto cur_error_lower = UINT_E_MAX;
-                                if (exact_core_lower > 0 && approx_core > 0) {
-                                    cur_error_lower = (exact_core_upper > approx_core) ?
+                                if (exact_core_lower > 0 && approx_core > 0
+                                        && exact_core_lower != UINT_E_MAX) {
+                                    cur_error_lower = (exact_core_lower > approx_core) ?
                                         (float) exact_core_lower / (float) approx_core :
                                         (float) approx_core / (float) exact_core_lower;
                                 }
 
                                 if (cur_error_upper > layers.OnePlusEps * layers.UpperConstant)
-                                    if (cur_error_upper < UINT_E_MAX || cur_error_lower < UINT_E_MAX)
-                                        cur_error = std::min((float) cur_error_upper, (float) cur_error_lower);
+                                    cur_error = std::min((double) cur_error_upper,
+                                            (double) cur_error_lower);
                                 else
                                     cur_error = cur_error_upper;
 
-                                if (exact_core_upper == UINT_E_MAX || exact_core_upper == 0
-                                        || approx_core == 0 || l1 == 0 || b1 == 0)
+                                if (exact_core_upper == UINT_E_MAX
+                                        || exact_core_lower == UINT_E_MAX
+                                        || exact_core_upper == 0
+                                        || exact_core_lower == 0
+                                        || approx_core == 0
+                                        || l1 == 0 || b1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
                             }
@@ -1669,12 +1676,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     }
                 }
                 double read_latency = read_timer.stop();
-                /*if (9.5e-07 < read_latency < 9.6e-07) {
-                    std::cout << read_latency << std::endl;
-                    std::cout << root_time << std::endl;
-                    std::cout << if_time << std::endl;
-                    std::cout << else_time << std::endl;
-                }*/
                 all_latency.push_back(read_latency);
                 my_counter++;
             }
@@ -1861,9 +1862,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     if (compare_exact) {
         auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
-            return (uintE) error <= UINT_E_MAX/2.0;
+            return (1.0 <= error) && (error < UINT_E_MAX);
         });
-        auto max_error = pbbslib::reduce_max(non_zero_errors);
+
+        auto max_error = pbbslib::reduce_max(parlay::make_slice(non_zero_errors));
         auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
         std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
         std::cout << "### Max Error: " << max_error << std::endl;
