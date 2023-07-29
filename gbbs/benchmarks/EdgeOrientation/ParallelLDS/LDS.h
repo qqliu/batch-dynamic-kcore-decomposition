@@ -1326,9 +1326,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 &keep_reading, &stop, batch_sync_point, batch_sync_point_end,
                 thread_i] {
 
-            std::cout << "Thread " << thread_i << " is waiting" << std::endl;
+            //std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
-            std::cout << "Thread " << thread_i << " is running" << std::endl;
+            //std::cout << "Thread " << thread_i << " is running" << std::endl;
 
             cpu_set_t cpuset;
             CPU_ZERO(&cpuset);
@@ -1340,22 +1340,24 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
             std::vector<double> all_latency;
 
-            if (keep_reading.flag) {
+            while (keep_reading.flag) {
                 double total_time = 0.0;
 
                 std::vector<double> all_latency_prefix;
                 timer read_timer;
+
+                //std::cout << "Thread " << thread_i << " is waiting for batch" << std::endl;
                 barrier_cross(batch_sync_point);
+                //std::cout << "Thread " << thread_i << " has started for batch" << std::endl;
 
                 while (stop.flag) {
-                    std::cout << "Thread " << thread_i << " reading" << std::endl;
                     read_timer.start();
                     total_time += read_timer.stop();
                     all_latency_prefix.push_back(total_time);
                     my_counter++;
                 }
 
-                for (size_t i = 0; i < max_reads; i++) {
+                for (size_t i = 0; i < all_latency_prefix.size(); i++) {
                     all_latency.push_back(total_time - all_latency_prefix[i]);
                 }
 
@@ -1397,25 +1399,20 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     keep_reading.flag = 1;
-    std::cout << "Main thread batch is waiting" << std::endl;
     timer overall_timer; overall_timer.start();
     barrier_cross(sync_point);
-    std::cout << "Main thread batch started" << std::endl;
 
     for (size_t i = offset; i < batch.size(); i += batch_size) {
         barrier_cross(batch_sync_point);
 
         timer t; t.start();
         stop.flag = 1;
-        std::cout << "flag started" << std::endl;
 
         auto end_size = std::min(i + batch_size, batch.size());
         auto insertions = parlay::filter(parlay::make_slice(batch.begin() + i,
                     batch.begin() + end_size), [&] (const DynamicEdge<W>& edge){
             return edge.insert;
         });
-
-        std::cout << "batch insertions started" << std::endl;
 
         auto deletions = parlay::filter(parlay::make_slice(batch.begin() + i,
                     batch.begin() + end_size), [&] (const DynamicEdge<W>& edge){
@@ -1441,8 +1438,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         layers.batch_insertion(batch_insertions);
         double insertion_time = t.stop();
 
-        std::cout << "batch insertions ended" << std::endl;
-
         t.start();
         num_deletion_flips += layers.batch_deletion(batch_deletions);
 
@@ -1450,7 +1445,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
         double deletion_time = t.stop();
         stop.flag = 0;
-        std::cout << "flag ended" << std::endl;
 
         t.start();
 
@@ -1519,7 +1513,11 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         std::cout << "### Number Deletion Flips: " << num_deletion_flips << std::endl;
         std::cout << "### Max Outdegree: " << max_degree << std::endl;
 
+        if (i + batch_size >= batch.size()) {
+            keep_reading.flag = 0;
+        }
         barrier_cross(batch_sync_point_end);
+
         double reading_time = t.stop();
 
         double tt = insertion_time + deletion_time + reading_time;
@@ -1532,6 +1530,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     keep_reading.flag = 0;
+    stop.flag = 0;
 
     double overall_time = overall_timer.stop();
     barrier_cross(sync_point_end);
@@ -1541,12 +1540,16 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     std::cout << "### Total Time: " << overall_time << std::endl;
 
-    gbbs::sequence<double> latencies = gbbs::sequence<double>(
-            num_reader_threads * max_reads, 0);
+    size_t total_count = 0;
+    for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+        total_count += latency_seq[t_i].size();
+    }
+
+    gbbs::sequence<double> latencies = gbbs::sequence<double>(total_count, 0);
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        for(size_t j = 0; j < max_reads; j++) {
+        for(size_t j = 0; j < latency_seq[t_i].size(); j++) {
             latencies[cur_count + j] = latency_seq[t_i][j];
         }
 
