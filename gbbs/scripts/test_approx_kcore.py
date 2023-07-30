@@ -111,8 +111,8 @@ def main():
   for program in programs:
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
-    #sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
-    #sub.wait()
+    sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
+    sub.wait()
   for file_idx, filename in enumerate(files):
     for program_idx, program in enumerate(programs):
       for e in epss:
