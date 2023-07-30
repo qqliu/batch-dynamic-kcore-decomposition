@@ -1389,13 +1389,15 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                         double cur_error_upper = UINT_E_MAX;
                         double cur_error_lower = UINT_E_MAX;
 
-                        if (exact_core_upper > 0 && approx_core > 0) {
+                        if (exact_core_upper > 0 && approx_core > 0 && exact_core_upper
+                                != UINT_E_MAX) {
                             cur_error_upper = (exact_core_upper > approx_core) ?
                                 (float) exact_core_upper / (float) approx_core :
                                 (float) approx_core / (float) exact_core_upper;
                         }
 
-                        if (exact_core_lower > 0 && approx_core > 0) {
+                        if (exact_core_lower > 0 && approx_core > 0 && exact_core_lower
+                                != UINT_E_MAX) {
                             cur_error_lower = (exact_core_lower > approx_core) ?
                                 (float) exact_core_lower / (float) approx_core :
                                 (float) approx_core / (float) exact_core_lower;
