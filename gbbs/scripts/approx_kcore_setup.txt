@@ -1,5 +1,6 @@
 Input graph directory: ~/graphs/
-Dynamic graphs: dblp_insertion_edges, livejournal_insertion_edges
+Dynamic graphs: dblp_insertion_edges
+#livejournal_insertion_edges
 Output directory: ./outputs/
 Benchmarks: PLDS
 Numbers of workers: 1, 2, 4, 8, 15
@@ -12,5 +13,5 @@ Output sizes: False
 Initial Graph File:
 Number of Levels Divisor: 20
 Opt: False
-Percentile: 0.9, 0.95
+Percentile: 0.95, 0.99, 0.9999
 Nonlinearizable: True
