@@ -378,12 +378,14 @@ struct LDS {
         u = find_compress(u, parents);
         v = find_compress(v, parents);
 
+        if (u == UINT_E_MAX || v == UINT_E_MAX) {
+            return false;
+        }
+
         while (u != v && u != UINT_E_MAX && v != UINT_E_MAX) {
                 u = find_compress(u, parents);
                 v = find_compress(v, parents);
 
-                if (u == UINT_E_MAX || v == UINT_E_MAX)
-                    return false;
 
                 if (u > v && parents[u].root == u
                     && pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)) {
