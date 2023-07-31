@@ -447,18 +447,19 @@ struct LDS {
 
     if  (initialize_roots) {
         parallel_for(0, dirty.size(), [&](size_t i) {
-            if (descriptor_array[dirty[i].second].root == UINT_E_MAX)
+            if (descriptor_array[dirty[i].second].root == UINT_E_MAX) {
                 descriptor_array[dirty[i].second].root = dirty[i].second;
-            descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+                descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+            }
         });
     }
 
     parallel_for(0, dirty.size(), [&] (size_t i){
         auto v = dirty[i].second;
-        descriptor_array[v].old_level = L[v].level;
-        if (descriptor_array[v].root == UINT_E_MAX)
+        if (descriptor_array[v].root == UINT_E_MAX) {
             descriptor_array[v].root = v;
-        else {
+            descriptor_array[v].old_level = L[v].level;
+        } else {
             for (size_t j = 0; j < L[v].down.size(); j++) {
                 auto cur_neighbors = L[v].down[j].entries();
                 for (size_t k = 0; k < cur_neighbors.size(); k++) {
@@ -569,15 +570,20 @@ struct LDS {
 
     if  (initialize_roots) {
         parallel_for(0, dirty.size(), [&](size_t i) {
-            if (descriptor_array[dirty[i].second].root == UINT_E_MAX)
+            if (descriptor_array[dirty[i].second].root == UINT_E_MAX) {
                 descriptor_array[dirty[i].second].root = dirty[i].second;
-            descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+                descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+            }
         });
     }
 
     parallel_for(0, dirty.size(), [&] (size_t i) {
         auto v = dirty[i].second;
-        descriptor_array[v].old_level = L[v].level;
+
+        if (descriptor_array[v].root == UINT_E_MAX) {
+            descriptor_array[v].old_level = L[v].level;
+            descriptor_array[v].root = v;
+        }
         auto my_up_neighbors = L[v].up.entries();
 
         // do merging the dependency trees using
@@ -831,13 +837,17 @@ struct LDS {
         // Get up neighbors.
         auto my_up_neighbors = L[u].up.entries();
 
+        if (descriptor_array[u].root == UINT_E_MAX) {
+            descriptor_array[u].root = u;
+            descriptor_array[u].old_level = L[u].level;
+        }
+
         // parallel for loop for the merge using compare and swap with all dependency DAGs of
         // pairs of up neighbors
         parallel_for (0, my_up_neighbors.size(), [&] (size_t i) {
             unite_impl(u, my_up_neighbors[i], descriptor_array.begin());
         });
 
-        descriptor_array[u].old_level = L[u].level;
 
         uintE dl_u = L[u].desire_level;
         assert(dl_u != UINT_E_MAX);
@@ -1057,10 +1067,10 @@ struct LDS {
 
       // Update descriptors of every node in nodes_to_move
       parallel_for(0, nodes_to_move.size(), [&] (size_t cur_node_to_move){
-        descriptor_array[cur_node_to_move].old_level = L[cur_node_to_move].level;
-        if (descriptor_array[cur_node_to_move].root == UINT_E_MAX)
+        if (descriptor_array[cur_node_to_move].root == UINT_E_MAX) {
             descriptor_array[cur_node_to_move].root = cur_node_to_move;
-        else {
+            descriptor_array[cur_node_to_move].old_level = L[cur_node_to_move].level;
+        } else {
             for (size_t down_level = 0; down_level < L[cur_node_to_move].down.size(); down_level++) {
                 auto cur_neighbors = L[cur_node_to_move].down[down_level].entries();
                 for (size_t neighbor_index = 0; neighbor_index < cur_neighbors.size(); neighbor_index++) {
@@ -1517,47 +1527,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 double else_time;
 
                 auto retry = true;
-                if (nonlinearizable) {
-                    retry = false;
-                    auto cur_level = layers.L[random_vertex].level;
-
-                    auto approx_core =
-                        layers.get_core_from_level(cur_level);
-                    if (compare_exact) {
-                        auto old_batch = layers.batch_num;
-                        auto new_batch = layers.batch_num;
-                        if (new_batch > 0)
-                            new_batch--;
-
-                        uintE exact_core_lower = 0;
-                        if (new_batch > 0)
-                            exact_core_lower =
-                                ground_truth_container.ground_truth[new_batch][random_vertex];
-
-                        uintE exact_core_upper =
-                            ground_truth_container.ground_truth[old_batch][random_vertex];
-
-                        double cur_error = UINT_E_MAX;
-                        double cur_error_upper = UINT_E_MAX;
-                        double cur_error_lower = UINT_E_MAX;
-
-                        if (exact_core_upper > 0 && approx_core > 0) {
-                            cur_error_upper = (exact_core_upper > approx_core) ?
-                                (float) exact_core_upper / (float) approx_core :
-                                (float) approx_core / (float) exact_core_upper;
-                        }
-
-                        if (exact_core_lower > 0 && approx_core > 0) {
-                            cur_error_lower = (exact_core_lower > approx_core) ?
-                                (float) exact_core_lower / (float) approx_core :
-                                (float) approx_core / (float) exact_core_lower;
-                        }
-
-                        cur_error = std::min(cur_error_upper, cur_error_lower);
-
-                        error_seq[thread_i].push_back(cur_error);
-                    }
-                }
 
                 while(retry && stop.flag == 0) {
                     root_timer.start();
@@ -1621,7 +1590,23 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || old_level_1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
+
+                                if (cur_error == 3) {
+                                    std::cout << "root marked" << std::endl;
+                                    std::cout << cur_error_upper << std::endl;
+                                    std::cout << cur_error_lower << std::endl;
+                                    std::cout << "batch num, b1, old_batch: "
+                                        << layers.batch_num
+                                        << ", " << b1 << ", " << old_batch << std::endl;
+                                    std::cout << "cur_level, old level, approx: "
+                                        << layers.L[random_vertex].level << ", "
+                                        << old_level_1 << ", " << approx_core << std::endl;
+                                    std::cout << "exact_core_lower, exact_core_upper: " <<
+                                        exact_core_lower << ", " << exact_core_upper
+                                        << std::endl;
+                                }
                         }
+
                         retry = false;
                         if_time = if_timer.stop();
                     }
@@ -1667,6 +1652,21 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || l1 == 0 || b1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
+
+                                if (cur_error == 3) {
+                                    std::cout << "root unmarked" << std::endl;
+                                    std::cout << cur_error_upper << std::endl;
+                                    std::cout << cur_error_lower << std::endl;
+                                    std::cout << "batch num, b1, old_batch: "
+                                        << layers.batch_num
+                                        << ", " << b1 << ", " << b1-1 << std::endl;
+                                    std::cout << "cur_level, old level, approx: "
+                                        << layers.L[random_vertex].level << ", "
+                                        << l1 << ", " << approx_core << std::endl;
+                                    std::cout << "exact_core_lower, exact_core_upper: " <<
+                                        exact_core_lower << ", " << exact_core_upper
+                                        << std::endl;
+                                }
                             }
 
                             retry = false;
