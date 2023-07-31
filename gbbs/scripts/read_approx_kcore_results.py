@@ -102,9 +102,6 @@ def main():
   program_dir = "../benchmarks/"
   empty = "../benchmarks/EdgeOrientation/ParallelLDS/empty_h"
   for program in programs:
-    print(programs)
-    print(program_dir)
-    print(program)
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
     #sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
@@ -152,7 +149,8 @@ def main():
                                         best_avg_time = cur_avg_time
                                         best_max_time = cur_max_time
                                         best_total_time = cur_total_time
-                                        best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
+                                        if (num_iterations - num_zero_batches > 0):
+                                            best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
                                         best_max_error = cur_max_error
                                         best_space = cur_best_space
                                     cur_max_time = 0
@@ -199,7 +197,8 @@ def main():
                                 best_avg_time = cur_avg_time
                                 best_max_time = cur_max_time
                                 best_total_time = cur_total_time
-                                best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
+                                if (num_iterations - num_zero_batches > 0):
+                                    best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
                                 best_max_error = cur_max_error
                                 best_space = cur_best_space
                         for param in out_path_components:
@@ -229,14 +228,17 @@ def main():
                         print(str(statistics.mean(latencies)), end=", ")
                         print(str(min(latencies)), end=", ")
                         print(str(max(latencies)), end=", ")
-                        print(str(statistics.median(avg_read_errors)), end=", ")
-                        print(str(statistics.mean(avg_read_errors)), end=", ")
-                        print(str(min(avg_read_errors)), end=", ")
-                        print(str(max(avg_read_errors)), end=", ")
-                        print(str(statistics.median(max_read_errors)), end=", ")
-                        print(str(statistics.mean(max_read_errors)), end=", ")
-                        print(str(min(max_read_errors)), end=", ")
-                        print(str(max(max_read_errors)), end="\n")
+                        if len(avg_read_errors) > 0:
+                            print(str(statistics.median(avg_read_errors)), end=", ")
+                            print(str(statistics.mean(avg_read_errors)), end=", ")
+                            print(str(min(avg_read_errors)), end=", ")
+                            print(str(max(avg_read_errors)), end=", ")
+                            print(str(statistics.median(max_read_errors)), end=", ")
+                            print(str(statistics.mean(max_read_errors)), end=", ")
+                            print(str(min(max_read_errors)), end=", ")
+                            print(str(max(max_read_errors)), end="\n")
+                        else:
+                            print("N/A, N/A, N/A, N/A, N/A, N/A, N/A, N/A")
 
 if __name__ == "__main__":
   main()
