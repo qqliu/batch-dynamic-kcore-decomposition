@@ -888,7 +888,6 @@ struct LDS {
           insert_neighbors(u, lower_neighbors);
         }
         num_flips[i] = upstart;
-        //std::cout << "finished all of 2" << std::endl;
       } else if (l_u > cur_level_id) {
 
         // Map the incident edges to (level, neighbor_id).
@@ -1362,6 +1361,18 @@ struct LDS {
     // Update the level structure (basically a sparse bucketing structure).
     size_t total_moved = rebalance_deletions(std::move(levels), 0);
 
+    parallel_for(0, n, [&] (size_t i) {
+        if (descriptor_array[i].root == i) {
+            descriptor_array[i].root = UINT_E_MAX;
+            descriptor_array[i].old_level = UINT_E_MAX;
+        }
+    });
+
+    parallel_for(0, n, [&] (size_t i) {
+        descriptor_array[i].root = UINT_E_MAX;
+        descriptor_array[i].old_level = UINT_E_MAX;
+    });
+
     return total_moved;
   }
 
@@ -1590,21 +1601,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || old_level_1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
-
-                                if (cur_error == 3) {
-                                    std::cout << "root marked" << std::endl;
-                                    std::cout << cur_error_upper << std::endl;
-                                    std::cout << cur_error_lower << std::endl;
-                                    std::cout << "batch num, b1, old_batch: "
-                                        << layers.batch_num
-                                        << ", " << b1 << ", " << old_batch << std::endl;
-                                    std::cout << "cur_level, old level, approx: "
-                                        << layers.L[random_vertex].level << ", "
-                                        << old_level_1 << ", " << approx_core << std::endl;
-                                    std::cout << "exact_core_lower, exact_core_upper: " <<
-                                        exact_core_lower << ", " << exact_core_upper
-                                        << std::endl;
-                                }
                         }
 
                         retry = false;
@@ -1649,24 +1645,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || exact_core_upper == 0
                                         || exact_core_lower == 0
                                         || approx_core == 0
-                                        || l1 == 0 || b1 == 0)
+                                        || l1 == 0)
                                     cur_error = UINT_E_MAX;
                                 error_seq[thread_i].push_back(cur_error);
-
-                                if (cur_error == 3) {
-                                    std::cout << "root unmarked" << std::endl;
-                                    std::cout << cur_error_upper << std::endl;
-                                    std::cout << cur_error_lower << std::endl;
-                                    std::cout << "batch num, b1, old_batch: "
-                                        << layers.batch_num
-                                        << ", " << b1 << ", " << b1-1 << std::endl;
-                                    std::cout << "cur_level, old level, approx: "
-                                        << layers.L[random_vertex].level << ", "
-                                        << l1 << ", " << approx_core << std::endl;
-                                    std::cout << "exact_core_lower, exact_core_upper: " <<
-                                        exact_core_lower << ", " << exact_core_upper
-                                        << std::endl;
-                                }
                             }
 
                             retry = false;
@@ -1788,7 +1769,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             auto cores = KCore(graph, 16);
 
             auto max_core = parlay::reduce(cores, parlay::maxm<uintE>());
-            std::cout << "### Coreness Exact: " << max_core << std::endl;
+            std::cout << "### Coreness Exact Old: " << max_core << std::endl;
 
             // Compare cores[v] to layers.core(v)
             auto approximation_error = parlay::delayed_seq<float>(batch_edge_list.max_vertex,
