@@ -1,13 +1,14 @@
-Input graph directory: ./
-Dynamic graphs: dblp_insertion_edges
-Output directory:
+Input graph directory: ~/graphs/
+Dynamic graphs: dblp_insertion_edges, livejournal_insertion_edges
+#, orkut_insertion_edges, stackoverflow_insertion_edges, wiki_insertion_edges, youtube_insertion_edges, ctr_insertion_edges, usa_insertion_edges, brain_insertion_edges
+Output directory: ./outputs/
 Benchmarks: PLDS
-Numbers of workers: 50
-Num Reader Threads: 10
+Numbers of workers: 1, 2, 4, 8, 16, 30
+Num Reader Threads: 1, 2, 4, 8, 16, 30
 Deltas: 0.4
 Lambdas: 3
 Batch sizes: 1000000
-Output stats: True
+Output stats: False
 Output sizes: False
 Initial Graph File:
 Number of Levels Divisor: 50
