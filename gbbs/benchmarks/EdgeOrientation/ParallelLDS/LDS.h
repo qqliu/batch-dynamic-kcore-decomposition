@@ -378,12 +378,14 @@ struct LDS {
         u = find_compress(u, parents);
         v = find_compress(v, parents);
 
+        if (u == UINT_E_MAX || v == UINT_E_MAX) {
+            return false;
+        }
+
         while (u != v && u != UINT_E_MAX && v != UINT_E_MAX) {
                 u = find_compress(u, parents);
                 v = find_compress(v, parents);
 
-                if (u == UINT_E_MAX || v == UINT_E_MAX)
-                    return false;
 
                 if (u > v && parents[u].root == u
                     && pbbslib::atomic_compare_and_swap(&parents[u].root, u, v)) {
@@ -447,18 +449,19 @@ struct LDS {
 
     if  (initialize_roots) {
         parallel_for(0, dirty.size(), [&](size_t i) {
-            if (descriptor_array[dirty[i].second].root == UINT_E_MAX)
+            if (descriptor_array[dirty[i].second].root == UINT_E_MAX) {
                 descriptor_array[dirty[i].second].root = dirty[i].second;
-            descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+                descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+            }
         });
     }
 
     parallel_for(0, dirty.size(), [&] (size_t i){
         auto v = dirty[i].second;
-        descriptor_array[v].old_level = L[v].level;
-        if (descriptor_array[v].root == UINT_E_MAX)
+        if (descriptor_array[v].root == UINT_E_MAX) {
             descriptor_array[v].root = v;
-        else {
+            descriptor_array[v].old_level = L[v].level;
+        } else {
             for (size_t j = 0; j < L[v].down.size(); j++) {
                 auto cur_neighbors = L[v].down[j].entries();
                 for (size_t k = 0; k < cur_neighbors.size(); k++) {
@@ -569,15 +572,20 @@ struct LDS {
 
     if  (initialize_roots) {
         parallel_for(0, dirty.size(), [&](size_t i) {
-            if (descriptor_array[dirty[i].second].root == UINT_E_MAX)
+            if (descriptor_array[dirty[i].second].root == UINT_E_MAX) {
                 descriptor_array[dirty[i].second].root = dirty[i].second;
-            descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+                descriptor_array[dirty[i].second].old_level = L[dirty[i].second].level;
+            }
         });
     }
 
     parallel_for(0, dirty.size(), [&] (size_t i) {
         auto v = dirty[i].second;
-        descriptor_array[v].old_level = L[v].level;
+
+        if (descriptor_array[v].root == UINT_E_MAX) {
+            descriptor_array[v].old_level = L[v].level;
+            descriptor_array[v].root = v;
+        }
         auto my_up_neighbors = L[v].up.entries();
 
         // do merging the dependency trees using
@@ -831,13 +839,17 @@ struct LDS {
         // Get up neighbors.
         auto my_up_neighbors = L[u].up.entries();
 
+        if (descriptor_array[u].root == UINT_E_MAX) {
+            descriptor_array[u].root = u;
+            descriptor_array[u].old_level = L[u].level;
+        }
+
         // parallel for loop for the merge using compare and swap with all dependency DAGs of
         // pairs of up neighbors
         parallel_for (0, my_up_neighbors.size(), [&] (size_t i) {
             unite_impl(u, my_up_neighbors[i], descriptor_array.begin());
         });
 
-        descriptor_array[u].old_level = L[u].level;
 
         uintE dl_u = L[u].desire_level;
         assert(dl_u != UINT_E_MAX);
@@ -878,7 +890,6 @@ struct LDS {
           insert_neighbors(u, lower_neighbors);
         }
         num_flips[i] = upstart;
-        //std::cout << "finished all of 2" << std::endl;
       } else if (l_u > cur_level_id) {
 
         // Map the incident edges to (level, neighbor_id).
@@ -1057,10 +1068,10 @@ struct LDS {
 
       // Update descriptors of every node in nodes_to_move
       parallel_for(0, nodes_to_move.size(), [&] (size_t cur_node_to_move){
-        descriptor_array[cur_node_to_move].old_level = L[cur_node_to_move].level;
-        if (descriptor_array[cur_node_to_move].root == UINT_E_MAX)
+        if (descriptor_array[cur_node_to_move].root == UINT_E_MAX) {
             descriptor_array[cur_node_to_move].root = cur_node_to_move;
-        else {
+            descriptor_array[cur_node_to_move].old_level = L[cur_node_to_move].level;
+        } else {
             for (size_t down_level = 0; down_level < L[cur_node_to_move].down.size(); down_level++) {
                 auto cur_neighbors = L[cur_node_to_move].down[down_level].entries();
                 for (size_t neighbor_index = 0; neighbor_index < cur_neighbors.size(); neighbor_index++) {
@@ -1352,6 +1363,18 @@ struct LDS {
     // Update the level structure (basically a sparse bucketing structure).
     size_t total_moved = rebalance_deletions(std::move(levels), 0);
 
+    parallel_for(0, n, [&] (size_t i) {
+        if (descriptor_array[i].root == i) {
+            descriptor_array[i].root = UINT_E_MAX;
+            descriptor_array[i].old_level = UINT_E_MAX;
+        }
+    });
+
+    parallel_for(0, n, [&] (size_t i) {
+        descriptor_array[i].root = UINT_E_MAX;
+        descriptor_array[i].old_level = UINT_E_MAX;
+    });
+
     return total_moved;
   }
 
@@ -1465,8 +1488,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         }
     }
 
-    parlay::random rng = parlay::random(time(0));
-
     std::cout << "Barrier is initializing" << std::endl;
     volatile struct {
         volatile uint64_t flag = 0;
@@ -1487,120 +1508,180 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     barrier_init(sync_point_end, num_reader_threads + 1);
 
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
-        read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
-                &layers, &rng, &stop, &counter_seq, &ground_truth_container, &compare_exact,
+        read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end, &read_thread_seq,
+                &layers, &stop, &counter_seq, &ground_truth_container, &compare_exact,
                 &error_seq, &nonlinearizable, &latency_seq, thread_i] {
             std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
             std::cout << "Thread " << thread_i << " is running" << std::endl;
+            cpu_set_t cpuset;
+            CPU_ZERO(&cpuset);
+            CPU_SET(thread_i, &cpuset);
+            pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(), sizeof(cpu_set_t), &cpuset);
+
             size_t my_counter = 0;
 
             std::vector<double> all_latency;
 
+            parlay::random rng = parlay::random(time(0));
+
             rng.fork(thread_i);
             while (stop.flag == 0) {
-                timer read_timer; read_timer.start();
                 auto random_vertex = rng.rand() % layers.n;
                 rng = rng.next();
 
+                timer read_timer; read_timer.start();
+                timer root_timer; root_timer.start();
+                timer if_timer; if_timer.start();
+                timer else_timer; else_timer.start();
+
+                double root_time;
+                double if_time;
+                double else_time;
+
                 auto retry = true;
-                if (nonlinearizable) {
-                    retry = false;
-                    auto cur_level = layers.L[random_vertex].level;
-
-                    auto approx_core =
-                        layers.get_core_from_level(cur_level);
-                    auto old_level = layers.L[random_vertex].level;
-                    auto old_batch = layers.batch_num;
-                    if (compare_exact) {
-                        auto new_batch = layers.batch_num;
-                        uintE exact_core =
-                            ground_truth_container.ground_truth[new_batch][random_vertex];
-                        auto new_level = layers.L[random_vertex].level;
-
-                        double cur_error = 0.0;
-                        if (exact_core > 0 && approx_core > 0) {
-                            cur_error = (exact_core > approx_core) ?
-                                (float) exact_core / (float) approx_core :
-                                (float) approx_core / (float) exact_core;
-                        } else {
-                            cur_error =
-                                std::max(std::max(exact_core, approx_core), (uintE) 1);
-                        }
-
-                        if (exact_core == UINT_E_MAX || exact_core == 0 ||
-                                approx_core == 0)
-                            cur_error = UINT_E_MAX;
-
-                        error_seq[thread_i].push_back(cur_error);
-                    }
-                }
 
                 while(retry && stop.flag == 0) {
+                    root_timer.start();
+
                     auto b1 = layers.batch_num;
                     auto l1 = layers.L[random_vertex].level;
+                    auto old_level_1 = layers.descriptor_array[random_vertex].old_level;
 
                     auto root = layers.find_compress(random_vertex, layers.descriptor_array.begin());
                     auto l2 = layers.L[random_vertex].level;
+
+                    auto old_level_2 = layers.descriptor_array[random_vertex].old_level;
                     auto b2 = layers.batch_num;
 
                     if (b1 != b2)
                         continue;
 
+                    root_time = root_timer.stop();
                     if (root != UINT_E_MAX) {
-                        auto cur_old_level = layers.descriptor_array[random_vertex].old_level;
+                        if (old_level_1 != old_level_2)
+                            continue;
+                        if_timer.start();
                         auto approx_core =
-                            layers.get_core_from_level(cur_old_level);
+                            layers.get_core_from_level(old_level_1);
 
                         size_t old_batch = (size_t) 0;
                         if (b1 > 0)
                             old_batch = b1 - 1;
 
                         if (compare_exact) {
-                                uintE exact_core = ground_truth_container.ground_truth[old_batch][random_vertex];
-                                double cur_error = 0.0;
-                                if (exact_core > 0 && approx_core > 0) {
-                                    cur_error = (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;
+                                uintE exact_core_lower = ground_truth_container.ground_truth[old_batch][random_vertex];
+                                uintE exact_core_upper = ground_truth_container.ground_truth[b1][random_vertex];
+                                double cur_error_lower = UINT_E_MAX;
+                                double cur_error_upper = UINT_E_MAX;
+                                double cur_error = UINT_E_MAX;
 
-                                } else {
-                                    cur_error =
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
+                                if (exact_core_lower > 0 && approx_core > 0
+                                        && exact_core_lower != UINT_E_MAX) {
+                                    cur_error_lower = (exact_core_lower > approx_core) ?
+                                        (float) exact_core_lower / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_lower;
                                 }
-                                if (exact_core == UINT_E_MAX || exact_core == 0
+
+                                if (exact_core_upper > 0 && approx_core > 0
+                                        && exact_core_upper != UINT_E_MAX) {
+                                    cur_error_upper = (exact_core_upper > approx_core) ?
+                                        (float) exact_core_upper / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_upper;
+                                }
+
+                                if (cur_error_upper > layers.OnePlusEps * layers.UpperConstant)
+                                    cur_error = std::min(cur_error_upper, cur_error_lower);
+                                else
+                                    cur_error = cur_error_upper;
+
+                                if (exact_core_lower == UINT_E_MAX
+                                        || exact_core_upper == UINT_E_MAX
+                                        || exact_core_lower == 0
+                                        || exact_core_upper == 0
                                         || approx_core == 0 || b1 == 0
-                                        || cur_old_level == 0)
+                                        || approx_core == UINT_E_MAX
+                                        || old_level_1 == 0)
                                     cur_error = UINT_E_MAX;
+
+                                if (cur_error > UINT_E_MAX/100 && cur_error < UINT_E_MAX) {
+                                    std::cout << "root unmarked" << std::endl;
+                                    std::cout << "error: " << cur_error << std::endl;
+                                    std::cout << "error lower: " << cur_error_lower << std::endl;
+                                    std::cout << "error upper: " << cur_error_upper << std::endl;
+                                    std::cout << "approx: " << approx_core << std::endl;
+                                    std::cout << "exact core lower: " << exact_core_lower << std::endl;
+                                    std::cout << "exact core upper: " << exact_core_upper << std::endl;
+                                }
+
                                 error_seq[thread_i].push_back(cur_error);
                         }
+
                         retry = false;
+                        if_time = if_timer.stop();
                     }
 
                     else {
+                        else_timer.start();
                         if (l1 == l2) {
                             auto approx_core = layers.get_core_from_level(l1);
-                            if (compare_exact) {
-                                auto exact_core = ground_truth_container.ground_truth[b1][random_vertex];
-                                double cur_error = 0.0;
-                                if (exact_core > 0 && approx_core > 0) {
-                                    cur_error = (exact_core > approx_core) ?
-                                        (float) exact_core / (float) approx_core :
-                                        (float) approx_core / (float) exact_core;
 
-                                } else {
-                                    cur_error =
-                                        std::max(std::max(exact_core, approx_core), (uintE) 1);
+                            if (compare_exact) {
+                                auto exact_core_upper = ground_truth_container.ground_truth[b1][random_vertex];
+                                auto exact_core_lower = 0.0;
+                                if (b1 > 0)
+                                    exact_core_lower = ground_truth_container.ground_truth[b1-1][random_vertex];
+
+                                double cur_error = UINT_E_MAX;
+                                double cur_error_upper = UINT_E_MAX;
+                                auto cur_error_lower = UINT_E_MAX;
+
+                                if (exact_core_upper > 0 && approx_core > 0
+                                        && exact_core_upper != UINT_E_MAX) {
+                                    cur_error_upper = (exact_core_upper > approx_core) ?
+                                        (float) exact_core_upper / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_upper;
                                 }
-                                if (exact_core == UINT_E_MAX || exact_core == 0
-                                        || approx_core == 0 || l1 == 0)
+
+                                if (exact_core_lower > 0 && approx_core > 0
+                                        && exact_core_lower != UINT_E_MAX) {
+                                    cur_error_lower = (exact_core_lower > approx_core) ?
+                                        (float) exact_core_lower / (float) approx_core :
+                                        (float) approx_core / (float) exact_core_lower;
+                                }
+
+                                if (cur_error_upper > layers.OnePlusEps * layers.UpperConstant)
+                                    cur_error = std::min((double) cur_error_upper,
+                                            (double) cur_error_lower);
+                                else
+                                    cur_error = cur_error_upper;
+
+                                if (exact_core_upper == UINT_E_MAX
+                                        || exact_core_lower == UINT_E_MAX
+                                        || exact_core_upper == 0
+                                        || exact_core_lower == 0
+                                        || approx_core == 0
+                                        || approx_core == UINT_E_MAX
+                                        || l1 == 0)
                                     cur_error = UINT_E_MAX;
+
+                                if (cur_error > UINT_E_MAX/100 && cur_error < UINT_E_MAX) {
+                                    std::cout << "root unmarked" << std::endl;
+                                    std::cout << "error: " << cur_error << std::endl;
+                                    std::cout << "error lower: " << cur_error_lower << std::endl;
+                                    std::cout << "error upper: " << cur_error_upper << std::endl;
+                                    std::cout << "approx: " << approx_core << std::endl;
+                                    std::cout << "exact core lower: " << exact_core_lower << std::endl;
+                                    std::cout << "exact core upper: " << exact_core_upper << std::endl;
+                                }
+
                                 error_seq[thread_i].push_back(cur_error);
                             }
 
                             retry = false;
                         } else
                             continue;
+                        else_time = else_timer.stop();
                     }
                 }
                 double read_latency = read_timer.stop();
@@ -1613,10 +1694,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
             barrier_cross(sync_point_end);
         });
-        cpu_set_t cpuset;
-        CPU_ZERO(&cpuset);
-        CPU_SET(thread_i, &cpuset);
-        pthread_setaffinity_np(read_thread_seq[thread_i].native_handle(), sizeof(cpu_set_t), &cpuset);
     }
 
     // First, insert / delete everything up to offset
@@ -1720,7 +1797,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             auto cores = KCore(graph, 16);
 
             auto max_core = parlay::reduce(cores, parlay::maxm<uintE>());
-            std::cout << "### Coreness Exact: " << max_core << std::endl;
+            std::cout << "### Coreness Exact Old: " << max_core << std::endl;
 
             // Compare cores[v] to layers.core(v)
             auto approximation_error = parlay::delayed_seq<float>(batch_edge_list.max_vertex,
@@ -1794,9 +1871,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     if (compare_exact) {
         auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
-            return error != UINT_E_MAX;
+            return (1.0 <= error) && (error < UINT_E_MAX/2);
         });
-        auto max_error = pbbslib::reduce_max(non_zero_errors);
+
+        auto max_error = pbbslib::reduce_max(parlay::make_slice(non_zero_errors));
         auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
         std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
         std::cout << "### Max Error: " << max_error << std::endl;
@@ -1805,13 +1883,14 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     if (num_reader_threads > 0) {
         parlay::sort_inplace(parlay::make_slice(latencies));
         size_t index_percentile = floor(percentile * latencies.size());
-        auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
 
         std::cout << "### Main Counter: " << main_counter << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
             << latencies[index_percentile] << std::endl;
+
+        auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
         std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
     }
 }
