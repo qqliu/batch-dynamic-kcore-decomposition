@@ -1539,20 +1539,31 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     std::cout << "### Total Time: " << overall_time << std::endl;
 
-    size_t total_count = 0;
+    size_t non_zero_total_count = 0;
+    size_t zero_total_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        total_count += latency_seq[t_i].size();
+        for (size_t i = 0; i < latency_seq[t_i].size(); i++) {
+            if (latency_seq[t_i][i] > 0)
+                non_zero_total_count += 1;
+            else
+                zero_total_count += 1;
+        }
     }
 
-    gbbs::sequence<double> latencies = gbbs::sequence<double>(total_count, 0);
+    auto total_count = zero_total_count + non_zero_total_count;
+    gbbs::sequence<double> latencies = gbbs::sequence<double>(non_zero_total_count, 0);
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
+        size_t this_non_zero_count = 0;
         for(size_t j = 0; j < latency_seq[t_i].size(); j++) {
-            latencies[cur_count + j] = latency_seq[t_i][j];
+            if (latency_seq[t_i][j] > 0) {
+                latencies[cur_count + this_non_zero_count] = latency_seq[t_i][j];
+                this_non_zero_count++;
+            }
         }
 
-        cur_count += latency_seq[t_i].size();
+        cur_count += this_non_zero_count;
     }
 
     if (num_reader_threads > 0) {
@@ -1561,7 +1572,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
-            << latencies[index_percentile] << std::endl;
+            << latencies[index_percentile - zero_total_count] << std::endl;
 
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
         std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
