@@ -1499,6 +1499,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         = gbbs::sequence<double>(num_reader_threads, 0.0);
     gbbs::sequence<double> max_error_seq
         = gbbs::sequence<double>(num_reader_threads, 0.0);
+    gbbs::sequence<double> non_zero_error_seq
+        = gbbs::sequence<double>(num_reader_threads, 0.0);
     gbbs::sequence<std::vector<double>> latency_seq
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
     gbbs::sequence<size_t> zero_latency_seq = gbbs::sequence<size_t>(num_reader_threads, 0);
@@ -1514,7 +1516,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end, &read_thread_seq,
                 &layers, &stop, &counter_seq, &ground_truth_container, &compare_exact,
                 &avg_error_seq, &max_error_seq, &nonlinearizable, &zero_latency_seq,
-                &latency_seq, thread_i] {
+                &latency_seq, &non_zero_error_seq, thread_i] {
             std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
             std::cout << "Thread " << thread_i << " is running" << std::endl;
@@ -1528,6 +1530,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             double max_thread_error = 0.0;
             double total_thread_error = 0.0;
             size_t zero_latencies = 0;
+            size_t non_zero_error = 0;
 
             parlay::random rng = parlay::random(time(0));
 
@@ -1599,9 +1602,12 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || old_level_1 == 0)
                                     cur_error = UINT_E_MAX;
 
-                                if (cur_error > max_thread_error)
-                                    max_thread_error = cur_error;
-                                total_thread_error += cur_error;
+                                if (cur_error != UINT_E_MAX) {
+                                    if (cur_error > max_thread_error)
+                                        max_thread_error = cur_error;
+                                    total_thread_error += cur_error;
+                                    non_zero_error++;
+                                }
                         }
 
                         retry = false;
@@ -1650,19 +1656,12 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || l1 == 0)
                                     cur_error = UINT_E_MAX;
 
-                                if (cur_error > UINT_E_MAX/100 && cur_error < UINT_E_MAX) {
-                                    std::cout << "root unmarked" << std::endl;
-                                    std::cout << "error: " << cur_error << std::endl;
-                                    std::cout << "error lower: " << cur_error_lower << std::endl;
-                                    std::cout << "error upper: " << cur_error_upper << std::endl;
-                                    std::cout << "approx: " << approx_core << std::endl;
-                                    std::cout << "exact core lower: " << exact_core_lower << std::endl;
-                                    std::cout << "exact core upper: " << exact_core_upper << std::endl;
+                                if (cur_error != UINT_E_MAX) {
+                                    if (cur_error > max_thread_error)
+                                        max_thread_error = cur_error;
+                                    total_thread_error += cur_error;
+                                    non_zero_error++;
                                 }
-
-                                if (cur_error > max_thread_error)
-                                    max_thread_error = cur_error;
-                                total_thread_error += cur_error;
                             }
 
                             retry = false;
@@ -1682,7 +1681,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             counter_seq[thread_i].store(my_counter, std::memory_order_release);
             zero_latency_seq[thread_i] = zero_latencies;
             max_error_seq[thread_i] = max_thread_error;
-            avg_error_seq[thread_i] = total_thread_error / my_counter;
+            avg_error_seq[thread_i] = total_thread_error;
+            non_zero_error_seq[thread_i] = non_zero_error;
 
             barrier_cross(sync_point_end);
         });
@@ -1852,6 +1852,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     double max_threads_error = 0.0;
     double avg_threads_error = 0.0;
     size_t total_latency_zeros = 0;
+    size_t total_non_zero_error = 0;
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
@@ -1865,9 +1866,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
         total_threads_error += avg_error_seq[t_i];
         total_latency_zeros += zero_latency_seq[t_i];
+        total_non_zero_error += non_zero_error_seq[t_i];
     }
 
-    avg_threads_error = total_threads_error / num_reader_threads;
+    avg_threads_error = total_threads_error / total_non_zero_error;
 
     if (compare_exact) {
         std::cout << "### Average Error: " << avg_threads_error << std::endl;
