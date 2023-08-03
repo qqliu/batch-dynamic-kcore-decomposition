@@ -1321,10 +1321,16 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     } stop;
 
     std::atomic<uintE> counter_seq[num_reader_threads];
-    gbbs::sequence<std::vector<double>> error_seq
-        = gbbs::sequence<std::vector<double>>(num_reader_threads);
+    gbbs::sequence<double> total_error_seq
+        = gbbs::sequence<double>(num_reader_threads);
+    gbbs::sequence<double> max_error_seq
+        = gbbs::sequence<double>(num_reader_threads);
+    gbbs::sequence<size_t> non_zero_error_seq
+        = gbbs::sequence<size_t>(num_reader_threads);
     gbbs::sequence<std::vector<double>> latency_seq
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
+    gbbs::sequence<size_t> zero_latency_seq
+        = gbbs::sequence<size_t>(num_reader_threads);
     std::thread read_thread_seq[num_reader_threads];
 
     barrier_t* sync_point = new barrier_t();
@@ -1335,7 +1341,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end, &read_thread_seq,
                 &layers, &stop, &counter_seq, &ground_truth_container, &compare_exact,
-                &error_seq, &nonlinearizable, &latency_seq, thread_i] {
+                &total_error_seq, &nonlinearizable, &non_zero_error_seq, &max_error_seq,
+                &latency_seq, &zero_latency_seq,
+                thread_i] {
             std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
             std::cout << "Thread " << thread_i << " is running" << std::endl;
@@ -1347,6 +1355,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             size_t my_counter = 0;
 
             std::vector<double> all_latency;
+            size_t non_zero_errors = 0;
+            size_t zero_latencies = 0;
+            double total_error = 0.0;
+            double max_error = 0.0;
 
             parlay::random rng = parlay::random(time(0));
 
@@ -1356,13 +1368,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 rng = rng.next();
 
                 timer read_timer; read_timer.start();
-                timer root_timer; root_timer.start();
-                timer if_timer; if_timer.start();
-                timer else_timer; else_timer.start();
-
-                double root_time;
-                double if_time;
-                double else_time;
 
                 auto retry = true;
                 if (nonlinearizable) {
@@ -1405,17 +1410,30 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                         cur_error = std::min(cur_error_upper, cur_error_lower);
 
-                        error_seq[thread_i].push_back(cur_error);
+                        if (cur_error != UINT_E_MAX) {
+                            if (cur_error > max_error)
+                                max_error = cur_error;
+                            total_error += cur_error;
+                            non_zero_errors++;
+                        }
                     }
                 }
 
                 double read_latency = read_timer.stop();
-                all_latency.push_back(read_latency);
+                if (read_latency > 0)
+                    all_latency.push_back(read_latency);
+                else
+                    zero_latencies++;
                 my_counter++;
             }
 
             latency_seq[thread_i] = all_latency;
-            counter_seq[thread_i].store(my_counter, std::memory_order_release);
+            zero_latency_seq[thread_i] = zero_latencies;
+            max_error_seq[thread_i] = max_error;
+            total_error_seq[thread_i] = total_error;
+            non_zero_error_seq[thread_i] = non_zero_errors;
+
+            counter_seq[thread_i] = my_counter;
 
             barrier_cross(sync_point_end);
         });
@@ -1580,42 +1598,48 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     gbbs::sequence<double> latencies = gbbs::sequence<double>(latency_sequence_size, 0);
-    gbbs::sequence<double> errors = gbbs::sequence<double>(latency_sequence_size, 0);
+
+    double total_error = 0.0;
+    size_t non_zero_errors = 0;
+    double max_error = 0.0;
+
+    size_t zero_latencies = 0;
 
     size_t cur_count = 0;
+    size_t total_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
         parallel_for(0, latency_seq[t_i].size(), [&] (size_t j){
             latencies[cur_count + j] = latency_seq[t_i][j];
-            if (compare_exact) {
-                errors[cur_count + j] = error_seq[t_i][j];
-            }
         });
 
+        total_error += total_error_seq[t_i];
+        non_zero_errors += non_zero_error_seq[t_i];
+
+        zero_latencies += zero_latency_seq[t_i];
         cur_count += latency_seq[t_i].size();
+
+        if (max_error_seq[t_i] > max_error)
+            max_error = max_error_seq[t_i];
+
+        total_count += counter_seq[t_i];
     }
 
     if (compare_exact) {
-        auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
-            return (1.0 <= error) && (error < UINT_E_MAX);
-        });
-
-        auto max_error = pbbslib::reduce_max(parlay::make_slice(non_zero_errors));
-        auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
-        std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
+        std::cout << "### Average Error: " << total_error/non_zero_errors << std::endl;
         std::cout << "### Max Error: " << max_error << std::endl;
     }
 
     if (num_reader_threads > 0) {
         parlay::sort_inplace(parlay::make_slice(latencies));
-        size_t index_percentile = floor(percentile * latencies.size());
+        size_t index_percentile = floor(percentile * total_count);
 
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
-        std::cout << "### Throughput: " << latency_sequence_size/overall_time << std::endl;
+        std::cout << "### Throughput: " << total_count/overall_time << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
-            << latencies[index_percentile] << std::endl;
+            << latencies[index_percentile - zero_latencies] << std::endl;
 
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
-        std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
+        std::cout << "### Average Latency: " << total_latency/total_count << std::endl;
     }
 }
 
