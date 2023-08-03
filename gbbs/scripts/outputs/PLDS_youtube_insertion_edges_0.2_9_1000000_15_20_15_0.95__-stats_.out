@@ -1,0 +1,1203 @@
+# list_alloc init_blocks: 1000
+# after init: 
+Used: 0, allocated: 31620, block size: 16392, bytes: 518315040
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0061
+# PBBS time: histogram time: 0.0243
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0081
+# PBBS time: histogram time: 0.0342
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0138
+# PBBS time: histogram time: 0.0598
+### Coreness Exact: 51
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 0 is running
+Thread 6 is running
+Thread 7 is running
+Thread Thread 8 is running
+Thread 12 is running
+Thread 10 is running
+Thread 11 is running
+Thread 3 is running
+Thread 5 is running
+Thread 2 is running
+Main thread batch started
+Thread 4 is running
+Thread 91 is running
+ is running
+Thread 13 is running
+### Batch Running Time: 0.3476
+### Insertion Running Time: 0.3465
+### Deletion Running Time: 0.001118
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0069
+# PBBS time: histogram time: 0.0389
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2264
+### Insertion Running Time: 0.2254
+### Deletion Running Time: 0.001005
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0357
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.2673
+### Insertion Running Time: 0.2663
+### Deletion Running Time: 0.000983
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0109
+# PBBS time: histogram time: 0.0580
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.24
+### Average Error: 263.3
+### Max Error: 1.432e+09
+### Main Counter: 23602910
+### Num Reader Threads: 15
+### Throughput: 1.904e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.406e-07
+### Running Time: 1.739
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0099
+# PBBS time: histogram time: 0.0274
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0111
+# PBBS time: histogram time: 0.0368
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0125
+# PBBS time: histogram time: 0.0488
+### Coreness Exact: 51
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 0 is running
+Thread 1 is running
+Thread 2 is running
+Thread 3 is running
+Thread 4 is running
+Thread 5 is running
+Thread 10 is running
+Thread Thread 6 is running
+7 is runningThread Thread Thread 9 is running
+Main thread batch started
+8 is running
+
+Thread 13 is running11
+ is running
+Thread 12 is running
+### Batch Running Time: 0.3282
+### Insertion Running Time: 0.3268
+### Deletion Running Time: 0.001335
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0213
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2261
+### Insertion Running Time: 0.2247
+### Deletion Running Time: 0.001322
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0361
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.2556
+### Insertion Running Time: 0.2543
+### Deletion Running Time: 0.001349
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0104
+# PBBS time: histogram time: 0.0471
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.129
+### Average Error: 1.611
+### Max Error: 2.8
+### Main Counter: 23661567
+### Num Reader Threads: 15
+### Throughput: 2.097e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.952e-07
+### Running Time: 1.594
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0054
+# PBBS time: histogram time: 0.0193
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0345
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0104
+# PBBS time: histogram time: 0.0467
+### Coreness Exact: 51
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 3 is waiting
+Thread 2 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 12 is waiting
+Thread 8 is waitingThread 
+11 is waiting
+Thread 9 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 10 is waiting
+Thread 14 is waiting
+Thread 14 is running
+Main thread batch started
+Thread 3 is running
+Thread 2 is running
+Thread 10 is running
+Thread 0 is running
+Thread 9 is running
+Thread 8 is running
+Thread 4 is running
+Thread 6 is running
+Thread 11 is running
+Thread 13 is running
+Thread 1 is running
+Thread 7 is running
+Thread 12 is running
+Thread 5 is running
+### Batch Running Time: 0.3568
+### Insertion Running Time: 0.3555
+### Deletion Running Time: 0.001346
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0059
+# PBBS time: histogram time: 0.0211
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2533
+### Insertion Running Time: 0.252
+### Deletion Running Time: 0.001301
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0100
+# PBBS time: histogram time: 0.0383
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.2491
+### Insertion Running Time: 0.2478
+### Deletion Running Time: 0.001285
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0118
+# PBBS time: histogram time: 0.0492
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.241
+### Average Error: 1.608
+### Max Error: 2.8
+### Main Counter: 26143316
+### Num Reader Threads: 15
+### Throughput: 2.107e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.887e-07
+### Running Time: 1.649
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0053
+# PBBS time: histogram time: 0.0216
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0088
+# PBBS time: histogram time: 0.0338
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0104
+# PBBS time: histogram time: 0.0558
+### Coreness Exact: 51
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Main thread batch started
+Thread 2 is runningThread 
+Thread 8 is running
+Thread Thread 7 is running
+Thread 12 is running
+Thread 3 is running
+Thread 4 is running
+Thread Thread 5 is running
+9 is runningThread 0 is running
+Thread 10 is running
+11 is running
+Thread 13 is running
+
+6 is running
+Thread 1 is running
+### Batch Running Time: 0.3517
+### Insertion Running Time: 0.3499
+### Deletion Running Time: 0.001827
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0056
+# PBBS time: histogram time: 0.0328
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2765
+### Insertion Running Time: 0.2752
+### Deletion Running Time: 0.001284
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0085
+# PBBS time: histogram time: 0.0502
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.23
+### Insertion Running Time: 0.2287
+### Deletion Running Time: 0.001294
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0251
+# PBBS time: histogram time: 0.0458
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.334
+### Average Error: 1.594
+### Max Error: 2.8
+### Main Counter: 27643283
+### Num Reader Threads: 15
+### Throughput: 2.072e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.022e-07
+### Running Time: 1.71
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0073
+# PBBS time: histogram time: 0.0208
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0093
+# PBBS time: histogram time: 0.0349
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0453
+### Coreness Exact: 51
+Barrier is initializing
+Thread 0 is waiting
+Thread 5 is waiting
+Thread 8 is waiting
+Thread Thread Thread 76 is waiting
+Thread Thread 10 is waiting
+ is waiting
+Thread 11 is waiting
+Thread 94 is waitingThread  is waiting2
+ is waiting
+Thread 12 is waiting
+3 is waiting
+
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 1 is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 1 is running
+Thread 0 is running
+Thread 8 is running
+Thread Thread 11 is running10Thread Thread Thread 12 is running
+6Thread 9 is running
+3 is running
+
+Thread 13 is running
+ is running
+Thread 5 is running
+Thread 4 is running
+Thread 7 is running
+Main thread batch started
+Thread 2 is running
+ is running
+### Batch Running Time: 0.3724
+### Insertion Running Time: 0.3711
+### Deletion Running Time: 0.0013
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0054
+# PBBS time: histogram time: 0.0300
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2264
+### Insertion Running Time: 0.225
+### Deletion Running Time: 0.00132
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0080
+# PBBS time: histogram time: 0.0521
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.2254
+### Insertion Running Time: 0.2241
+### Deletion Running Time: 0.001295
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0107
+# PBBS time: histogram time: 0.0478
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.204
+### Average Error: 1.601
+### Max Error: 2.8
+### Main Counter: 25066537
+### Num Reader Threads: 15
+### Throughput: 2.082e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.979e-07
+### Running Time: 1.574
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0053
+# PBBS time: histogram time: 0.0194
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0336
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0102
+# PBBS time: histogram time: 0.0452
+### Coreness Exact: 51
+Barrier is initializing
+Thread 0 is waiting
+Thread 2 is waiting
+Thread 1 is waiting
+Thread 3 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 5 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 13 is waiting
+Thread 14 is waiting
+Main thread batch is waiting
+Thread 4 is waiting
+Thread Thread 11 is waiting
+12 is waiting
+Thread 12 is running
+Thread 0 is running
+Thread 5 is running
+Thread Thread Thread 4 is running3
+6 is running
+Thread Thread  is running7
+Thread Thread Thread 29Main thread batch started
+Thread  is runningThread Thread 11 is running
+13 is running
+10 is running
+ is running is running
+8 is running
+14 is running
+
+
+Thread 1 is running
+### Batch Running Time: 0.3352
+### Insertion Running Time: 0.3339
+### Deletion Running Time: 0.001315
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0053
+# PBBS time: histogram time: 0.0259
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2315
+### Insertion Running Time: 0.2302
+### Deletion Running Time: 0.001265
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0083
+# PBBS time: histogram time: 0.0408
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.2501
+### Insertion Running Time: 0.2488
+### Deletion Running Time: 0.001352
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0106
+# PBBS time: histogram time: 0.0543
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.182
+### Average Error: 1.603
+### Max Error: 2.8
+### Main Counter: 25159223
+### Num Reader Threads: 15
+### Throughput: 2.128e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.828e-07
+### Running Time: 1.558
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0052
+# PBBS time: histogram time: 0.0191
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0083
+# PBBS time: histogram time: 0.0338
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0101
+# PBBS time: histogram time: 0.0449
+### Coreness Exact: 51
+Barrier is initializing
+Thread 3 is waiting
+Thread 1 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 8 is waiting
+Thread 6 is waiting
+Thread Thread 0 is waiting
+Thread 9 is waiting
+Thread 7 is waiting
+2 is waiting
+Thread 10 is waiting
+Thread 12 is waiting
+Thread 11 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 4 is running
+Thread 7 is running
+Thread 1 is runningMain thread batch started
+Thread 6 is running
+Thread 2 is running
+Thread 10 is running
+Thread 5 is runningThread 
+Thread 
+8 is running
+Thread 9 is running
+Thread 0 is running
+Thread 3 is running
+Thread 12 is running
+Thread 13 is running
+11 is running
+### Batch Running Time: 0.2926
+### Insertion Running Time: 0.2913
+### Deletion Running Time: 0.001298
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0052
+# PBBS time: histogram time: 0.0213
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2262
+### Insertion Running Time: 0.2249
+### Deletion Running Time: 0.001286
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0084
+# PBBS time: histogram time: 0.0372
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.2741
+### Insertion Running Time: 0.2728
+### Deletion Running Time: 0.001313
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0104
+# PBBS time: histogram time: 0.0470
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.273
+### Average Error: 1.597
+### Max Error: 2.8
+### Main Counter: 27106237
+### Num Reader Threads: 15
+### Throughput: 2.129e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.809e-07
+### Running Time: 1.64
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0062
+# PBBS time: histogram time: 0.0195
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0359
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0102
+# PBBS time: histogram time: 0.0457
+### Coreness Exact: 51
+Barrier is initializing
+Thread Thread 2 is waiting1 is waiting
+
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 0 is waiting
+Thread 12 is waiting
+Thread 11 is waiting
+Thread 11 is running
+Thread 14 is running
+Thread 1 is running
+Thread 2 is running
+Thread 5 is running
+Thread 0 is running
+Thread 7 is running
+Thread 8 is running
+Thread 13 is running
+Thread 4 is running
+Thread 10 is running
+Main thread batch started
+Thread 9 is running
+Thread 12 is running
+Thread 6 is running
+Thread 3 is running
+### Batch Running Time: 0.2879
+### Insertion Running Time: 0.2866
+### Deletion Running Time: 0.001313
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0053
+# PBBS time: histogram time: 0.0364
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2569
+### Insertion Running Time: 0.2556
+### Deletion Running Time: 0.001296
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0084
+# PBBS time: histogram time: 0.0587
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.248
+### Insertion Running Time: 0.2466
+### Deletion Running Time: 0.001445
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0108
+# PBBS time: histogram time: 0.0474
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.171
+### Average Error: 1.611
+### Max Error: 2.8
+### Main Counter: 25099577
+### Num Reader Threads: 15
+### Throughput: 2.144e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.762e-07
+### Running Time: 1.524
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0058
+# PBBS time: histogram time: 0.0215
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0095
+# PBBS time: histogram time: 0.0344
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0453
+### Coreness Exact: 51
+Barrier is initializing
+Thread 2 is waiting
+Thread 1 is waiting
+Thread 4 is waiting
+Thread 6 is waiting
+Thread 8 is waiting
+Thread 10 is waiting
+Thread 5 is waitingThread Thread 11 is waiting
+3 is waiting
+Thread Thread 7 is waiting9 is waiting
+
+
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 0 is waiting
+Thread 0 is running
+Thread 13 is running
+Thread 14 is running
+Thread Thread 2 is running
+10 is running
+Thread 9 is running
+Thread 3 is running
+Thread 12 is running
+Thread 6 is running
+Thread 4 is running
+Thread 5 is running
+Thread 8 is running
+Thread 11 is running
+Thread 1 is running
+Main thread batch started
+Thread 7 is running
+### Batch Running Time: 0.2843
+### Insertion Running Time: 0.283
+### Deletion Running Time: 0.001312
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0422
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2457
+### Insertion Running Time: 0.2443
+### Deletion Running Time: 0.001377
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0329
+# PBBS time: histogram time: 0.0396
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.2538
+### Insertion Running Time: 0.2522
+### Deletion Running Time: 0.001539
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0113
+# PBBS time: histogram time: 0.0475
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.177
+### Average Error: 1.612
+### Max Error: 2.8
+### Main Counter: 24483109
+### Num Reader Threads: 15
+### Throughput: 2.08e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.953e-07
+### Running Time: 1.547
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0054
+# PBBS time: histogram time: 0.0195
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0091
+# PBBS time: histogram time: 0.0339
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0449
+### Coreness Exact: 51
+Barrier is initializing
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 0 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Main thread batch started
+Thread Thread 12 is running is running
+
+Thread 5 is running
+Thread 3 is running
+Thread 7 is running
+Thread Thread 4 is running
+Thread 9 is running
+Thread 011 is running
+Thread 10 is running
+ is running
+Thread Thread 12 is running
+Thread 8 is running
+13 is running
+Thread 6 is running
+### Batch Running Time: 0.4389
+### Insertion Running Time: 0.4375
+### Deletion Running Time: 0.001337
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0078
+# PBBS time: histogram time: 0.0243
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.214
+### Insertion Running Time: 0.2121
+### Deletion Running Time: 0.001845
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0086
+# PBBS time: histogram time: 0.0520
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.3061
+### Insertion Running Time: 0.3048
+### Deletion Running Time: 0.001351
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0106
+# PBBS time: histogram time: 0.0497
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.346
+### Average Error: 1.611
+### Max Error: 2.8
+### Main Counter: 28706173
+### Num Reader Threads: 15
+### Throughput: 2.132e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 5.775e-07
+### Running Time: 1.71
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0054
+# PBBS time: histogram time: 0.0191
+### Coreness Exact: 18
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0083
+# PBBS time: histogram time: 0.0339
+### Coreness Exact: 35
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0103
+# PBBS time: histogram time: 0.0453
+### Coreness Exact: 51
+Barrier is initializing
+Thread 0 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 1 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 4 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 4 is running
+Thread Thread 92Thread  is running
+Thread 13Thread  is running6 is running
+1
+ is runningThread  is running
+0 is running
+Main thread batch started
+Thread Thread 11 is running
+Thread Thread Thread 10 is running
+Thread 5 is running
+3 is running7
+12 is running
+ is running
+Thread 8 is running
+
+### Batch Running Time: 0.3327
+### Insertion Running Time: 0.3314
+### Deletion Running Time: 0.001359
+### Batch Num: 1000000
+### Coreness Estimate: 19
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0054
+# PBBS time: histogram time: 0.0208
+### Coreness Exact Old: 18
+### Num Bad: 5.317e+05
+### Per Vertex Average Coreness Error: 1.185
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.125
+### Batch Running Time: 0.2122
+### Insertion Running Time: 0.2109
+### Deletion Running Time: 0.001287
+### Batch Num: 2000000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0088
+# PBBS time: histogram time: 0.0365
+### Coreness Exact Old: 35
+### Num Bad: 2.244e+05
+### Per Vertex Average Coreness Error: 1.206
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Batch Running Time: 0.3256
+### Insertion Running Time: 0.3243
+### Deletion Running Time: 0.001309
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0100
+# PBBS time: histogram time: 0.0472
+### Coreness Exact Old: 51
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.219
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2.231
+### Total Time: 1.337
+### Average Error: 1.599
+### Max Error: 2.8
+### Main Counter: 27295577
+### Num Reader Threads: 15
+### Throughput: 2.041e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.085e-07
+### Running Time: 1.695
+# time per iter: 1.631

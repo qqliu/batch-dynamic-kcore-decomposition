@@ -1,0 +1,4657 @@
+# list_alloc init_blocks: 1000
+# after init: 
+Used: 0, allocated: 31620, block size: 16392, bytes: 518315040
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0040
+# PBBS time: histogram time: 0.0209
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0050
+# PBBS time: histogram time: 0.0226
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0065
+# PBBS time: histogram time: 0.0326
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0124
+# PBBS time: histogram time: 0.0366
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0080
+# PBBS time: histogram time: 0.0504
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0089
+# PBBS time: histogram time: 0.0540
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0104
+# PBBS time: histogram time: 0.0639
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0151
+# PBBS time: histogram time: 0.0698
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0125
+# PBBS time: histogram time: 0.0827
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0133
+# PBBS time: histogram time: 0.1057
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0144
+# PBBS time: histogram time: 0.0957
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0148
+# PBBS time: histogram time: 0.1022
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0157
+# PBBS time: histogram time: 0.1110
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0172
+# PBBS time: histogram time: 0.1195
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0224
+# PBBS time: histogram time: 0.1272
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0185
+# PBBS time: histogram time: 0.1369
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0191
+# PBBS time: histogram time: 0.1420
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 3 is waiting
+Thread 7 is waiting
+Thread 6Thread Main thread batch is waiting
+Thread 10 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Thread 14 is waiting
+8 is waiting
+Thread 9 is waiting
+Thread 11 is waiting
+ is waiting
+Thread 6 is running
+Thread 8 is running
+Thread Thread 111 is running is running
+Thread 0 is running
+Thread 4 is running
+
+Thread 5 is running
+Thread 2 is running
+Thread 7 is running
+Thread 10 is runningThread 3 is running
+Thread Thread Thread Thread 14 is running9
+12
+ is running
+13 is running
+ is running
+Main thread batch started
+### Batch Running Time: 0.2307
+### Insertion Running Time: 0.2197
+### Deletion Running Time: 0.011
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0033
+# PBBS time: histogram time: 0.0236
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3063
+### Insertion Running Time: 0.2949
+### Deletion Running Time: 0.01139
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0062
+# PBBS time: histogram time: 0.0265
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4463
+### Insertion Running Time: 0.4341
+### Deletion Running Time: 0.01228
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0064
+# PBBS time: histogram time: 0.0565
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.5424
+### Insertion Running Time: 0.5301
+### Deletion Running Time: 0.01223
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0092
+# PBBS time: histogram time: 0.0536
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.272
+### Insertion Running Time: 0.2484
+### Deletion Running Time: 0.02361
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0958
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2631
+### Insertion Running Time: 0.2506
+### Deletion Running Time: 0.01251
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0276
+# PBBS time: histogram time: 0.1170
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4726
+### Insertion Running Time: 0.4598
+### Deletion Running Time: 0.01277
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0109
+# PBBS time: histogram time: 0.1763
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3349
+### Insertion Running Time: 0.3192
+### Deletion Running Time: 0.0157
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0124
+# PBBS time: histogram time: 0.1939
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3624
+### Insertion Running Time: 0.3419
+### Deletion Running Time: 0.02053
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.1422
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3993
+### Insertion Running Time: 0.3731
+### Deletion Running Time: 0.0262
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0348
+# PBBS time: histogram time: 0.1515
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3324
+### Insertion Running Time: 0.3094
+### Deletion Running Time: 0.02305
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0142
+# PBBS time: histogram time: 0.2437
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2613
+### Insertion Running Time: 0.2233
+### Deletion Running Time: 0.03806
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0161
+# PBBS time: histogram time: 0.1687
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2432
+### Insertion Running Time: 0.2163
+### Deletion Running Time: 0.02686
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0479
+# PBBS time: histogram time: 0.2463
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2268
+### Insertion Running Time: 0.2157
+### Deletion Running Time: 0.0111
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0175
+# PBBS time: histogram time: 0.1746
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2334
+### Insertion Running Time: 0.2222
+### Deletion Running Time: 0.01121
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0220
+# PBBS time: histogram time: 0.2268
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3913
+### Insertion Running Time: 0.3605
+### Deletion Running Time: 0.03077
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0218
+# PBBS time: histogram time: 0.2451
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2677
+### Insertion Running Time: 0.2388
+### Deletion Running Time: 0.02885
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0328
+# PBBS time: histogram time: 0.2123
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 13.64
+### Average Error: 1.112
+### Max Error: 2
+### Main Counter: 241135688
+### Num Reader Threads: 15
+### Throughput: 1.768e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 7.042e-07
+### Running Time: 18.89
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0201
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0087
+# PBBS time: histogram time: 0.0370
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0076
+# PBBS time: histogram time: 0.0302
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0372
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0563
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0089
+# PBBS time: histogram time: 0.0607
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0104
+# PBBS time: histogram time: 0.0691
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0128
+# PBBS time: histogram time: 0.0703
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0121
+# PBBS time: histogram time: 0.0859
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0133
+# PBBS time: histogram time: 0.0911
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0142
+# PBBS time: histogram time: 0.1033
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.1114
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0159
+# PBBS time: histogram time: 0.1120
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0164
+# PBBS time: histogram time: 0.1240
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0185
+# PBBS time: histogram time: 0.1276
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0183
+# PBBS time: histogram time: 0.1386
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0191
+# PBBS time: histogram time: 0.1479
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread Main thread batch is waiting
+13 is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 1 is running
+Thread 3 is running
+Thread 2 is running
+Thread 6Thread  is running0 is running
+Thread 5 is running
+Thread 7 is running
+
+Thread 9 is running
+Thread 10 is running
+Thread 11 is running
+Thread 8 is running
+Thread 12 is running
+Thread Thread 4Main thread batch started
+ is running
+13 is running
+### Batch Running Time: 0.4755
+### Insertion Running Time: 0.4501
+### Deletion Running Time: 0.02541
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0128
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.326
+### Insertion Running Time: 0.3094
+### Deletion Running Time: 0.01658
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0250
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3149
+### Insertion Running Time: 0.2924
+### Deletion Running Time: 0.0225
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0083
+# PBBS time: histogram time: 0.0379
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3375
+### Insertion Running Time: 0.3073
+### Deletion Running Time: 0.0302
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0088
+# PBBS time: histogram time: 0.0499
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3591
+### Insertion Running Time: 0.3351
+### Deletion Running Time: 0.02407
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0095
+# PBBS time: histogram time: 0.1073
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3047
+### Insertion Running Time: 0.2885
+### Deletion Running Time: 0.01623
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0102
+# PBBS time: histogram time: 0.0953
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3355
+### Insertion Running Time: 0.3059
+### Deletion Running Time: 0.02957
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0126
+# PBBS time: histogram time: 0.1242
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2823
+### Insertion Running Time: 0.2653
+### Deletion Running Time: 0.01707
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0152
+# PBBS time: histogram time: 0.1163
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3473
+### Insertion Running Time: 0.3119
+### Deletion Running Time: 0.03533
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0145
+# PBBS time: histogram time: 0.1148
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3282
+### Insertion Running Time: 0.2963
+### Deletion Running Time: 0.03192
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0174
+# PBBS time: histogram time: 0.1209
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3381
+### Insertion Running Time: 0.3208
+### Deletion Running Time: 0.01722
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0154
+# PBBS time: histogram time: 0.1818
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2921
+### Insertion Running Time: 0.2669
+### Deletion Running Time: 0.02515
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0191
+# PBBS time: histogram time: 0.1841
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3104
+### Insertion Running Time: 0.2848
+### Deletion Running Time: 0.02562
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0205
+# PBBS time: histogram time: 0.1693
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2877
+### Insertion Running Time: 0.271
+### Deletion Running Time: 0.01661
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0195
+# PBBS time: histogram time: 0.1800
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2964
+### Insertion Running Time: 0.2747
+### Deletion Running Time: 0.02171
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0205
+# PBBS time: histogram time: 0.2039
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3481
+### Insertion Running Time: 0.3277
+### Deletion Running Time: 0.02033
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0237
+# PBBS time: histogram time: 0.1970
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2753
+### Insertion Running Time: 0.251
+### Deletion Running Time: 0.02426
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0332
+# PBBS time: histogram time: 0.2464
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 13.24
+### Average Error: 1.112
+### Max Error: 2
+### Main Counter: 240585256
+### Num Reader Threads: 15
+### Throughput: 1.817e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.931e-07
+### Running Time: 18.22
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0037
+# PBBS time: histogram time: 0.0137
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0199
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0283
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0073
+# PBBS time: histogram time: 0.0361
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0081
+# PBBS time: histogram time: 0.0452
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0531
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0106
+# PBBS time: histogram time: 0.0624
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0114
+# PBBS time: histogram time: 0.0699
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0124
+# PBBS time: histogram time: 0.0782
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0130
+# PBBS time: histogram time: 0.0869
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0143
+# PBBS time: histogram time: 0.0954
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0158
+# PBBS time: histogram time: 0.1027
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0164
+# PBBS time: histogram time: 0.1194
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0170
+# PBBS time: histogram time: 0.1204
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0184
+# PBBS time: histogram time: 0.1277
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0188
+# PBBS time: histogram time: 0.1363
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0192
+# PBBS time: histogram time: 0.1420
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 6 is waiting
+Thread 11 is waiting
+Thread Thread 13 is waiting
+Main thread batch is waiting
+12 is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread Thread 0 is running
+Thread 2 is running
+12Thread 3 is running
+ is running
+Thread 4 is running
+Thread 5 is running
+Thread 7 is running
+Thread 8 is running
+Thread 9 is running
+Thread 1 is running
+Thread 6 is running
+Thread 10 is running
+Thread 11 is running
+Thread 13 is running
+Main thread batch started
+### Batch Running Time: 0.3899
+### Insertion Running Time: 0.3639
+### Deletion Running Time: 0.02601
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0139
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2803
+### Insertion Running Time: 0.2625
+### Deletion Running Time: 0.01781
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0112
+# PBBS time: histogram time: 0.0414
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2589
+### Insertion Running Time: 0.2416
+### Deletion Running Time: 0.0173
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0087
+# PBBS time: histogram time: 0.0482
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3159
+### Insertion Running Time: 0.2883
+### Deletion Running Time: 0.02761
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.0700
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3406
+### Insertion Running Time: 0.3209
+### Deletion Running Time: 0.01975
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0095
+# PBBS time: histogram time: 0.1040
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3037
+### Insertion Running Time: 0.2871
+### Deletion Running Time: 0.01667
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0096
+# PBBS time: histogram time: 0.1113
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3362
+### Insertion Running Time: 0.296
+### Deletion Running Time: 0.0402
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0116
+# PBBS time: histogram time: 0.1300
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3404
+### Insertion Running Time: 0.3198
+### Deletion Running Time: 0.02053
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0228
+# PBBS time: histogram time: 0.1331
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3405
+### Insertion Running Time: 0.3096
+### Deletion Running Time: 0.03091
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0128
+# PBBS time: histogram time: 0.1498
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2715
+### Insertion Running Time: 0.248
+### Deletion Running Time: 0.02352
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0173
+# PBBS time: histogram time: 0.1360
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3167
+### Insertion Running Time: 0.2914
+### Deletion Running Time: 0.02527
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0357
+# PBBS time: histogram time: 0.2364
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3513
+### Insertion Running Time: 0.3196
+### Deletion Running Time: 0.03165
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0195
+# PBBS time: histogram time: 0.2194
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3314
+### Insertion Running Time: 0.2885
+### Deletion Running Time: 0.04287
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0225
+# PBBS time: histogram time: 0.1692
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3174
+### Insertion Running Time: 0.2858
+### Deletion Running Time: 0.03161
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0209
+# PBBS time: histogram time: 0.1746
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3174
+### Insertion Running Time: 0.2918
+### Deletion Running Time: 0.02569
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0198
+# PBBS time: histogram time: 0.2299
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3301
+### Insertion Running Time: 0.3021
+### Deletion Running Time: 0.02806
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0311
+# PBBS time: histogram time: 0.2082
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3194
+### Insertion Running Time: 0.2941
+### Deletion Running Time: 0.02531
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0391
+# PBBS time: histogram time: 0.3170
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 14.26
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 258408749
+### Num Reader Threads: 15
+### Throughput: 1.812e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.91e-07
+### Running Time: 19.06
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0106
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0050
+# PBBS time: histogram time: 0.0206
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0064
+# PBBS time: histogram time: 0.0286
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0072
+# PBBS time: histogram time: 0.0360
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0083
+# PBBS time: histogram time: 0.0443
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0528
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0106
+# PBBS time: histogram time: 0.0621
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0112
+# PBBS time: histogram time: 0.0698
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0123
+# PBBS time: histogram time: 0.0779
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0132
+# PBBS time: histogram time: 0.0868
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0142
+# PBBS time: histogram time: 0.0952
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.1033
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0164
+# PBBS time: histogram time: 0.1126
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0165
+# PBBS time: histogram time: 0.1198
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0177
+# PBBS time: histogram time: 0.1278
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0184
+# PBBS time: histogram time: 0.1359
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0193
+# PBBS time: histogram time: 0.1473
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 3 is waiting
+Thread 2 is waiting
+Thread 4 is waitingThread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 12 is waiting
+Main thread batch started
+Thread 10 is running
+Thread 13 is running
+Thread 3 is running
+Thread 5 is running
+Thread 11 is running
+Thread 8 is running
+Thread 9 is running
+Thread 12 is running
+Thread 14 is running
+Thread 2 is running
+Thread 4 is running
+Thread 6 is running
+Thread 0 is running
+Thread 7Thread  is running
+1 is running
+### Batch Running Time: 0.3454
+### Insertion Running Time: 0.3075
+### Deletion Running Time: 0.03792
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0315
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.388
+### Insertion Running Time: 0.3492
+### Deletion Running Time: 0.03878
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0060
+# PBBS time: histogram time: 0.0387
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4337
+### Insertion Running Time: 0.3951
+### Deletion Running Time: 0.03862
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0065
+# PBBS time: histogram time: 0.0589
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4363
+### Insertion Running Time: 0.3816
+### Deletion Running Time: 0.05473
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0073
+# PBBS time: histogram time: 0.0940
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3549
+### Insertion Running Time: 0.3262
+### Deletion Running Time: 0.02873
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0092
+# PBBS time: histogram time: 0.0821
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3332
+### Insertion Running Time: 0.2813
+### Deletion Running Time: 0.05183
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0100
+# PBBS time: histogram time: 0.1587
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3761
+### Insertion Running Time: 0.3476
+### Deletion Running Time: 0.02848
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0110
+# PBBS time: histogram time: 0.1448
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.381
+### Insertion Running Time: 0.3295
+### Deletion Running Time: 0.05147
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0122
+# PBBS time: histogram time: 0.1922
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3302
+### Insertion Running Time: 0.3044
+### Deletion Running Time: 0.02583
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0327
+# PBBS time: histogram time: 0.1720
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3562
+### Insertion Running Time: 0.3
+### Deletion Running Time: 0.05613
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.2004
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3896
+### Insertion Running Time: 0.3361
+### Deletion Running Time: 0.05346
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0143
+# PBBS time: histogram time: 0.2426
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3957
+### Insertion Running Time: 0.3675
+### Deletion Running Time: 0.0282
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0168
+# PBBS time: histogram time: 0.2644
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3614
+### Insertion Running Time: 0.3179
+### Deletion Running Time: 0.04351
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0183
+# PBBS time: histogram time: 0.2610
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3963
+### Insertion Running Time: 0.3439
+### Deletion Running Time: 0.0524
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0189
+# PBBS time: histogram time: 0.2649
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3379
+### Insertion Running Time: 0.3205
+### Deletion Running Time: 0.01746
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0199
+# PBBS time: histogram time: 0.2939
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.377
+### Insertion Running Time: 0.3478
+### Deletion Running Time: 0.02919
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0333
+# PBBS time: histogram time: 0.3056
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3641
+### Insertion Running Time: 0.3339
+### Deletion Running Time: 0.03017
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0250
+# PBBS time: histogram time: 0.2471
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 16.8
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 298105335
+### Num Reader Threads: 15
+### Throughput: 1.775e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 7.095e-07
+### Running Time: 21.7
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0105
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0200
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0284
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0073
+# PBBS time: histogram time: 0.0360
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0084
+# PBBS time: histogram time: 0.0443
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0526
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0104
+# PBBS time: histogram time: 0.0616
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0113
+# PBBS time: histogram time: 0.0696
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0123
+# PBBS time: histogram time: 0.0785
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0133
+# PBBS time: histogram time: 0.0865
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0142
+# PBBS time: histogram time: 0.0982
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.1030
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0161
+# PBBS time: histogram time: 0.1117
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0164
+# PBBS time: histogram time: 0.1197
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0173
+# PBBS time: histogram time: 0.1269
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0187
+# PBBS time: histogram time: 0.1349
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0192
+# PBBS time: histogram time: 0.1422
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread Thread 2 is waiting
+Thread 3 is waiting
+1 is waiting
+Thread 4 is waiting
+Thread 6 is waiting
+Thread 8 is waiting
+Thread 7 is waiting
+Thread 5Thread 9 is waiting
+ is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Main thread batch started
+Thread 3 is running
+Thread Thread 4 is running
+Thread 1 is running
+Thread 9 is running
+Thread 0 is running
+Thread 7 is running
+Thread 5 is running
+Thread 10 is running
+Thread 12 is running
+13 is running
+Thread 8 is running
+Thread Thread 11 is running
+Thread 2 is running
+6 is running
+### Batch Running Time: 0.3601
+### Insertion Running Time: 0.3263
+### Deletion Running Time: 0.03379
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0031
+# PBBS time: histogram time: 0.0303
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4057
+### Insertion Running Time: 0.3526
+### Deletion Running Time: 0.05306
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0384
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4005
+### Insertion Running Time: 0.354
+### Deletion Running Time: 0.04644
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0066
+# PBBS time: histogram time: 0.0781
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3797
+### Insertion Running Time: 0.3337
+### Deletion Running Time: 0.04591
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0268
+# PBBS time: histogram time: 0.0858
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3734
+### Insertion Running Time: 0.3388
+### Deletion Running Time: 0.03451
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0088
+# PBBS time: histogram time: 0.1153
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4144
+### Insertion Running Time: 0.3858
+### Deletion Running Time: 0.02862
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0225
+# PBBS time: histogram time: 0.1096
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4201
+### Insertion Running Time: 0.3599
+### Deletion Running Time: 0.06026
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0161
+# PBBS time: histogram time: 0.1549
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3003
+### Insertion Running Time: 0.2835
+### Deletion Running Time: 0.0168
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0136
+# PBBS time: histogram time: 0.1157
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2885
+### Insertion Running Time: 0.2592
+### Deletion Running Time: 0.02937
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0147
+# PBBS time: histogram time: 0.1340
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3087
+### Insertion Running Time: 0.2915
+### Deletion Running Time: 0.0172
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0163
+# PBBS time: histogram time: 0.1596
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3351
+### Insertion Running Time: 0.3187
+### Deletion Running Time: 0.01635
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0162
+# PBBS time: histogram time: 0.1796
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.348
+### Insertion Running Time: 0.2938
+### Deletion Running Time: 0.05419
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0161
+# PBBS time: histogram time: 0.1387
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2676
+### Insertion Running Time: 0.2472
+### Deletion Running Time: 0.02034
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0185
+# PBBS time: histogram time: 0.1528
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2404
+### Insertion Running Time: 0.2236
+### Deletion Running Time: 0.01675
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0192
+# PBBS time: histogram time: 0.1733
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2619
+### Insertion Running Time: 0.2447
+### Deletion Running Time: 0.01723
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0195
+# PBBS time: histogram time: 0.2848
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3312
+### Insertion Running Time: 0.2789
+### Deletion Running Time: 0.05228
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0205
+# PBBS time: histogram time: 0.2612
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2841
+### Insertion Running Time: 0.255
+### Deletion Running Time: 0.02909
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0258
+# PBBS time: histogram time: 0.2604
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 14.31
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 263540979
+### Num Reader Threads: 15
+### Throughput: 1.842e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.778e-07
+### Running Time: 19.16
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0105
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0196
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0065
+# PBBS time: histogram time: 0.0285
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0075
+# PBBS time: histogram time: 0.0363
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0080
+# PBBS time: histogram time: 0.0451
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0530
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0618
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0118
+# PBBS time: histogram time: 0.0697
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0126
+# PBBS time: histogram time: 0.0782
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0130
+# PBBS time: histogram time: 0.0866
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0144
+# PBBS time: histogram time: 0.0952
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.1026
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0162
+# PBBS time: histogram time: 0.1111
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0163
+# PBBS time: histogram time: 0.1190
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0174
+# PBBS time: histogram time: 0.1273
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0184
+# PBBS time: histogram time: 0.1347
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0195
+# PBBS time: histogram time: 0.1490
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 5 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread Thread 1114 is waiting is waiting
+
+Thread 12 is waiting
+Thread 12 is running
+Thread 0 is running
+Thread 1 is running
+Thread 2 is running
+Thread 3 is running
+Thread 10 is running
+Thread 13 is running
+Thread Main thread batch started
+8 is running
+Thread 6 is running
+Thread 9 is running
+Thread 7 is running
+Thread 4 is running
+Thread 11 is running
+Thread 14 is running
+Thread 5 is running
+### Batch Running Time: 0.4492
+### Insertion Running Time: 0.4039
+### Deletion Running Time: 0.04534
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0031
+# PBBS time: histogram time: 0.0146
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3424
+### Insertion Running Time: 0.2921
+### Deletion Running Time: 0.05037
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0054
+# PBBS time: histogram time: 0.0475
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4271
+### Insertion Running Time: 0.4028
+### Deletion Running Time: 0.02434
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0075
+# PBBS time: histogram time: 0.0379
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2983
+### Insertion Running Time: 0.2816
+### Deletion Running Time: 0.01671
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0081
+# PBBS time: histogram time: 0.0668
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3179
+### Insertion Running Time: 0.293
+### Deletion Running Time: 0.02487
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0681
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3114
+### Insertion Running Time: 0.2867
+### Deletion Running Time: 0.02462
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0106
+# PBBS time: histogram time: 0.1215
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2842
+### Insertion Running Time: 0.2676
+### Deletion Running Time: 0.01654
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0111
+# PBBS time: histogram time: 0.1020
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3473
+### Insertion Running Time: 0.309
+### Deletion Running Time: 0.03834
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0127
+# PBBS time: histogram time: 0.1326
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3537
+### Insertion Running Time: 0.3126
+### Deletion Running Time: 0.04111
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0166
+# PBBS time: histogram time: 0.1299
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.372
+### Insertion Running Time: 0.3414
+### Deletion Running Time: 0.0306
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0156
+# PBBS time: histogram time: 0.2039
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3099
+### Insertion Running Time: 0.2811
+### Deletion Running Time: 0.02881
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0304
+# PBBS time: histogram time: 0.2059
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.318
+### Insertion Running Time: 0.2981
+### Deletion Running Time: 0.01981
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0191
+# PBBS time: histogram time: 0.2131
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3001
+### Insertion Running Time: 0.2773
+### Deletion Running Time: 0.02283
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0254
+# PBBS time: histogram time: 0.2127
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3177
+### Insertion Running Time: 0.2927
+### Deletion Running Time: 0.02501
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0261
+# PBBS time: histogram time: 0.1942
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3121
+### Insertion Running Time: 0.2836
+### Deletion Running Time: 0.02849
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0220
+# PBBS time: histogram time: 0.2310
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3512
+### Insertion Running Time: 0.3191
+### Deletion Running Time: 0.03204
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0196
+# PBBS time: histogram time: 0.2194
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3105
+### Insertion Running Time: 0.2911
+### Deletion Running Time: 0.01941
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0209
+# PBBS time: histogram time: 0.2693
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 14.32
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 261514087
+### Num Reader Threads: 15
+### Throughput: 1.826e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.861e-07
+### Running Time: 19.21
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0104
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0050
+# PBBS time: histogram time: 0.0198
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0285
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0073
+# PBBS time: histogram time: 0.0361
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0443
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0531
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0106
+# PBBS time: histogram time: 0.0615
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0113
+# PBBS time: histogram time: 0.0700
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0126
+# PBBS time: histogram time: 0.0783
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0131
+# PBBS time: histogram time: 0.0874
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0142
+# PBBS time: histogram time: 0.0951
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0158
+# PBBS time: histogram time: 0.1033
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0161
+# PBBS time: histogram time: 0.1116
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0164
+# PBBS time: histogram time: 0.1206
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0190
+# PBBS time: histogram time: 0.1272
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0189
+# PBBS time: histogram time: 0.1365
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0195
+# PBBS time: histogram time: 0.1423
+### Coreness Exact: 3
+Barrier is initializing
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 3 is waiting
+Thread Thread 8 is waiting
+4 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 0 is waiting
+Thread Thread 1211 is waiting is waiting
+
+Thread 11 is running
+Thread 12 is running
+Thread 5 is running
+Thread 0 is running
+Thread 9 is running
+Thread 1 is running
+Thread 10 is running
+Thread 3 is running
+Thread 8 is running
+Main thread batch started
+Thread 2 is running
+Thread 13 is running
+Thread 7 is running
+Thread Thread 4 is running
+6 is running
+Thread 14 is running
+### Batch Running Time: 0.394
+### Insertion Running Time: 0.346
+### Deletion Running Time: 0.04797
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0142
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4199
+### Insertion Running Time: 0.3721
+### Deletion Running Time: 0.04774
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0052
+# PBBS time: histogram time: 0.0357
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3719
+### Insertion Running Time: 0.3427
+### Deletion Running Time: 0.02925
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0777
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.38
+### Insertion Running Time: 0.3427
+### Deletion Running Time: 0.0373
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0081
+# PBBS time: histogram time: 0.1048
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3536
+### Insertion Running Time: 0.3248
+### Deletion Running Time: 0.02886
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0095
+# PBBS time: histogram time: 0.0781
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3044
+### Insertion Running Time: 0.2858
+### Deletion Running Time: 0.01852
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.1105
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2855
+### Insertion Running Time: 0.2695
+### Deletion Running Time: 0.01604
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0109
+# PBBS time: histogram time: 0.1181
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3479
+### Insertion Running Time: 0.327
+### Deletion Running Time: 0.02099
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0130
+# PBBS time: histogram time: 0.1152
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3016
+### Insertion Running Time: 0.2846
+### Deletion Running Time: 0.01704
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0137
+# PBBS time: histogram time: 0.1203
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3082
+### Insertion Running Time: 0.2918
+### Deletion Running Time: 0.01642
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0146
+# PBBS time: histogram time: 0.1662
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.347
+### Insertion Running Time: 0.3304
+### Deletion Running Time: 0.01655
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0202
+# PBBS time: histogram time: 0.1619
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.367
+### Insertion Running Time: 0.3118
+### Deletion Running Time: 0.0552
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0181
+# PBBS time: histogram time: 0.1811
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2916
+### Insertion Running Time: 0.2753
+### Deletion Running Time: 0.01626
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0198
+# PBBS time: histogram time: 0.1834
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.251
+### Insertion Running Time: 0.2167
+### Deletion Running Time: 0.03427
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0232
+# PBBS time: histogram time: 0.1957
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3433
+### Insertion Running Time: 0.3119
+### Deletion Running Time: 0.03138
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0213
+# PBBS time: histogram time: 0.2053
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.371
+### Insertion Running Time: 0.3199
+### Deletion Running Time: 0.05114
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0247
+# PBBS time: histogram time: 0.2103
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3075
+### Insertion Running Time: 0.2827
+### Deletion Running Time: 0.02487
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0260
+# PBBS time: histogram time: 0.2494
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 14.12
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 255362884
+### Num Reader Threads: 15
+### Throughput: 1.808e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.934e-07
+### Running Time: 18.87
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0109
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0203
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0062
+# PBBS time: histogram time: 0.0290
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0468
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0083
+# PBBS time: histogram time: 0.0444
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0529
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0106
+# PBBS time: histogram time: 0.0624
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0122
+# PBBS time: histogram time: 0.0699
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0122
+# PBBS time: histogram time: 0.0793
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0129
+# PBBS time: histogram time: 0.0869
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0143
+# PBBS time: histogram time: 0.0957
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0154
+# PBBS time: histogram time: 0.1031
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0160
+# PBBS time: histogram time: 0.1116
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0165
+# PBBS time: histogram time: 0.1199
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0179
+# PBBS time: histogram time: 0.1276
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0189
+# PBBS time: histogram time: 0.1347
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0195
+# PBBS time: histogram time: 0.1432
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 9 is waiting
+Thread 9 is running
+Main thread batch startedThread 11 is running
+Thread 1 is running
+Thread Thread 6 is running
+3Thread  is running
+Thread 4 is running
+Thread 14 is running
+Thread Thread 05 is runningThread 2 is running
+8 is running
+ is running
+
+Thread Thread 12 is running
+13 is running
+Thread 7 is running
+Thread 10 is running
+
+### Batch Running Time: 0.3676
+### Insertion Running Time: 0.3123
+### Deletion Running Time: 0.05528
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0187
+# PBBS time: histogram time: 0.0152
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4015
+### Insertion Running Time: 0.374
+### Deletion Running Time: 0.02757
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0185
+# PBBS time: histogram time: 0.0379
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3626
+### Insertion Running Time: 0.3167
+### Deletion Running Time: 0.04588
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0067
+# PBBS time: histogram time: 0.0824
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3852
+### Insertion Running Time: 0.3398
+### Deletion Running Time: 0.04536
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0085
+# PBBS time: histogram time: 0.0885
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3979
+### Insertion Running Time: 0.358
+### Deletion Running Time: 0.03988
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0086
+# PBBS time: histogram time: 0.0977
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4155
+### Insertion Running Time: 0.3696
+### Deletion Running Time: 0.04583
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0968
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.343
+### Insertion Running Time: 0.312
+### Deletion Running Time: 0.03107
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0116
+# PBBS time: histogram time: 0.1164
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3883
+### Insertion Running Time: 0.3638
+### Deletion Running Time: 0.02453
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0272
+# PBBS time: histogram time: 0.1432
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3921
+### Insertion Running Time: 0.3626
+### Deletion Running Time: 0.02946
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0154
+# PBBS time: histogram time: 0.1584
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3877
+### Insertion Running Time: 0.3592
+### Deletion Running Time: 0.02848
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0138
+# PBBS time: histogram time: 0.1774
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3849
+### Insertion Running Time: 0.3258
+### Deletion Running Time: 0.05912
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0151
+# PBBS time: histogram time: 0.2452
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3626
+### Insertion Running Time: 0.3089
+### Deletion Running Time: 0.05367
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0152
+# PBBS time: histogram time: 0.2760
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3597
+### Insertion Running Time: 0.3251
+### Deletion Running Time: 0.03463
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0181
+# PBBS time: histogram time: 0.2516
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3277
+### Insertion Running Time: 0.2983
+### Deletion Running Time: 0.02945
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0233
+# PBBS time: histogram time: 0.2264
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3711
+### Insertion Running Time: 0.3429
+### Deletion Running Time: 0.02824
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0211
+# PBBS time: histogram time: 0.2824
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3433
+### Insertion Running Time: 0.3174
+### Deletion Running Time: 0.02589
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0198
+# PBBS time: histogram time: 0.3257
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4056
+### Insertion Running Time: 0.3595
+### Deletion Running Time: 0.0461
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0223
+# PBBS time: histogram time: 0.3482
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 16.93
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 299994049
+### Num Reader Threads: 15
+### Throughput: 1.772e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 7.109e-07
+### Running Time: 21.8
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0103
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0196
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0062
+# PBBS time: histogram time: 0.0284
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0074
+# PBBS time: histogram time: 0.0359
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0082
+# PBBS time: histogram time: 0.0445
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0089
+# PBBS time: histogram time: 0.0529
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0622
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0113
+# PBBS time: histogram time: 0.0698
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0125
+# PBBS time: histogram time: 0.0781
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0131
+# PBBS time: histogram time: 0.0873
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0144
+# PBBS time: histogram time: 0.0949
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0152
+# PBBS time: histogram time: 0.1027
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0162
+# PBBS time: histogram time: 0.1118
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0166
+# PBBS time: histogram time: 0.1199
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0176
+# PBBS time: histogram time: 0.1271
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0187
+# PBBS time: histogram time: 0.1355
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0195
+# PBBS time: histogram time: 0.1423
+### Coreness Exact: 3
+Barrier is initializing
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 0 is waiting
+Thread 0 is running
+Thread Thread 7 is running
+Thread 8 is running
+Thread Thread 3 is running
+Thread Thread 13 is running
+Thread 11 is running
+Thread 10Thread Thread 5 is running
+9 is running
+ is running
+Main thread batch started
+14 is running
+1 is running
+Thread 12 is running
+Thread Thread 6 is running
+4 is running2
+ is running
+### Batch Running Time: 0.4372
+### Insertion Running Time: 0.3988
+### Deletion Running Time: 0.03847
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0033
+# PBBS time: histogram time: 0.0122
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4227
+### Insertion Running Time: 0.3759
+### Deletion Running Time: 0.04676
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0270
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3334
+### Insertion Running Time: 0.2965
+### Deletion Running Time: 0.03691
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0077
+# PBBS time: histogram time: 0.0592
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.344
+### Insertion Running Time: 0.3153
+### Deletion Running Time: 0.02872
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0094
+# PBBS time: histogram time: 0.0665
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.363
+### Insertion Running Time: 0.3446
+### Deletion Running Time: 0.01844
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0086
+# PBBS time: histogram time: 0.0835
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3142
+### Insertion Running Time: 0.2853
+### Deletion Running Time: 0.02895
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0802
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2994
+### Insertion Running Time: 0.2703
+### Deletion Running Time: 0.02916
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0150
+# PBBS time: histogram time: 0.0841
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.284
+### Insertion Running Time: 0.2539
+### Deletion Running Time: 0.03015
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0146
+# PBBS time: histogram time: 0.1352
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2769
+### Insertion Running Time: 0.2604
+### Deletion Running Time: 0.01652
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0159
+# PBBS time: histogram time: 0.1123
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3137
+### Insertion Running Time: 0.2836
+### Deletion Running Time: 0.03006
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0159
+# PBBS time: histogram time: 0.1332
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2859
+### Insertion Running Time: 0.268
+### Deletion Running Time: 0.0179
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0145
+# PBBS time: histogram time: 0.2438
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2927
+### Insertion Running Time: 0.2646
+### Deletion Running Time: 0.02814
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0182
+# PBBS time: histogram time: 0.1882
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2615
+### Insertion Running Time: 0.2311
+### Deletion Running Time: 0.03039
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0175
+# PBBS time: histogram time: 0.1484
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2744
+### Insertion Running Time: 0.2578
+### Deletion Running Time: 0.01654
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0190
+# PBBS time: histogram time: 0.1946
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3274
+### Insertion Running Time: 0.3033
+### Deletion Running Time: 0.02418
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0223
+# PBBS time: histogram time: 0.1986
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2982
+### Insertion Running Time: 0.2796
+### Deletion Running Time: 0.0186
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0207
+# PBBS time: histogram time: 0.2186
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.2819
+### Insertion Running Time: 0.2656
+### Deletion Running Time: 0.01631
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0218
+# PBBS time: histogram time: 0.2948
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 13.4
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 244101111
+### Num Reader Threads: 15
+### Throughput: 1.822e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.866e-07
+### Running Time: 18.18
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0103
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0051
+# PBBS time: histogram time: 0.0198
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0284
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0072
+# PBBS time: histogram time: 0.0362
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0080
+# PBBS time: histogram time: 0.0447
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0091
+# PBBS time: histogram time: 0.0528
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0619
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0113
+# PBBS time: histogram time: 0.0701
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0124
+# PBBS time: histogram time: 0.0782
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0131
+# PBBS time: histogram time: 0.0880
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0142
+# PBBS time: histogram time: 0.0949
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0149
+# PBBS time: histogram time: 0.1028
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0161
+# PBBS time: histogram time: 0.1120
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0166
+# PBBS time: histogram time: 0.1199
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0172
+# PBBS time: histogram time: 0.1278
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0187
+# PBBS time: histogram time: 0.1348
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0194
+# PBBS time: histogram time: 0.1420
+### Coreness Exact: 3
+Barrier is initializing
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 3 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 10 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Thread Thread 9 is waiting11 is waiting
+
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 0 is waiting
+Thread 0 is running
+Thread 6 is running
+Thread 14 is running
+Thread 7 is running
+Thread 11 is running
+Thread 5 is running
+Thread Thread 8 is running9
+Main thread batch startedThread 4 is running
+ is running
+Thread 12 is running
+Thread 13 is running
+
+Thread 1 is running
+Thread 10 is running
+Thread 3 is running
+Thread 2 is running
+### Batch Running Time: 0.4221
+### Insertion Running Time: 0.3876
+### Deletion Running Time: 0.03453
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0030
+# PBBS time: histogram time: 0.0121
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4181
+### Insertion Running Time: 0.3705
+### Deletion Running Time: 0.04762
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0050
+# PBBS time: histogram time: 0.0475
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3639
+### Insertion Running Time: 0.3395
+### Deletion Running Time: 0.02447
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0062
+# PBBS time: histogram time: 0.0732
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3403
+### Insertion Running Time: 0.3101
+### Deletion Running Time: 0.03024
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0140
+# PBBS time: histogram time: 0.0778
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3883
+### Insertion Running Time: 0.3596
+### Deletion Running Time: 0.02863
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0243
+# PBBS time: histogram time: 0.1067
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3759
+### Insertion Running Time: 0.3487
+### Deletion Running Time: 0.02723
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0102
+# PBBS time: histogram time: 0.1052
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3688
+### Insertion Running Time: 0.3379
+### Deletion Running Time: 0.03092
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0247
+# PBBS time: histogram time: 0.1369
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3551
+### Insertion Running Time: 0.3109
+### Deletion Running Time: 0.04416
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0126
+# PBBS time: histogram time: 0.2011
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3647
+### Insertion Running Time: 0.3273
+### Deletion Running Time: 0.03738
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0158
+# PBBS time: histogram time: 0.1785
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4283
+### Insertion Running Time: 0.3896
+### Deletion Running Time: 0.03868
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0164
+# PBBS time: histogram time: 0.1746
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3398
+### Insertion Running Time: 0.3194
+### Deletion Running Time: 0.0204
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0146
+# PBBS time: histogram time: 0.2385
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3532
+### Insertion Running Time: 0.3279
+### Deletion Running Time: 0.02531
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0170
+# PBBS time: histogram time: 0.2163
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4193
+### Insertion Running Time: 0.3901
+### Deletion Running Time: 0.02917
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0162
+# PBBS time: histogram time: 0.2623
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3657
+### Insertion Running Time: 0.3382
+### Deletion Running Time: 0.02754
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0201
+# PBBS time: histogram time: 0.2362
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3366
+### Insertion Running Time: 0.308
+### Deletion Running Time: 0.02862
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0242
+# PBBS time: histogram time: 0.2065
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3842
+### Insertion Running Time: 0.3498
+### Deletion Running Time: 0.03433
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0214
+# PBBS time: histogram time: 0.2791
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3433
+### Insertion Running Time: 0.2956
+### Deletion Running Time: 0.04764
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0219
+# PBBS time: histogram time: 0.3169
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 16.44
+### Average Error: 1.113
+### Max Error: 2
+### Main Counter: 296997968
+### Num Reader Threads: 15
+### Throughput: 1.806e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 6.924e-07
+### Running Time: 21.28
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ParallelLDS/empty_h
+### Threads: 60
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0032
+# PBBS time: histogram time: 0.0103
+### Coreness Exact: 3
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0050
+# PBBS time: histogram time: 0.0196
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0063
+# PBBS time: histogram time: 0.0284
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0074
+# PBBS time: histogram time: 0.0359
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0083
+# PBBS time: histogram time: 0.0445
+### Coreness Exact: 3
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0091
+# PBBS time: histogram time: 0.0529
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.0615
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0115
+# PBBS time: histogram time: 0.0701
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0125
+# PBBS time: histogram time: 0.0782
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0131
+# PBBS time: histogram time: 0.0864
+### Coreness Exact: 3
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0144
+# PBBS time: histogram time: 0.0957
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0159
+# PBBS time: histogram time: 0.1034
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0162
+# PBBS time: histogram time: 0.1118
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0166
+# PBBS time: histogram time: 0.1199
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0186
+# PBBS time: histogram time: 0.1277
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0190
+# PBBS time: histogram time: 0.1352
+### Coreness Exact: 3
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0196
+# PBBS time: histogram time: 0.1508
+### Coreness Exact: 3
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 11 is running
+Main thread batch started
+Thread 1 is running
+Thread 2 is running
+Thread 3 is running
+Thread 4 is running
+Thread 6 is running
+Thread 5 is running
+Thread Thread 8 is running9 is running
+Thread 7 is running
+Thread 13 is running
+
+Thread 12 is running
+Thread 10 is running
+Thread 0 is running
+### Batch Running Time: 0.3414
+### Insertion Running Time: 0.3121
+### Deletion Running Time: 0.0293
+### Batch Num: 1000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 262144
+resized hist_table to: 1048576
+# PBBS time: bucket time: 0.0030
+# PBBS time: histogram time: 0.0120
+### Coreness Exact Old: 3
+### Num Bad: 1.321e+07
+### Per Vertex Average Coreness Error: 1.12
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4362
+### Insertion Running Time: 0.3972
+### Deletion Running Time: 0.03899
+### Batch Num: 2000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 524288
+resized hist_table to: 2097152
+# PBBS time: bucket time: 0.0055
+# PBBS time: histogram time: 0.0254
+### Coreness Exact Old: 3
+### Num Bad: 1.241e+07
+### Per Vertex Average Coreness Error: 1.104
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3282
+### Insertion Running Time: 0.311
+### Deletion Running Time: 0.01717
+### Batch Num: 3000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0073
+# PBBS time: histogram time: 0.0650
+### Coreness Exact Old: 3
+### Num Bad: 1.158e+07
+### Per Vertex Average Coreness Error: 1.103
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3641
+### Insertion Running Time: 0.3389
+### Deletion Running Time: 0.02513
+### Batch Num: 4000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 4194304
+# PBBS time: bucket time: 0.0090
+# PBBS time: histogram time: 0.0846
+### Coreness Exact Old: 3
+### Num Bad: 1.076e+07
+### Per Vertex Average Coreness Error: 1.094
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3847
+### Insertion Running Time: 0.3507
+### Deletion Running Time: 0.03402
+### Batch Num: 5000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0086
+# PBBS time: histogram time: 0.1087
+### Coreness Exact Old: 3
+### Num Bad: 9.967e+06
+### Per Vertex Average Coreness Error: 1.088
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4081
+### Insertion Running Time: 0.3822
+### Deletion Running Time: 0.02589
+### Batch Num: 6000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 1048576
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0094
+# PBBS time: histogram time: 0.1657
+### Coreness Exact Old: 3
+### Num Bad: 9.163e+06
+### Per Vertex Average Coreness Error: 1.083
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3517
+### Insertion Running Time: 0.3052
+### Deletion Running Time: 0.04653
+### Batch Num: 7000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0105
+# PBBS time: histogram time: 0.1903
+### Coreness Exact Old: 3
+### Num Bad: 8.298e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3559
+### Insertion Running Time: 0.3303
+### Deletion Running Time: 0.02566
+### Batch Num: 8000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0129
+# PBBS time: histogram time: 0.1840
+### Coreness Exact Old: 3
+### Num Bad: 7.485e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3236
+### Insertion Running Time: 0.2898
+### Deletion Running Time: 0.03376
+### Batch Num: 9000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 8388608
+# PBBS time: bucket time: 0.0176
+# PBBS time: histogram time: 0.1622
+### Coreness Exact Old: 3
+### Num Bad: 6.652e+06
+### Per Vertex Average Coreness Error: 1.089
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3881
+### Insertion Running Time: 0.3423
+### Deletion Running Time: 0.04575
+### Batch Num: 10000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0143
+# PBBS time: histogram time: 0.1777
+### Coreness Exact Old: 3
+### Num Bad: 5.784e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3961
+### Insertion Running Time: 0.352
+### Deletion Running Time: 0.04411
+### Batch Num: 11000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 2097152
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0160
+# PBBS time: histogram time: 0.1922
+### Coreness Exact Old: 3
+### Num Bad: 4.95e+06
+### Per Vertex Average Coreness Error: 1.092
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3801
+### Insertion Running Time: 0.3507
+### Deletion Running Time: 0.02944
+### Batch Num: 12000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0331
+# PBBS time: histogram time: 0.2029
+### Coreness Exact Old: 3
+### Num Bad: 4.132e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4367
+### Insertion Running Time: 0.3838
+### Deletion Running Time: 0.05296
+### Batch Num: 13000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0231
+# PBBS time: histogram time: 0.2373
+### Coreness Exact Old: 3
+### Num Bad: 3.301e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3558
+### Insertion Running Time: 0.3264
+### Deletion Running Time: 0.02933
+### Batch Num: 14000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0193
+# PBBS time: histogram time: 0.2804
+### Coreness Exact Old: 3
+### Num Bad: 2.447e+06
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.4082
+### Insertion Running Time: 0.3648
+### Deletion Running Time: 0.04339
+### Batch Num: 15000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0189
+# PBBS time: histogram time: 0.2767
+### Coreness Exact Old: 3
+### Num Bad: 1.64e+06
+### Per Vertex Average Coreness Error: 1.09
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3883
+### Insertion Running Time: 0.3223
+### Deletion Running Time: 0.06607
+### Batch Num: 16000000
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0231
+# PBBS time: histogram time: 0.2369
+### Coreness Exact Old: 3
+### Num Bad: 7.949e+05
+### Per Vertex Average Coreness Error: 1.091
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Batch Running Time: 0.3442
+### Insertion Running Time: 0.3039
+### Deletion Running Time: 0.04029
+### Batch Num: 16933413
+### Coreness Estimate: 3
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 8
+resized hist_table to: 4194304
+resized hist_table to: 16777216
+# PBBS time: bucket time: 0.0251
+# PBBS time: histogram time: 0.2551
+### Coreness Exact Old: 3
+### Num Bad: 0
+### Per Vertex Average Coreness Error: 1.093
+### Per Vertex Min Coreness Error: 1
+### Per Vertex Max Coreness Error: 2
+### Total Time: 16.56
+### Average Error: 1.112
+### Max Error: 2
+### Main Counter: 294749541
+### Num Reader Threads: 15
+### Throughput: 1.779e+07
+### Latency Percentile 0.95: 1.192e-06
+### Average Latency: 7.088e-07
+### Running Time: 21.43
+# time per iter: 19.8

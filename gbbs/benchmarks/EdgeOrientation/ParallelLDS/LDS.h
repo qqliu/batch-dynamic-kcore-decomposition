@@ -1495,10 +1495,15 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     } stop;
 
     std::atomic<uintE> counter_seq[num_reader_threads];
-    gbbs::sequence<std::vector<double>> error_seq
-        = gbbs::sequence<std::vector<double>>(num_reader_threads);
+    gbbs::sequence<double> avg_error_seq
+        = gbbs::sequence<double>(num_reader_threads, 0.0);
+    gbbs::sequence<double> max_error_seq
+        = gbbs::sequence<double>(num_reader_threads, 0.0);
+    gbbs::sequence<double> non_zero_error_seq
+        = gbbs::sequence<double>(num_reader_threads, 0.0);
     gbbs::sequence<std::vector<double>> latency_seq
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
+    gbbs::sequence<size_t> zero_latency_seq = gbbs::sequence<size_t>(num_reader_threads, 0);
     std::thread read_thread_seq[num_reader_threads];
 
     size_t main_counter = 0;
@@ -1510,7 +1515,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end, &read_thread_seq,
                 &layers, &stop, &counter_seq, &ground_truth_container, &compare_exact,
-                &error_seq, &nonlinearizable, &latency_seq, thread_i] {
+                &avg_error_seq, &max_error_seq, &nonlinearizable, &zero_latency_seq,
+                &latency_seq, &non_zero_error_seq, thread_i] {
             std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
             std::cout << "Thread " << thread_i << " is running" << std::endl;
@@ -1521,7 +1527,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
             size_t my_counter = 0;
 
-            std::vector<double> all_latency;
+            double max_thread_error = 0.0;
+            double total_thread_error = 0.0;
+            size_t zero_latencies = 0;
+            size_t non_zero_error = 0;
 
             parlay::random rng = parlay::random(time(0));
 
@@ -1531,19 +1540,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 rng = rng.next();
 
                 timer read_timer; read_timer.start();
-                timer root_timer; root_timer.start();
-                timer if_timer; if_timer.start();
-                timer else_timer; else_timer.start();
-
-                double root_time;
-                double if_time;
-                double else_time;
 
                 auto retry = true;
 
                 while(retry && stop.flag == 0) {
-                    root_timer.start();
-
                     auto b1 = layers.batch_num;
                     auto l1 = layers.L[random_vertex].level;
                     auto old_level_1 = layers.descriptor_array[random_vertex].old_level;
@@ -1557,11 +1557,9 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                     if (b1 != b2)
                         continue;
 
-                    root_time = root_timer.stop();
                     if (root != UINT_E_MAX) {
                         if (old_level_1 != old_level_2)
                             continue;
-                        if_timer.start();
                         auto approx_core =
                             layers.get_core_from_level(old_level_1);
 
@@ -1604,25 +1602,18 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || old_level_1 == 0)
                                     cur_error = UINT_E_MAX;
 
-                                if (cur_error > UINT_E_MAX/100 && cur_error < UINT_E_MAX) {
-                                    std::cout << "root unmarked" << std::endl;
-                                    std::cout << "error: " << cur_error << std::endl;
-                                    std::cout << "error lower: " << cur_error_lower << std::endl;
-                                    std::cout << "error upper: " << cur_error_upper << std::endl;
-                                    std::cout << "approx: " << approx_core << std::endl;
-                                    std::cout << "exact core lower: " << exact_core_lower << std::endl;
-                                    std::cout << "exact core upper: " << exact_core_upper << std::endl;
+                                if (cur_error != UINT_E_MAX) {
+                                    if (cur_error > max_thread_error)
+                                        max_thread_error = cur_error;
+                                    total_thread_error += cur_error;
+                                    non_zero_error++;
                                 }
-
-                                error_seq[thread_i].push_back(cur_error);
                         }
 
                         retry = false;
-                        if_time = if_timer.stop();
                     }
 
                     else {
-                        else_timer.start();
                         if (l1 == l2) {
                             auto approx_core = layers.get_core_from_level(l1);
 
@@ -1665,32 +1656,33 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || l1 == 0)
                                     cur_error = UINT_E_MAX;
 
-                                if (cur_error > UINT_E_MAX/100 && cur_error < UINT_E_MAX) {
-                                    std::cout << "root unmarked" << std::endl;
-                                    std::cout << "error: " << cur_error << std::endl;
-                                    std::cout << "error lower: " << cur_error_lower << std::endl;
-                                    std::cout << "error upper: " << cur_error_upper << std::endl;
-                                    std::cout << "approx: " << approx_core << std::endl;
-                                    std::cout << "exact core lower: " << exact_core_lower << std::endl;
-                                    std::cout << "exact core upper: " << exact_core_upper << std::endl;
+                                if (cur_error != UINT_E_MAX) {
+                                    if (cur_error > max_thread_error)
+                                        max_thread_error = cur_error;
+                                    total_thread_error += cur_error;
+                                    non_zero_error++;
                                 }
-
-                                error_seq[thread_i].push_back(cur_error);
                             }
 
                             retry = false;
                         } else
                             continue;
-                        else_time = else_timer.stop();
                     }
                 }
                 double read_latency = read_timer.stop();
-                all_latency.push_back(read_latency);
+
+                if (read_latency > 0)
+                    latency_seq[thread_i].push_back(read_latency);
+                else
+                    zero_latencies++;
                 my_counter++;
             }
 
-            latency_seq[thread_i] = all_latency;
             counter_seq[thread_i].store(my_counter, std::memory_order_release);
+            zero_latency_seq[thread_i] = zero_latencies;
+            max_error_seq[thread_i] = max_thread_error;
+            avg_error_seq[thread_i] = total_thread_error;
+            non_zero_error_seq[thread_i] = non_zero_error;
 
             barrier_cross(sync_point_end);
         });
@@ -1856,42 +1848,46 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     gbbs::sequence<double> latencies = gbbs::sequence<double>(latency_sequence_size, 0);
-    gbbs::sequence<double> errors = gbbs::sequence<double>(latency_sequence_size, 0);
+    double total_threads_error = 0.0;
+    double max_threads_error = 0.0;
+    double avg_threads_error = 0.0;
+    size_t total_latency_zeros = 0;
+    size_t total_non_zero_error = 0;
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
         parallel_for(0, latency_seq[t_i].size(), [&] (size_t j){
             latencies[cur_count + j] = latency_seq[t_i][j];
-            if (compare_exact)
-                errors[cur_count + j] = error_seq[t_i][j];
         });
 
         cur_count += latency_seq[t_i].size();
+        if (max_error_seq[t_i] > max_threads_error)
+            max_threads_error = max_error_seq[t_i];
+
+        total_threads_error += avg_error_seq[t_i];
+        total_latency_zeros += zero_latency_seq[t_i];
+        total_non_zero_error += non_zero_error_seq[t_i];
     }
 
-    if (compare_exact) {
-        auto non_zero_errors = parlay::filter(errors, [&] (const double error) {
-            return (1.0 <= error) && (error < UINT_E_MAX/2);
-        });
+    avg_threads_error = total_threads_error / total_non_zero_error;
 
-        auto max_error = pbbslib::reduce_max(parlay::make_slice(non_zero_errors));
-        auto total_error = parlay::scan_inplace(parlay::make_slice(non_zero_errors));
-        std::cout << "### Average Error: " << total_error/non_zero_errors.size() << std::endl;
-        std::cout << "### Max Error: " << max_error << std::endl;
+    if (compare_exact) {
+        std::cout << "### Average Error: " << avg_threads_error << std::endl;
+        std::cout << "### Max Error: " << max_threads_error << std::endl;
     }
 
     if (num_reader_threads > 0) {
         parlay::sort_inplace(parlay::make_slice(latencies));
-        size_t index_percentile = floor(percentile * latencies.size());
+        size_t index_percentile = floor(percentile * main_counter);
 
         std::cout << "### Main Counter: " << main_counter << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
-            << latencies[index_percentile] << std::endl;
+            << latencies[index_percentile - total_latency_zeros] << std::endl;
 
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
-        std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
+        std::cout << "### Average Latency: " << total_latency/main_counter << std::endl;
     }
 }
 
