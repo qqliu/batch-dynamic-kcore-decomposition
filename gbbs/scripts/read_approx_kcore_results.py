@@ -149,7 +149,8 @@ def main():
                                         best_avg_time = cur_avg_time
                                         best_max_time = cur_max_time
                                         best_total_time = cur_total_time
-                                        best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
+                                        if (num_iterations - num_zero_batches > 0):
+                                            best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
                                         best_max_error = cur_max_error
                                         best_space = cur_best_space
                                     cur_max_time = 0
@@ -196,7 +197,8 @@ def main():
                                 best_avg_time = cur_avg_time
                                 best_max_time = cur_max_time
                                 best_total_time = cur_total_time
-                                best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
+                                if (num_iterations - num_zero_batches > 0):
+                                    best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
                                 best_max_error = cur_max_error
                                 best_space = cur_best_space
                         for param in out_path_components:

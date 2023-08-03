@@ -1,5 +1,5 @@
 Input graph directory: ~/graphs/
-Dynamic graphs: dblp_insertion_edges, livejournal_insertion_edges, stackoverflow_insertion_edges, wiki_insertion_edges, youtube_insertion_edges, ctr_insertion_edges, usa_insertion_edges, orkut_insertion_edges, brain_insertion_edges
+Dynamic graphs: dblp_deletion_edges, livejournal_deletion_edges, orkut_deletion_edges, stackoverflow_deletion_edges, wiki_deletion_edges, youtube_deletion_edges, ctr_deletion_edges, usa_deletion_edges, orkut_deletion_edges, brain_deletion_edges
 Output directory: ./outputs/
 Benchmarks: PLDS
 Numbers of workers: 15
@@ -9,9 +9,8 @@ Lambdas: 9
 Batch sizes: 1000000
 Output stats: True
 Output sizes: False
-Initial Graph File:
+Initial Graph File: dblp_insertion_edges, livejournal_insertion_edges, orkut_insertion_edges, stackoverflow_insertion_edges, wiki_insertion_edges, youtube_insertion_edges, ctr_insertion_edges, usa_insertion_edges, orkut_insertion_edges, brain_insertion_edges
 Number of Levels Divisor: 20
 Opt: False
 Percentile: 0.95
-#, 0.9, 0.9999
 Nonlinearizable: False

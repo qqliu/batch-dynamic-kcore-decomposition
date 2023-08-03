@@ -127,7 +127,7 @@ def main():
                             d, b, nw, divisor, nt, percent, nonlin, stats, ".out"]
                         out_filename = os.path.join(write_dir, "_".join(out_path_components))
                         program_path = os.path.join(program_dir, program)
-                        ss = (program_path + " "
+                        ss = ("PARLAY_NUM_THREADS=" + str(nw) + " " + program_path + " "
                         "-s -i " + read_dir + filename + " -eps " + e + " "
                         "-delta " + d + " -b " + b + " " + "-readers " + nt + " "
                         + stats + " " + nonlin + " " + size + " "

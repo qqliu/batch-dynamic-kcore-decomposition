@@ -1600,8 +1600,19 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || exact_core_lower == 0
                                         || exact_core_upper == 0
                                         || approx_core == 0 || b1 == 0
+                                        || approx_core == UINT_E_MAX
                                         || old_level_1 == 0)
                                     cur_error = UINT_E_MAX;
+
+                                if (cur_error > UINT_E_MAX/100 && cur_error < UINT_E_MAX) {
+                                    std::cout << "root unmarked" << std::endl;
+                                    std::cout << "error: " << cur_error << std::endl;
+                                    std::cout << "error lower: " << cur_error_lower << std::endl;
+                                    std::cout << "error upper: " << cur_error_upper << std::endl;
+                                    std::cout << "approx: " << approx_core << std::endl;
+                                    std::cout << "exact core lower: " << exact_core_lower << std::endl;
+                                    std::cout << "exact core upper: " << exact_core_upper << std::endl;
+                                }
 
                                 error_seq[thread_i].push_back(cur_error);
                         }
@@ -1650,8 +1661,19 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         || exact_core_upper == 0
                                         || exact_core_lower == 0
                                         || approx_core == 0
+                                        || approx_core == UINT_E_MAX
                                         || l1 == 0)
                                     cur_error = UINT_E_MAX;
+
+                                if (cur_error > UINT_E_MAX/100 && cur_error < UINT_E_MAX) {
+                                    std::cout << "root unmarked" << std::endl;
+                                    std::cout << "error: " << cur_error << std::endl;
+                                    std::cout << "error lower: " << cur_error_lower << std::endl;
+                                    std::cout << "error upper: " << cur_error_upper << std::endl;
+                                    std::cout << "approx: " << approx_core << std::endl;
+                                    std::cout << "exact core lower: " << exact_core_lower << std::endl;
+                                    std::cout << "exact core upper: " << exact_core_upper << std::endl;
+                                }
 
                                 error_seq[thread_i].push_back(cur_error);
                             }
