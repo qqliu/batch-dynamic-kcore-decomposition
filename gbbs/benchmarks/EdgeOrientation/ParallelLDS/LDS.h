@@ -11,16 +11,6 @@
 
 namespace gbbs {
 
-struct ground_truth_struct{
-    sequence<sequence<uintE>> ground_truth;
-
-    ground_truth_struct() {}
-
-    ground_truth_struct(size_t batches, uintE n) {
-        ground_truth = sequence<sequence<uintE>>(batches, sequence<uintE>(n, 0));
-    }
-};
-
 struct LDS {
 
   double delta = 48.0;
@@ -1307,6 +1297,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
     gbbs::sequence<std::vector<double>> latency_seq
         = gbbs::sequence<std::vector<double>>(num_reader_threads);
+    gbbs::sequence<std::vector<size_t>> same_value_latency_seq
+        = gbbs::sequence<std::vector<size_t>>(num_reader_threads);
     std::thread read_thread_seq[num_reader_threads];
 
     barrier_t* sync_point = new barrier_t();
@@ -1322,7 +1314,8 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     for(size_t thread_i = 0; thread_i < num_reader_threads; thread_i++) {
         read_thread_seq[thread_i] = std::thread([sync_point, sync_point_end,
                 &layers, &read_thread_seq, &latency_seq, &max_reads,
-                &keep_reading, &stop, batch_sync_point, batch_sync_point_end,
+                &keep_reading, &stop, &same_value_latency_seq,
+                batch_sync_point, batch_sync_point_end,
                 thread_i] {
 
             //std::cout << "Thread " << thread_i << " is waiting" << std::endl;
@@ -1338,11 +1331,14 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             size_t my_counter = 0;
 
             std::vector<double> all_latency;
+            std::vector<double> all_latency_prefix;
+            all_latency_prefix.push_back(0.0);
+
+            std::vector<size_t> same_value_counts;
+            size_t cur_value_count = 0;
+            double total_time = 0.0;
 
             while (keep_reading.flag) {
-                double total_time = 0.0;
-
-                std::vector<double> all_latency_prefix;
                 timer read_timer;
 
                 //std::cout << "Thread " << thread_i << " is waiting for batch" << std::endl;
@@ -1351,19 +1347,32 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
                 while (stop.flag) {
                     read_timer.start();
-                    total_time += read_timer.stop();
-                    all_latency_prefix.push_back(total_time);
-                    my_counter++;
-                }
+                    double this_read = read_timer.stop();
+                    total_time += this_read;
 
-                for (size_t i = 0; i < all_latency_prefix.size(); i++) {
-                    all_latency.push_back(total_time - all_latency_prefix[i]);
+                    if (this_read > 0) {
+                        all_latency_prefix.push_back(total_time);
+                        same_value_counts.push_back(cur_value_count);
+                        cur_value_count = 1;
+                    } else {
+                        cur_value_count++;
+                    }
+                    my_counter++;
                 }
 
                 barrier_cross(batch_sync_point_end);
             }
 
+            same_value_counts.push_back(cur_value_count);
+            for (size_t i = 0; i < all_latency_prefix.size(); i++) {
+                all_latency.push_back(total_time - all_latency_prefix[i]);
+            }
+
             latency_seq[thread_i] = all_latency;
+            same_value_latency_seq[thread_i] = same_value_counts;
+            if (latency_seq[thread_i].size() != same_value_latency_seq[thread_i].size())
+                std::cout << "NOOOOOOOOO" << latency_seq[thread_i].size() << ", " <<
+                    same_value_latency_seq[thread_i].size() << std::endl;
             barrier_cross(sync_point_end);
         });
     }
@@ -1538,44 +1547,68 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     std::cout << "### Total Time: " << overall_time << std::endl;
+    std::cout << "latency seq size: " << latency_seq[0].size() << ", count seq size: " << same_value_latency_seq[0].size() << std::endl;
 
-    size_t non_zero_total_count = 0;
-    size_t zero_total_count = 0;
+    size_t latency_size = 0;
+    size_t total_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        for (size_t i = 0; i < latency_seq[t_i].size(); i++) {
-            if (latency_seq[t_i][i] > 0)
-                non_zero_total_count += 1;
-            else
-                zero_total_count += 1;
-        }
+        latency_size += latency_seq[t_i].size();
+        for (size_t i = 0; i < latency_seq[t_i].size(); i++)
+            total_count += same_value_latency_seq[t_i][i];
     }
+    std::cout << "Latencies size: " << latency_size << std::endl;
 
-    auto total_count = zero_total_count + non_zero_total_count;
-    gbbs::sequence<double> latencies = gbbs::sequence<double>(non_zero_total_count, 0);
+    gbbs::sequence<std::pair<double, size_t>> latencies =
+        gbbs::sequence<std::pair<double, size_t>>(latency_size, std::make_pair(0.0, 0));
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
-        size_t this_non_zero_count = 0;
         for(size_t j = 0; j < latency_seq[t_i].size(); j++) {
-            if (latency_seq[t_i][j] > 0) {
-                latencies[cur_count + this_non_zero_count] = latency_seq[t_i][j];
-                this_non_zero_count++;
-            }
+            latencies[cur_count].first = latency_seq[t_i][j];
+            latencies[cur_count].second = same_value_latency_seq[t_i][j];
         }
 
-        cur_count += this_non_zero_count;
+        cur_count += latency_seq[t_i].size();
     }
+    std::cout << "Cur count: " << cur_count << std::endl;
 
     if (num_reader_threads > 0) {
-        parlay::sort_inplace(parlay::make_slice(latencies));
-        size_t index_percentile = floor(percentile * latencies.size());
+        auto comp_f = [&](const std::pair<double, size_t>& l, const std::pair<double, size_t>& r) {
+            return l.first <= r.first;
+        };
+
+        std::cout << "Tried sorting in place" << std::endl;
+        parlay::sort_inplace(parlay::make_slice(latencies), comp_f);
+        std::cout << "Sorted in place" << std::endl;
+
+        size_t index_percentile = floor(percentile * total_count);
+        size_t index_nine_percentile = floor(0.99 * total_count);
+        size_t cur_prefix_count = 0;
+        double total_latency = 0.0;
+
+        gbbs::sequence<size_t> latencies_counts =
+            gbbs::sequence<size_t>(latencies.size(), 0);
+
+        for (size_t j = 0; j < latencies.size(); j++) {
+            cur_prefix_count += latencies[j].second;
+            latencies_counts[j] = cur_prefix_count;
+            total_latency += latencies[j].first * latencies[j].second;
+        }
+
+        std::cout << "Obtained latency counts" << std::endl;
+
+        size_t true_index_percentile = parlay::internal::binary_search(latencies_counts,
+                index_percentile, std::less<uintE>());
+        size_t true_index_nine_percentile = parlay::internal::binary_search(latencies_counts,
+                index_nine_percentile, std::less<uintE>());
 
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
-            << latencies[index_percentile - zero_total_count] << std::endl;
+            << latencies[true_index_percentile].first << std::endl;
+        std::cout << "### Latency Percentile 0.99: "
+            << latencies[true_index_nine_percentile].first << std::endl;
 
-        auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
-        std::cout << "### Average Latency: " << total_latency/latencies.size() << std::endl;
+        std::cout << "### Average Latency: " << total_latency/cur_prefix_count << std::endl;
         std::cout << "### Throughput: " << total_count/overall_time << std::endl;
     }
 }
