@@ -1,16 +1,17 @@
 Input graph directory: ~/graphs/
-Dynamic graphs: twitter_deletion_edges, friendster_deletion_edges
+Dynamic graphs: twitter_insertion_edges, friendster_insertion_edges
+twitter_deletion_edges, friendster_deletion_edges
 Output directory: ./outputs/
 Benchmarks: PLDS
 Numbers of workers: 15
 Num Reader Threads: 15
 Deltas: 0.2
 Lambdas: 9
-Batch sizes: 1000000
-Output stats: True
+Batch sizes: 100000000
+Output stats: False
 Output sizes: False
-Initial Graph File: twitter_insertion_edges, friendster_insertion_edges
-Number of Levels Divisor: 20
+Initial Graph File:
+Number of Levels Divisor: 50
 Opt: False
 Percentile: 0.9999
 Nonlinearizable: False

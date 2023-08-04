@@ -1879,12 +1879,15 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     if (num_reader_threads > 0) {
         parlay::sort_inplace(parlay::make_slice(latencies));
         size_t index_percentile = floor(percentile * main_counter);
+        size_t index_nine_percentile = floor(0.99 * main_counter);
 
         std::cout << "### Main Counter: " << main_counter << std::endl;
         std::cout << "### Num Reader Threads: " << num_reader_threads << std::endl;
         std::cout << "### Throughput: " << main_counter/overall_time << std::endl;
         std::cout << "### Latency Percentile " << percentile << ": "
             << latencies[index_percentile - total_latency_zeros] << std::endl;
+        std::cout << "### Latency Percentile 0.99: "
+            << latencies[index_nine_percentile - total_latency_zeros] << std::endl;
 
         auto total_latency = parlay::scan_inplace(parlay::make_slice(latencies));
         std::cout << "### Average Latency: " << total_latency/main_counter << std::endl;
