@@ -748,7 +748,6 @@ struct LDS {
           insert_neighbors(u, lower_neighbors);
         }
         num_flips[i] = upstart;
-        //std::cout << "finished all of 2" << std::endl;
       } else if (l_u > cur_level_id) {
 
         // Map the incident edges to (level, neighbor_id).
@@ -1318,9 +1317,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 batch_sync_point, batch_sync_point_end,
                 thread_i] {
 
-            //std::cout << "Thread " << thread_i << " is waiting" << std::endl;
             barrier_cross(sync_point);
-            //std::cout << "Thread " << thread_i << " is running" << std::endl;
 
             cpu_set_t cpuset;
             CPU_ZERO(&cpuset);
@@ -1341,9 +1338,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             while (keep_reading.flag) {
                 timer read_timer;
 
-                //std::cout << "Thread " << thread_i << " is waiting for batch" << std::endl;
                 barrier_cross(batch_sync_point);
-                //std::cout << "Thread " << thread_i << " has started for batch" << std::endl;
 
                 while (stop.flag) {
                     read_timer.start();
@@ -1370,9 +1365,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
 
             latency_seq[thread_i] = all_latency;
             same_value_latency_seq[thread_i] = same_value_counts;
-            if (latency_seq[thread_i].size() != same_value_latency_seq[thread_i].size())
-                std::cout << "NOOOOOOOOO" << latency_seq[thread_i].size() << ", " <<
-                    same_value_latency_seq[thread_i].size() << std::endl;
             barrier_cross(sync_point_end);
         });
     }
@@ -1547,7 +1539,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
     }
 
     std::cout << "### Total Time: " << overall_time << std::endl;
-    std::cout << "latency seq size: " << latency_seq[0].size() << ", count seq size: " << same_value_latency_seq[0].size() << std::endl;
 
     size_t latency_size = 0;
     size_t total_count = 0;
@@ -1556,30 +1547,21 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         for (size_t i = 0; i < latency_seq[t_i].size(); i++)
             total_count += same_value_latency_seq[t_i][i];
     }
-    std::cout << "Latencies size: " << latency_size << std::endl;
 
-    gbbs::sequence<std::pair<double, size_t>> latencies =
-        gbbs::sequence<std::pair<double, size_t>>(latency_size, std::make_pair(0.0, 0));
+    std::vector<std::pair<double, size_t>> latencies;
 
     size_t cur_count = 0;
     for (size_t t_i = 0; t_i < num_reader_threads; t_i++) {
         for(size_t j = 0; j < latency_seq[t_i].size(); j++) {
-            latencies[cur_count].first = latency_seq[t_i][j];
-            latencies[cur_count].second = same_value_latency_seq[t_i][j];
+            latencies.push_back(std::make_pair(latency_seq[t_i][j],
+                        same_value_latency_seq[t_i][j]));
         }
 
         cur_count += latency_seq[t_i].size();
     }
-    std::cout << "Cur count: " << cur_count << std::endl;
 
     if (num_reader_threads > 0) {
-        auto comp_f = [&](const std::pair<double, size_t>& l, const std::pair<double, size_t>& r) {
-            return l.first <= r.first;
-        };
-
-        std::cout << "Tried sorting in place" << std::endl;
-        parlay::sort_inplace(parlay::make_slice(latencies), comp_f);
-        std::cout << "Sorted in place" << std::endl;
+        std::sort(latencies.begin(), latencies.end());
 
         size_t index_percentile = floor(percentile * total_count);
         size_t index_nine_percentile = floor(0.99 * total_count);
@@ -1594,8 +1576,6 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             latencies_counts[j] = cur_prefix_count;
             total_latency += latencies[j].first * latencies[j].second;
         }
-
-        std::cout << "Obtained latency counts" << std::endl;
 
         size_t true_index_percentile = parlay::internal::binary_search(latencies_counts,
                 index_percentile, std::less<uintE>());
