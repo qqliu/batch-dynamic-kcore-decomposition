@@ -1588,7 +1588,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         (float) approx_core / (float) exact_core_upper;
                                 }
 
-                                if (cur_error_upper > layers.OnePlusEps * layers.UpperConstant)
+                                if (cur_error_upper > 1)
                                     cur_error = std::min(cur_error_upper, cur_error_lower);
                                 else
                                     cur_error = cur_error_upper;
@@ -1641,7 +1641,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                                         (float) approx_core / (float) exact_core_lower;
                                 }
 
-                                if (cur_error_upper > layers.OnePlusEps * layers.UpperConstant)
+                                if (cur_error_upper > 1)
                                     cur_error = std::min((double) cur_error_upper,
                                             (double) cur_error_lower);
                                 else
