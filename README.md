@@ -1,11 +1,11 @@
-# Batch-Dynamic K-Core Decomposition Algorithms
+# Concurrent Batch-Dynamic K-Core Decomposition Algorithms
 --------
 
-PLDS Algorithm and Experiments
+Concurrent PLDS Algorithm and Experiments
 --------
 
-This repository contains code for our parallel batch-dynamic k-core
-decomposition algorithms. Our code for our parallel batch-dynamic data
+This repository contains code for our concurrent, parallel batch-dynamic k-core
+decomposition algorithms. Our code for our concurrent, parallel batch-dynamic data
 structures uses the framework of the [Graph-Based Benchmark Suite (GBBS)](https://github.com/ParAlg/gbbs).
 The `gbbs/benchmarks/EdgeOrientation/` directory ([EdgeOrientation Directory Link](./gbbs/benchmarks/EdgeOrientation/README.md)) contains all relevant information
 to our k-core decomposition algorithms, including how to run the experiments
@@ -18,11 +18,9 @@ python3 test_approx_kcore.py
 ```
 
 The script outputs three different output files for each of the three different
-programs: `PLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
-`LDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
-`AKCore_dblp_insertion_edges_0.4_3_1000000_60_.out`, and an additional
-`EKCore_dblp_insertion_edges_0.4_3_1000000_60_.out` for the ExactKCore
-benchmark.
+programs: `CPLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
+`NonSync_dblp_insertion_edges_0.4_3_1000000_60_.out`,
+`SyncReads_dblp_insertion_edges_0.4_3_1000000_60_.out`.
 
 Updating Submodules
 --------
@@ -50,10 +48,13 @@ updates, e.g., `dblp_insertion_edges, livejournal_insertion_edges`.
 `Output directory:` Directory to write the outputs of the experiments.
 
 `Benchmarks:` Comma separated list of benchmarks you want to test. The available benchmarks
-are `PLDS`, `LDS`, `EKCore` (ExactKCore), and `AKCore` (ApproxKCore).
+are `CPLDS`, `NonSync`, and `SyncReads`.
 
-`Numbers of workers:` Comma separated list of number of hyper-threads you want
-to test, e.g., `30, 60`.
+`Numbers of workers:` Comma separated list of number of threads you want
+to test, e.g., `8, 15`.
+
+`Num Reader Threads:` Comma separated list of number of reader threads you want to
+test, e.g. `8, 15`.
 
 `Deltas:` Comma separated list of deltas you want to test, e.g., `0.4, 0.8,
 1.6`. (Can only accomodate positive values.)
@@ -64,7 +65,8 @@ to test, e.g., `30, 60`.
 `Batch sizes:` Comma separated list of batch sizes you want to test, e.g.,
 `1000000, 10000000`.
 
-`Output stats:` `True` if you want to output the error ratios; `False` if not.
+`Output stats:` `True` if you want to output the error ratios for both reads and
+writes; `False` if not.
 
 `Output sizes:` `True` if you want to output the sizes of the data structures;
 `False` if not.
@@ -83,6 +85,9 @@ default, 50, is used in all of our experiments for PLDSOpt given in our paper.
 `Opt:` `True` if you want to use the heuristic where (2 + 3/\lambda) is set to
 1.1 (so \lambda = -10/3); `False` if not.
 Note that this setting is not theoretically time efficient.
+
+`Percentile:` Comma separated list of percentiles for returning the latency, e.g.,
+`0.95, 0.999` for returning the 95th and 99.9th percentile latencies.
 
 Reading Outputs
 --------
@@ -116,53 +121,29 @@ wget https://storage.googleapis.com/k-core-decomposition/edge_orientation_exps/<
 The following graphs are available for download:
 
 ```
-brain_batch
 brain_deletion_edges
 brain_insertion_edges
-brain_initial
-ctr_batch
 ctr_deletion_edges
 ctr_insertion_edges
-ctr_initial
-dblp_batch
 dblp_deletion_edges
 dblp_insertion_edges
-dblp_initial
-friendster_batch
 friendster_deletion_edges
 friendster_insertion_edges
-friendster_initial
-livejournal_batch
 livejournal_deletion_edges
 livejournal_insertion_edges
-livejournal_initial
-orkut_batch
 orkut_deletion_edges
 orkut_insertion_edges
-orkut_initial
-stackoverflow_batch
 stackoverflow_deletion_edges
 stackoverflow_insertion_edges
-stackoverflow_initial
-twitter_batch
 twitter_deletion_edges
 twitter_insertion_edges
-twitter_initial
-usa_batch
 usa_deletion_edges
 usa_insertion_edges
-usa_initial
-wiki_batch
 wiki_deletion_edges
 wiki_insertion_edges
-wiki_initial
-youtube_batch
 youtube_deletion_edges
 youtube_insertion_edges
-youtube_initial
 ```
 
 `_insertion_edges` contain edges formatted for insertions. `_deletion_edges`
-contain edges formatted for deletions. `_initial` contain the initial graph for our
-mixed batch experiments. `_batch` contain the batch of edge updates used
-in our mixed batch (1/2 insertions and 1/2 deletions) experiments.
+contain edges formatted for deletions.
