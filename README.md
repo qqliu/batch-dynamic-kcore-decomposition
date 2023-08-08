@@ -127,8 +127,6 @@ ctr_deletion_edges
 ctr_insertion_edges
 dblp_deletion_edges
 dblp_insertion_edges
-friendster_deletion_edges
-friendster_insertion_edges
 livejournal_deletion_edges
 livejournal_insertion_edges
 orkut_deletion_edges
