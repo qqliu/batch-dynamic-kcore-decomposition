@@ -1,0 +1,76 @@
+# list_alloc init_blocks: 1000
+# after init: 
+Used: 0, allocated: 8670, block size: 16392, bytes: 142118640
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Max reads: 1000000
+Barrier is initializing
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 1.81359
+### Insertion Running Time: 1.81069
+### Deletion Running Time: 0.00386095
+### Batch Num: 2990443
+### Total Time: 1.8148
+### Num Reader Threads: 15
+### Latency Percentile 0.9999: 0.858841
+### Latency Percentile 0.99: 0.827408
+### Average Latency: 0.410542
+### Throughput: 1.01153e+08
+### Running Time: 2.78688
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Max reads: 1000000
+Barrier is initializing
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 2.35335
+### Insertion Running Time: 2.3518
+### Deletion Running Time: 0.00253701
+### Batch Num: 2990443
+### Total Time: 2.35364
+### Num Reader Threads: 15
+### Latency Percentile 0.9999: 1.13344
+### Latency Percentile 0.99: 1.09188
+### Average Latency: 0.521827
+### Throughput: 1.287e+08
+### Running Time: 3.92953
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Max reads: 1000000
+Barrier is initializing
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 2.62601
+### Insertion Running Time: 2.62442
+### Deletion Running Time: 0.0035851
+### Batch Num: 2990443
+### Total Time: 2.62721
+### Num Reader Threads: 15
+### Latency Percentile 0.9999: 1.29828
+### Latency Percentile 0.99: 1.21606
+### Average Latency: 0.591608
+### Throughput: 1.26062e+08
+### Running Time: 4.2524
+# time per iter: 3.65627

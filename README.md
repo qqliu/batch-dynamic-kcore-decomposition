@@ -18,9 +18,9 @@ python3 test_approx_kcore.py
 ```
 
 The script outputs three different output files for each of the three different
-programs: `CPLDS_dblp_insertion_edges_0.4_3_1000000_60_.out`,
-`NonSync_dblp_insertion_edges_0.4_3_1000000_60_.out`,
-`SyncReads_dblp_insertion_edges_0.4_3_1000000_60_.out`.
+programs: `CLDS_youtube_insertion_edges_0.4_3_1000000_60_.out`,
+`Nonlin_youtube_insertion_edges_0.4_3_1000000_60_.out`,
+`Delayed_youtube_insertion_edges_0.4_3_1000000_60_.out`.
 
 Updating Submodules
 --------

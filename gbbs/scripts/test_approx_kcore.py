@@ -24,19 +24,17 @@ def appendToFile(out, filename):
 
 def benchmarkToProgramPath(benchmark):
   benchmark_dict = {
-    "PLDS" : "EdgeOrientation/ParallelLDS/LDS",
-    "LDS" : "EdgeOrientation/LDS/LDS",
-    "AKCore" : "KCore/ApproximateKCore/KCore",
-    "EKCore" : "KCore/JulienneDBS17/KCore"
+    "CLDS" : "EdgeOrientation/ConcurrentLDS/LDS",
+    "Delayed" : "EdgeOrientation/SynchronizedReads/LDS",
+    "Nonlin" : "EdgeOrientation/NonlinearizableReads/LDS"
   }
   return benchmark_dict.get(benchmark)
 
 def benchmarkToIsDynamic(benchmark):
   benchmark_dict = {
-    "PLDS" : True,
-    "LDS" : True,
-    "AKCore" : False,
-    "EKCore" : False
+    "CLDS" : True,
+    "Delayed" : True,
+    "Nonlin" : True
   }
   return benchmark_dict.get(benchmark)
 
@@ -107,12 +105,12 @@ def main():
           opt = ""
   # Setup other parameters
   program_dir = "../benchmarks/"
-  empty = "../benchmarks/EdgeOrientation/ParallelLDS/empty_h"
+  empty = "../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h"
   for program in programs:
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
-    #sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
-    #sub.wait()
+    sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
+    sub.wait()
   for file_idx, filename in enumerate(files):
     for program_idx, program in enumerate(programs):
       for e in epss:

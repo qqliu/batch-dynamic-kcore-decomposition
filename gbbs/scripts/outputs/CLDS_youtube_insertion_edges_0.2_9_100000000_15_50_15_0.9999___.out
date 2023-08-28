@@ -1,0 +1,172 @@
+# list_alloc init_blocks: 1000
+# after init: 
+Used: 0, allocated: 8670, block size: 16392, bytes: 142118640
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Barrier is initializing
+Thread 0 is waiting
+Thread 2 is waiting
+Thread 1 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 9 is waiting
+Thread 8 is waiting
+Thread 10 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Thread Thread 1411 is waiting
+ is waiting
+Main thread batch is waiting
+Main thread batch started
+Thread 8 is running
+Thread Thread 13 is running
+Thread Thread 2 is running
+Thread 0 is running
+Thread Thread 1 is runningThread Thread 3 is running
+
+4 is runningThread 
+Thread 7 is running
+10Thread 11 is running
+6 is running
+Thread 12 is running
+ is running
+9 is running
+Thread 14 is running
+5 is running
+### Batch Running Time: 3.89563
+### Insertion Running Time: 3.89297
+### Deletion Running Time: 0.0026648
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Total Time: 3.89699
+### Main Counter: 154884851
+### Num Reader Threads: 15
+### Throughput: 3.97448e+07
+### Latency Percentile 0.9999: 1.21593e-05
+### Latency Percentile 0.99: 1.19209e-06
+### Average Latency: 2.1177e-07
+### Running Time: 4.28335
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Barrier is initializing
+Thread 0 is waiting
+Thread 3 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 9 is waiting
+Thread 8 is waiting
+Thread Thread 10 is waiting
+11 is waiting
+Thread 12 is waiting
+Main thread batch is waiting
+Thread Thread 1314 is waiting is waiting
+
+Thread 13 is running
+Thread 3 is running
+Thread 4 is running
+Thread 12 is running
+Thread 11 is running
+Thread 8 is running
+Thread 1 is running
+Thread 14 is running
+Thread 2 is running
+Thread 0 is running
+Thread 10 is running
+Main thread batch started
+Thread 9 is running
+Thread 7 is running
+Thread 5 is runningThread 
+6 is running
+### Batch Running Time: 3.68469
+### Insertion Running Time: 3.6827
+### Deletion Running Time: 0.00199103
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Total Time: 3.68645
+### Main Counter: 149292506
+### Num Reader Threads: 15
+### Throughput: 4.04976e+07
+### Latency Percentile 0.9999: 1.50204e-05
+### Latency Percentile 0.99: 1.19209e-06
+### Average Latency: 2.38029e-07
+### Running Time: 3.98148
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 5 is waiting
+Thread 4 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Main thread batch is waiting
+Thread Thread 1413 is waiting
+ is waiting
+Main thread batch started
+Thread 5 is running
+Thread 0 is running
+Thread Thread Thread Thread 1 is running
+8 is running
+Thread 63 is running
+ is running
+Thread 7 is running
+4 is running
+Thread 9 is running
+Thread 12 is running
+Thread 10 is running
+Thread 13 is running
+Thread 11 is running
+Thread 14 is running
+Thread 2 is running
+### Batch Running Time: 3.77407
+### Insertion Running Time: 3.77239
+### Deletion Running Time: 0.00168014
+### Batch Num: 2990443
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Total Time: 3.77538
+### Main Counter: 155682709
+### Num Reader Threads: 15
+### Throughput: 4.12363e+07
+### Latency Percentile 0.9999: 1.21593e-05
+### Latency Percentile 0.99: 1.19209e-06
+### Average Latency: 2.21034e-07
+### Running Time: 4.04285
+# time per iter: 4.10256
