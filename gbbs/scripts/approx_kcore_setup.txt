@@ -1,5 +1,5 @@
 Input graph directory: ./
-Dynamic graphs: youtube_insertion_edges
+Dynamic graphs: dblp_insertion_edges
 Output directory: ./outputs/
 Benchmarks: CLDS, Delayed, Nonlin
 Numbers of workers: 15
