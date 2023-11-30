@@ -25,17 +25,17 @@ def appendToFile(out, filename):
 
 def benchmarkToProgramPath(benchmark):
   benchmark_dict = {
-    "LDS" : "EdgeOrientation/LDS/LDS",
-    "PLDS" : "EdgeOrientation/ParallelLDS/LDS",
-    "KCore" : "KCore/ApproximateKCore/KCore"
+    "CLDS" : "EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/LDS",
+    "Delayed" : "EdgeOrientation/ConcurrentPLDS/SynchronizedReads/LDS",
+    "Nonlin" : "EdgeOrientation/ConcurrentPLDS/NonlinearizableReads/LDS"
   }
   return benchmark_dict.get(benchmark)
 
 def benchmarkToIsDynamic(benchmark):
   benchmark_dict = {
-    "LDS" : True,
-    "ParallelLDS" : True,
-    "KCore" : False
+    "CLDS" : True,
+    "Delayed" : True,
+    "Nonlin" : True
   }
   return benchmark_dict.get(benchmark)
 
@@ -45,7 +45,7 @@ def main():
   output, err = git_init_process.communicate()
 
   # Read parameters from setup file
-  with open('approx_kcore_setup.txt') as parameters_file:
+  with open('cplds_approx_kcore_setup.txt') as parameters_file:
     for line in parameters_file:
       line = line.strip()
       split = [x.strip() for x in line.split(':')]

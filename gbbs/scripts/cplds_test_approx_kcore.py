@@ -24,9 +24,9 @@ def appendToFile(out, filename):
 
 def benchmarkToProgramPath(benchmark):
   benchmark_dict = {
-    "CLDS" : "EdgeOrientation/ConcurrentLDS/LDS",
-    "Delayed" : "EdgeOrientation/SynchronizedReads/LDS",
-    "Nonlin" : "EdgeOrientation/NonlinearizableReads/LDS"
+    "CLDS" : "EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/LDS",
+    "Delayed" : "EdgeOrientation/ConcurrentPLDS/SynchronizedReads/LDS",
+    "Nonlin" : "EdgeOrientation/ConcurrentPLDS/NonlinearizableReads/LDS"
   }
   return benchmark_dict.get(benchmark)
 
@@ -50,7 +50,7 @@ def main():
   output, err = git_init_delete_process.communicate()
 
   # Read parameters from setup file
-  with open('approx_kcore_setup.txt') as parameters_file:
+  with open('cplds_approx_kcore_setup.txt') as parameters_file:
     for line in parameters_file:
       line = line.strip()
       split = [x.strip() for x in line.split(':')]
@@ -105,12 +105,10 @@ def main():
           opt = ""
   # Setup other parameters
   program_dir = "../benchmarks/"
-  empty = "../benchmarks/EdgeOrientation/ConcurrentLDS/empty_h"
+  empty = "../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/empty_h"
   for program in programs:
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
-    sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
-    sub.wait()
   for file_idx, filename in enumerate(files):
     for program_idx, program in enumerate(programs):
       for e in epss:

@@ -1,0 +1,16 @@
+Input graph directory: ./
+Dynamic graphs: dblp_insertion_edges
+Output directory: ./outputs/
+Benchmarks: CLDS, Delayed, Nonlin
+Numbers of workers: 15
+Num Reader Threads: 15
+Deltas: 0.2
+Lambdas: 9
+Batch sizes: 100000
+Output stats: False
+Output sizes: False
+Initial Graph File:
+Number of Levels Divisor: 20
+Opt: False
+Percentile: 0.9999
+Nonlinearizable: False

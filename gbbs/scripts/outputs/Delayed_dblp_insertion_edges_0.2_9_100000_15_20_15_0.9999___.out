@@ -1,0 +1,316 @@
+# list_alloc init_blocks: 1000
+# after init: 
+Used: 0, allocated: 8670, block size: 16392, bytes: 142118640
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Max reads: 1000000
+Barrier is initializing
+### Coreness Estimate: 6
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 16
+### Batch Running Time: 0.0277691
+### Insertion Running Time: 0.027477
+### Deletion Running Time: 0.00062108
+### Batch Num: 100000
+### Coreness Estimate: 11
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 32
+### Batch Running Time: 0.0435929
+### Insertion Running Time: 0.0432401
+### Deletion Running Time: 0.000597954
+### Batch Num: 200000
+### Coreness Estimate: 16
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.054101
+### Insertion Running Time: 0.0538151
+### Deletion Running Time: 0.000552893
+### Batch Num: 300000
+### Coreness Estimate: 23
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.06147
+### Insertion Running Time: 0.0611801
+### Deletion Running Time: 0.000559092
+### Batch Num: 400000
+### Coreness Estimate: 27
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0680289
+### Insertion Running Time: 0.067754
+### Deletion Running Time: 0.000549793
+### Batch Num: 500000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.072989
+### Insertion Running Time: 0.0727038
+### Deletion Running Time: 0.000554085
+### Batch Num: 600000
+### Coreness Estimate: 39
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.075002
+### Insertion Running Time: 0.074729
+### Deletion Running Time: 0.000535011
+### Batch Num: 700000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.077719
+### Insertion Running Time: 0.077446
+### Deletion Running Time: 0.00056982
+### Batch Num: 800000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0810161
+### Insertion Running Time: 0.080723
+### Deletion Running Time: 0.000540972
+### Batch Num: 900000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0830262
+### Insertion Running Time: 0.082751
+### Deletion Running Time: 0.00051713
+### Batch Num: 1000000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.04684
+### Insertion Running Time: 0.046536
+### Deletion Running Time: 0.000543833
+### Batch Num: 1049866
+### Total Time: 0.692298
+### Num Reader Threads: 15
+### Latency Percentile 0.9999: 0.33986
+### Latency Percentile 0.99: 0.290341
+### Average Latency: 0.104765
+### Throughput: 2.45351e+08
+### Running Time: 0.983133
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Max reads: 1000000
+Barrier is initializing
+### Coreness Estimate: 6
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 16
+### Batch Running Time: 0.032846
+### Insertion Running Time: 0.032537
+### Deletion Running Time: 0.000557899
+### Batch Num: 100000
+### Coreness Estimate: 11
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 32
+### Batch Running Time: 0.046216
+### Insertion Running Time: 0.0459292
+### Deletion Running Time: 0.000625849
+### Batch Num: 200000
+### Coreness Estimate: 16
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.055393
+### Insertion Running Time: 0.0550511
+### Deletion Running Time: 0.000596046
+### Batch Num: 300000
+### Coreness Estimate: 23
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0605819
+### Insertion Running Time: 0.0602701
+### Deletion Running Time: 0.00058794
+### Batch Num: 400000
+### Coreness Estimate: 27
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0651562
+### Insertion Running Time: 0.0648532
+### Deletion Running Time: 0.000575066
+### Batch Num: 500000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.0714068
+### Insertion Running Time: 0.0710087
+### Deletion Running Time: 0.000854969
+### Batch Num: 600000
+### Coreness Estimate: 39
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.0790498
+### Insertion Running Time: 0.0787618
+### Deletion Running Time: 0.00054884
+### Batch Num: 700000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.0773711
+### Insertion Running Time: 0.0770831
+### Deletion Running Time: 0.000545979
+### Batch Num: 800000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0802219
+### Insertion Running Time: 0.0798941
+### Deletion Running Time: 0.000601768
+### Batch Num: 900000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.081656
+### Insertion Running Time: 0.081367
+### Deletion Running Time: 0.000552893
+### Batch Num: 1000000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0473552
+### Insertion Running Time: 0.0470603
+### Deletion Running Time: 0.000545979
+### Batch Num: 1049866
+### Total Time: 0.697789
+### Num Reader Threads: 15
+### Latency Percentile 0.9999: 0.301358
+### Latency Percentile 0.99: 0.252723
+### Average Latency: 0.105808
+### Throughput: 2.45567e+08
+### Running Time: 0.979561
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Max reads: 1000000
+Barrier is initializing
+### Coreness Estimate: 6
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 16
+### Batch Running Time: 0.029068
+### Insertion Running Time: 0.028666
+### Deletion Running Time: 0.00067091
+### Batch Num: 100000
+### Coreness Estimate: 11
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 32
+### Batch Running Time: 0.0460169
+### Insertion Running Time: 0.0456882
+### Deletion Running Time: 0.000662804
+### Batch Num: 200000
+### Coreness Estimate: 16
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.056396
+### Insertion Running Time: 0.056113
+### Deletion Running Time: 0.000544071
+### Batch Num: 300000
+### Coreness Estimate: 23
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.060569
+### Insertion Running Time: 0.060281
+### Deletion Running Time: 0.000552177
+### Batch Num: 400000
+### Coreness Estimate: 27
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0661409
+### Insertion Running Time: 0.06584
+### Deletion Running Time: 0.00057888
+### Batch Num: 500000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.07127
+### Insertion Running Time: 0.070945
+### Deletion Running Time: 0.000618935
+### Batch Num: 600000
+### Coreness Estimate: 39
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.074523
+### Insertion Running Time: 0.0742218
+### Deletion Running Time: 0.000576019
+### Batch Num: 700000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.077776
+### Insertion Running Time: 0.077462
+### Deletion Running Time: 0.000586033
+### Batch Num: 800000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0808492
+### Insertion Running Time: 0.0804913
+### Deletion Running Time: 0.000771046
+### Batch Num: 900000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0812929
+### Insertion Running Time: 0.0809958
+### Deletion Running Time: 0.000561953
+### Batch Num: 1000000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0475171
+### Insertion Running Time: 0.0472
+### Deletion Running Time: 0.000586033
+### Batch Num: 1049866
+### Total Time: 0.691999
+### Num Reader Threads: 15
+### Latency Percentile 0.9999: 0.350259
+### Latency Percentile 0.99: 0.294469
+### Average Latency: 0.117776
+### Throughput: 2.74569e+08
+### Running Time: 0.998283
+# time per iter: 0.986992

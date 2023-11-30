@@ -1,0 +1,412 @@
+# list_alloc init_blocks: 1000
+# after init: 
+Used: 0, allocated: 8670, block size: 16392, bytes: 142118640
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread Thread 1312 is waiting is waiting
+
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 12 is running
+Thread Thread Thread 2 is running13
+11Thread 0 is running
+ is runningThread 3 is running
+Thread 5
+Main thread batch started is runningThread 
+
+Thread Thread 101Thread  is running9 is running is runningThread 
+Thread 
+Thread 
+68 is running4 is running is running
+7
+
+ is running
+ is running
+### Batch Running Time: 0.036515
+### Insertion Running Time: 0.0360661
+### Deletion Running Time: 0.000448942
+### Batch Num: 100000
+### Coreness Estimate: 6
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 16
+### Batch Running Time: 0.0589731
+### Insertion Running Time: 0.0585561
+### Deletion Running Time: 0.000416994
+### Batch Num: 200000
+### Coreness Estimate: 11
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 32
+### Batch Running Time: 0.072366
+### Insertion Running Time: 0.071836
+### Deletion Running Time: 0.000530005
+### Batch Num: 300000
+### Coreness Estimate: 16
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0845411
+### Insertion Running Time: 0.0840931
+### Deletion Running Time: 0.000447989
+### Batch Num: 400000
+### Coreness Estimate: 23
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.092433
+### Insertion Running Time: 0.0920179
+### Deletion Running Time: 0.000415087
+### Batch Num: 500000
+### Coreness Estimate: 27
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0992541
+### Insertion Running Time: 0.0988491
+### Deletion Running Time: 0.000405073
+### Batch Num: 600000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.106837
+### Insertion Running Time: 0.106415
+### Deletion Running Time: 0.000422001
+### Batch Num: 700000
+### Coreness Estimate: 39
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.109778
+### Insertion Running Time: 0.109369
+### Deletion Running Time: 0.000409126
+### Batch Num: 800000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.112932
+### Insertion Running Time: 0.11252
+### Deletion Running Time: 0.000411987
+### Batch Num: 900000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.122612
+### Insertion Running Time: 0.122084
+### Deletion Running Time: 0.000527859
+### Batch Num: 1000000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0694361
+### Insertion Running Time: 0.0689981
+### Deletion Running Time: 0.000437975
+### Batch Num: 1049866
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Total Time: 0.969271
+### Main Counter: 62321044
+### Num Reader Threads: 15
+### Throughput: 6.42968e+07
+### Latency Percentile 0.9999: 9.05991e-06
+### Latency Percentile 0.99: 1.19209e-06
+### Average Latency: 1.52975e-07
+### Running Time: 1.038
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread Thread 2 is waiting3
+ is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 7 is waiting
+Thread 8 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread 12 is running
+Thread 13Thread Thread 2 is running
+Thread  is running3 is running
+Thread Thread 0
+ is running4
+1Thread  is runningThread Thread 7 is running9 is running
+
+Thread 10 is running
+6 is running
+Main thread batch started is running
+Thread 
+Thread 11 is running
+Thread 5
+ is running
+8 is running
+### Batch Running Time: 0.0402861
+### Insertion Running Time: 0.0397441
+### Deletion Running Time: 0.000541925
+### Batch Num: 100000
+### Coreness Estimate: 6
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 16
+### Batch Running Time: 0.0613501
+### Insertion Running Time: 0.0608749
+### Deletion Running Time: 0.000475168
+### Batch Num: 200000
+### Coreness Estimate: 11
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 32
+### Batch Running Time: 0.0839148
+### Insertion Running Time: 0.0834939
+### Deletion Running Time: 0.000420809
+### Batch Num: 300000
+### Coreness Estimate: 16
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.085623
+### Insertion Running Time: 0.085216
+### Deletion Running Time: 0.000406981
+### Batch Num: 400000
+### Coreness Estimate: 23
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0948
+### Insertion Running Time: 0.0942659
+### Deletion Running Time: 0.000534058
+### Batch Num: 500000
+### Coreness Estimate: 27
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.101822
+### Insertion Running Time: 0.101383
+### Deletion Running Time: 0.000439167
+### Batch Num: 600000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.105825
+### Insertion Running Time: 0.105269
+### Deletion Running Time: 0.000555992
+### Batch Num: 700000
+### Coreness Estimate: 39
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.129104
+### Insertion Running Time: 0.12869
+### Deletion Running Time: 0.000414133
+### Batch Num: 800000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.115631
+### Insertion Running Time: 0.115201
+### Deletion Running Time: 0.000430107
+### Batch Num: 900000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.117904
+### Insertion Running Time: 0.117472
+### Deletion Running Time: 0.000432014
+### Batch Num: 1000000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0685341
+### Insertion Running Time: 0.0679531
+### Deletion Running Time: 0.000581026
+### Batch Num: 1049866
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Total Time: 1.00838
+### Main Counter: 64640760
+### Num Reader Threads: 15
+### Throughput: 6.41035e+07
+### Latency Percentile 0.9999: 9.05991e-06
+### Latency Percentile 0.99: 1.19209e-06
+### Average Latency: 1.56105e-07
+### Running Time: 1.06577
+### Application: LDS
+### Graph: ../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/empty_h
+### Threads: 15
+### n: 0
+### m: 0
+### Params: 
+### ------------------------------------
+Barrier is initializing
+Thread 0 is waiting
+Thread 1 is waiting
+Thread 2 is waiting
+Thread 3 is waiting
+Thread 4 is waiting
+Thread 5 is waiting
+Thread 6 is waiting
+Thread 8 is waiting
+Thread 7 is waiting
+Thread 9 is waiting
+Thread 10 is waiting
+Thread 11 is waiting
+Thread 12 is waiting
+Thread 13 is waiting
+Main thread batch is waiting
+Thread 14 is waiting
+Thread 14 is running
+Thread Thread Thread 13 is running
+Thread 0 is running
+Thread Thread Thread Thread Thread 7Thread Thread 8 is running
+12210 is running is runningThread 1 is running
+
+Thread Main thread batch started6 is running is running4
+3 is running
+Thread 11 is running
+5 is running
+
+
+
+ is running
+9 is running
+ is running
+### Batch Running Time: 0.0403991
+### Insertion Running Time: 0.0398118
+### Deletion Running Time: 0.000587225
+### Batch Num: 100000
+### Coreness Estimate: 6
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 16
+### Batch Running Time: 0.0587029
+### Insertion Running Time: 0.058239
+### Deletion Running Time: 0.000463963
+### Batch Num: 200000
+### Coreness Estimate: 11
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 32
+### Batch Running Time: 0.0697942
+### Insertion Running Time: 0.069309
+### Deletion Running Time: 0.000485182
+### Batch Num: 300000
+### Coreness Estimate: 16
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0790401
+### Insertion Running Time: 0.078546
+### Deletion Running Time: 0.000494003
+### Batch Num: 400000
+### Coreness Estimate: 23
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.087239
+### Insertion Running Time: 0.086786
+### Deletion Running Time: 0.000452995
+### Batch Num: 500000
+### Coreness Estimate: 27
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 64
+### Batch Running Time: 0.0942478
+### Insertion Running Time: 0.093658
+### Deletion Running Time: 0.000589848
+### Batch Num: 600000
+### Coreness Estimate: 32
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.0983331
+### Insertion Running Time: 0.097851
+### Deletion Running Time: 0.000482082
+### Batch Num: 700000
+### Coreness Estimate: 39
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.103398
+### Insertion Running Time: 0.102926
+### Deletion Running Time: 0.000472069
+### Batch Num: 800000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 128
+### Batch Running Time: 0.107971
+### Insertion Running Time: 0.107499
+### Deletion Running Time: 0.00047183
+### Batch Num: 900000
+### Coreness Estimate: 47
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.110074
+### Insertion Running Time: 0.1096
+### Deletion Running Time: 0.000473976
+### Batch Num: 1000000
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Batch Running Time: 0.0641069
+### Insertion Running Time: 0.0636539
+### Deletion Running Time: 0.000452995
+### Batch Num: 1049866
+### Coreness Estimate: 56
+### Number Insertion Flips: 0
+### Number Deletion Flips: 0
+### Max Outdegree: 256
+### Total Time: 0.917326
+### Main Counter: 58298951
+### Num Reader Threads: 15
+### Throughput: 6.35531e+07
+### Latency Percentile 0.9999: 7.86781e-06
+### Latency Percentile 0.99: 1.19209e-06
+### Average Latency: 1.60715e-07
+### Running Time: 0.976473
+# time per iter: 1.02675
