@@ -45,7 +45,7 @@ def main():
   output, err = git_init_process.communicate()
 
   # Read parameters from setup file
-  with open('cplds_approx_kcore_setup.txt') as parameters_file:
+  with open('latency.txt') as parameters_file:
     for line in parameters_file:
       line = line.strip()
       split = [x.strip() for x in line.split(':')]
@@ -99,14 +99,14 @@ def main():
         else:
           opt = ""
   # Setup other parameters
-  program_dir = "../benchmarks/"
-  empty = "../benchmarks/EdgeOrientation/ParallelLDS/empty_h"
+  program_dir = "../../benchmarks/"
+  empty = "../../benchmarks/EdgeOrientation/ParallelLDS/empty_h"
   for program in programs:
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
     #sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
     #sub.wait()
-  print("Program, File Name, Num Upates, Num Update Threads, Num Read Threads, Latency Percentile, Avg Latency (sec), Percentile Latency (sec)", end=", ")
+  print("Program, File Name, Num Upates, Num Update Threads, Num Read Threads, Latency Percentile, Avg Latency (sec), Percentile Latency (sec)", end="\n")
   for file_idx, filename in enumerate(files):
     for program_idx, program in enumerate(programs):
       for e in epss:
@@ -204,7 +204,7 @@ def main():
                                 best_space = cur_best_space
                         param = out_path_components
                         print(str(param[0]) + ", " + str(param[1]) + ", " + str(param[4]) + ", " +
-                                str(param[5]) + ", " + str(param[7]) + ", " + str(param[8]), end = ",")
+                                str(param[5]) + ", " + str(param[7]) + ", " + str(param[8]), end = ", ")
                         print(str(statistics.median(avg_latencies)), end=", ")
                         print(str(statistics.median(latencies)), end="\n")
 

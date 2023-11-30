@@ -12,5 +12,5 @@ Output sizes: False
 Initial Graph File:
 Number of Levels Divisor: 20
 Opt: False
-Percentile: 0.99, 0.9999
+Percentile: 0.99
 Nonlinearizable: False

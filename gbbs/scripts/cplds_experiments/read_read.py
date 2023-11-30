@@ -45,7 +45,7 @@ def main():
   output, err = git_init_process.communicate()
 
   # Read parameters from setup file
-  with open('cplds_approx_kcore_setup.txt') as parameters_file:
+  with open('read.txt') as parameters_file:
     for line in parameters_file:
       line = line.strip()
       split = [x.strip() for x in line.split(':')]
@@ -106,6 +106,7 @@ def main():
     program_local_dir = os.path.dirname(program_path)
     #sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
     #sub.wait()
+  print("Program, File Name, Num Upates, Num Update Threads, Num Read Threads, Read Throughtput", end="\n")
   for file_idx, filename in enumerate(files):
     for program_idx, program in enumerate(programs):
       for e in epss:
@@ -201,44 +202,10 @@ def main():
                                     best_avg_error = cur_total_error / (num_iterations - num_zero_batches)
                                 best_max_error = cur_max_error
                                 best_space = cur_best_space
-                        for param in out_path_components:
-                            if not param == ".out":
-                                print(str(param), end = ",")
-                        print(str(best_avg_time), end = ",")
-                        print(str(best_max_time), end = ",")
-                        print(str(best_total_time), end = ",")
-                        if not best_space == 0:
-                            print(str(best_space), end = ",")
-                        else:
-                            print("N/A", end = ",")
-                        if not best_avg_error == 0:
-                            print(str(best_avg_error), end=",")
-                            print(str(best_max_error), end=",")
-                        else:
-                            print("N/A,N/A", end = ",")
-                        print(str(statistics.median(throughputs)), end=", ")
-                        print(str(statistics.mean(throughputs)), end=", ")
-                        print(str(min(throughputs)), end=", ")
-                        print(str(max(throughputs)), end=", ")
-                        print(str(statistics.median(avg_latencies)), end=", ")
-                        print(str(statistics.mean(avg_latencies)), end=", ")
-                        print(str(min(avg_latencies)), end=", ")
-                        print(str(max(avg_latencies)), end=", ")
-                        print(str(statistics.median(latencies)), end=", ")
-                        print(str(statistics.mean(latencies)), end=", ")
-                        print(str(min(latencies)), end=", ")
-                        print(str(max(latencies)), end=", ")
-                        if len(avg_read_errors) > 0:
-                            print(str(statistics.median(avg_read_errors)), end=", ")
-                            print(str(statistics.mean(avg_read_errors)), end=", ")
-                            print(str(min(avg_read_errors)), end=", ")
-                            print(str(max(avg_read_errors)), end=", ")
-                            print(str(statistics.median(max_read_errors)), end=", ")
-                            print(str(statistics.mean(max_read_errors)), end=", ")
-                            print(str(min(max_read_errors)), end=", ")
-                            print(str(max(max_read_errors)), end="\n")
-                        else:
-                            print("N/A, N/A, N/A, N/A, N/A, N/A, N/A, N/A")
+                        param = out_path_components
+                        print(str(param[0]) + ", " + str(param[1]) + ", " + str(param[4]) + ", " +
+                                str(param[5]) + ", " + str(param[7]), end = ", ")
+                        print(str(statistics.median(throughputs)), end="\n")
 
 if __name__ == "__main__":
   main()

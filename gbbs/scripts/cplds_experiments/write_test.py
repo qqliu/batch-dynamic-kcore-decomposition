@@ -50,7 +50,7 @@ def main():
   output, err = git_init_delete_process.communicate()
 
   # Read parameters from setup file
-  with open('cplds_approx_kcore_setup.txt') as parameters_file:
+  with open('write.txt') as parameters_file:
     for line in parameters_file:
       line = line.strip()
       split = [x.strip() for x in line.split(':')]
@@ -133,7 +133,6 @@ def main():
                         if len(initial_graphs) > file_idx and len(initial_graphs[file_idx]) > 0:
                             ss += " -init_graph_file " + read_dir + initial_graphs[file_idx]
                         ss += " " + empty
-                        print(ss)
                         out = shellGetOutput(ss)
                         appendToFile(out, out_filename)
 

@@ -1,12 +1,12 @@
-Input graph directory: ./
-Dynamic graphs: dblp_insertion_edges
-Output directory: ./outputs/
+Input graph directory: ../
+Dynamic graphs: dblp_insertion_edges, youtube_insertion_edges, wiki_insertion_edges
+Output directory: ../outputs/
 Benchmarks: CLDS, Delayed, Nonlin
 Numbers of workers: 15
 Num Reader Threads: 15
 Deltas: 0.2
 Lambdas: 9
-Batch sizes: 100000
+Batch sizes: 1000000
 Output stats: False
 Output sizes: False
 Initial Graph File:
