@@ -1370,7 +1370,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 timer read_timer; read_timer.start();
 
                 auto retry = true;
-                if (nonlinearizable) {
+                if (true) {
                     retry = false;
                     auto cur_level = layers.L[random_vertex].level;
 
