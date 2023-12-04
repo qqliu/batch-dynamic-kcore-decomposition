@@ -1,6 +1,9 @@
 # Batch-Dynamic K-Core Decomposition Algorithms
 --------
 
+[![DOI](https://zenodo.org/badge/372586195.svg)](https://zenodo.org/doi/10.5281/zenodo.10253798)
+
+
 PLDS Algorithm and Experiments
 --------
 
