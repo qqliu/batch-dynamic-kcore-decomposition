@@ -1,6 +1,15 @@
 # Concurrent Batch-Dynamic K-Core Decomposition Algorithms
 --------
 
+Run
+
+```
+sh run_experiments.sh
+```
+
+from within the [CLDS scripts](../../../scripts/cplds_experiments/)
+directory to see a sample of the experiments we ran in our paper.
+
 Concurrent PLDS Algorithm and Experiments
 --------
 

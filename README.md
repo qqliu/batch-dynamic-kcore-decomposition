@@ -3,6 +3,13 @@
 
 [![DOI](https://zenodo.org/badge/372586195.svg)](https://zenodo.org/doi/10.5281/zenodo.10253798)
 
+First run
+
+```
+sh setup.sh
+```
+to setup the environment for running our experimental code.
+
 
 PLDS Algorithm and Experiments
 --------
@@ -169,3 +176,10 @@ youtube_initial
 contain edges formatted for deletions. `_initial` contain the initial graph for our
 mixed batch experiments. `_batch` contain the batch of edge updates used
 in our mixed batch (1/2 insertions and 1/2 deletions) experiments.
+
+
+ConcurrentLDS Algorithm and Experiments
+--------
+
+A description for how to run the experimentsusing teh CLDS code is given in the
+[ConcurrentLDS directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation/ConcurrentPLDS).
