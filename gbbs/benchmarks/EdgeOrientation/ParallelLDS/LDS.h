@@ -1293,7 +1293,7 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         double deletion_time = t.stop();
         double tt = insertion_time + deletion_time;
 
-        std::cout << "### Batch Running Time: " << tt << std::endl;
+        /*std::cout << "### Batch Running Time: " << tt << std::endl;
         std::cout << "### Insertion Running Time: " << insertion_time << std::endl;
         std::cout << "### Deletion Running Time: " << deletion_time << std::endl;
         std::cout << "### Batch Num: " << end_size - offset << std::endl;
@@ -1304,13 +1304,16 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
         if (get_size) {
             auto size = layers.get_size();
             std::cout << "### Size: " << size << std::endl;
-        }
-        if (compare_exact) {
+        }*/
+        if (compare_exact && std::min(batch.size(), i + batch_size) == batch.size()) {
             auto graph = dynamic_edge_list_to_symmetric_graph(batch_edge_list, std::min(batch.size(),
                         i + batch_size));
 
             // Run kcore on graph
             auto cores = KCore(graph, 16);
+
+            /*for (size_t nv = 0; nv < graph.n; nv++)
+                std::cout << nv << " " << cores[nv] << std::endl;*/
 
             auto max_core = parlay::reduce(cores, parlay::maxm<uintE>());
             std::cout << "### Coreness Exact: " << max_core << std::endl;
@@ -1350,10 +1353,10 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
                 return (exact_core != 0) && (approx_core != 0);
             }), parlay::addm<float>());
             auto avg_error = (denominator == 0) ? 0 : sum_error / denominator;
-            std::cout << "### Num Bad: " << bad << std::endl;
+            /*std::cout << "### Num Bad: " << bad << std::endl;
             std::cout << "### Per Vertex Average Coreness Error: " << avg_error << std::endl; fflush(stdout);
             std::cout << "### Per Vertex Min Coreness Error: " << min_error << std::endl; fflush(stdout);
-            std::cout << "### Per Vertex Max Coreness Error: " << max_error << std::endl; fflush(stdout);
+            std::cout << "### Per Vertex Max Coreness Error: " << max_error << std::endl; fflush(stdout);*/
         }
     }
 }

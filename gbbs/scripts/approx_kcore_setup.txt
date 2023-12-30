@@ -1,12 +1,13 @@
-Input graph directory: ./
-Dynamic graphs: dblp_insertion_edges
+Input graph directory: ~/graphs/
+Dynamic graphs: brain_insertion_edges, wiki_insertion_edges, youtube_insertion_edges, stackoverflow_insertion_edges, ctr_insertion_edges, usa_insertion_edges
 Output directory:
-Benchmarks: PLDS, EKCore, AKCore, LDS
+Benchmarks: PLDS
+, EKCore, AKCore, LDS
 Numbers of workers: 60
 Deltas: 0.4
 Lambdas: 3
-Batch sizes: 1000000
-Output stats: False
+Batch sizes: 10000000
+Output stats: True
 Output sizes: False
 Initial Graph File:
 Number of Levels Divisor: 50

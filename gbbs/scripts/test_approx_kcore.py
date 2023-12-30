@@ -102,8 +102,8 @@ def main():
   for program in programs:
     program_path = os.path.join(program_dir, program)
     program_local_dir = os.path.dirname(program_path)
-    sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
-    sub.wait()
+    #sub = subprocess.Popen(["make"], stdout=subprocess.PIPE, cwd=program_local_dir)
+    #sub.wait()
   for file_idx, filename in enumerate(files):
     for program_idx, program in enumerate(programs):
       for e in epss:
@@ -111,7 +111,7 @@ def main():
           for divisor in divisors:
             for b in batch_sizes:
               for nw in num_workers:
-                num_rounds = 3
+                num_rounds = 1
                 out_path_components = [program_pres[program_idx], filename, e,
                         d, b, nw, divisor, ".out"]
                 out_filename = os.path.join(write_dir, "_".join(out_path_components))
