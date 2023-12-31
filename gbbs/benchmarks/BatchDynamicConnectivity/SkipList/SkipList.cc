@@ -29,35 +29,10 @@ double LDS_runner(Graph& G, commandLine P) {
   std::cout << "### ------------------------------------" << std::endl;
   assert(P.getOption("-s"));
 
-  // Load dynamic graph options
-  const std::string kInputFlag{"-i"};
-  const char* const input_file{P.getOptionValue(kInputFlag)};
-  long batch_size = P.getOptionLongValue("-b", 1);
-  bool compare_exact = P.getOption("-stats");
-  bool optimized_insertion = P.getOption("-ins-opt");
-  bool get_size = P.getOption("-size");
-
-  // Option for starting with a non-empty graph
-  const char* const init_graph_file(P.getOptionValue("-init_graph_file"));
-
   // Load the dynamic graph
-  using W = typename Graph::weight_type;
-  bool use_dynamic = (input_file && input_file[0]);
-  BatchDynamicEdges<W> batch_edge_list = use_dynamic ?
-    read_batch_dynamic_edge_list<W>(input_file) : BatchDynamicEdges<W>{};
-  if (use_dynamic && batch_size == 0) batch_size = batch_edge_list.edges.size();
-
-  // Prepend the initial graph if specified, and store the offset of the
-  // initial graph in the resulting dynamic edges list
-  size_t offset = 0;
-  if (use_dynamic && init_graph_file) {
-    BatchDynamicEdges<W> init_graph_list = read_batch_dynamic_edge_list<W>(init_graph_file);
-    offset = prepend_dynamic_edge_list(batch_edge_list, init_graph_list);
-  }
-
-  // Run LDS
   timer t; t.start();
-  RunSkipList(G, batch_edge_list);
+  uintE n = 1000;
+  RunSkipList(n);
   double tt = t.stop();
 
   std::cout << "### Running Time: " << tt << std::endl;
