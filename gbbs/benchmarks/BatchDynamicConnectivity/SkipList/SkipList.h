@@ -40,6 +40,16 @@ struct SkipList {
             elements[height].second = right;
         }
 
+        inline bool CASleft(size_t level,
+                SkipListElement* old_left, SkipListElement* new_left) {
+               return pbbslib::atomic_compare_and_swap(&elements[level].first, old_left, new_left);
+        }
+
+        inline bool CASright(size_t level,
+                SkipListElement* old_right, SkipListElement* new_right) {
+               return pbbslib::atomic_compare_and_swap(&elements[level].second, old_right, new_right);
+        }
+
         inline SkipListElement* get_left(size_t height) {
                 return elements[height].first;
         }
@@ -126,9 +136,9 @@ struct SkipList {
     void join(SkipListElement* left, SkipListElement* right) {
             size_t level = 0;
             while(left != nullptr && right != nullptr) {
-                    if (left->elements[level].second == nullptr) {
-                            left->elements[level].second = right;
-                            right->elements[level].first = left;
+                    if (left->elements[level].second == nullptr &&
+                                left->CASright(level, nullptr, right)) {
+                            right->CASleft(level, nullptr, left);
                             left = find_left_parent(level, left);
                             right = find_right_parent(level, right);
                             level++;
@@ -138,15 +148,25 @@ struct SkipList {
             }
     }
 
-    void split(SkipListElement* this_element) {
+    SkipListElement* split(SkipListElement* this_element) {
             SkipListElement* successor = nullptr;
             SkipListElement* cur_element = this_element;
 
             size_t level = 0;
 
             while(cur_element != nullptr) {
-
+                SkipListElement* next = cur_element->elements[level].second;
+                if (next != nullptr && cur_element->CASright(level, next, nullptr)) {
+                        if (level == 0)
+                            successor = next;
+                        next->elements[level].first = nullptr;
+                        cur_element = find_left_parent(level, cur_element);
+                        level++;
+                } else {
+                        break;
+                }
             }
+            return successor;
     }
 
     /* The augmented skip list can take any arbitrary associative, commutative function */
