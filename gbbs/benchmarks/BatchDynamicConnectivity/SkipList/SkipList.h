@@ -15,7 +15,6 @@ struct SkipList {
     struct SkipListElement {
         size_t height;
         size_t lowest_needs_update = 0;
-        uintE val;
 
         using pointers = std::pair<SkipListElement*, SkipListElement*>;
         using height_array = parlay::sequence<pointers>;
@@ -34,7 +33,7 @@ struct SkipList {
                 update_level = UINT_E_MAX;
                 elements[0].first = _l;
                 elements[0].second = _r;
-                val = _val;
+                values[0] = _val;
         }
 
         inline void set_left_pointer(size_t height, SkipListElement* left) {
@@ -74,6 +73,7 @@ struct SkipList {
     SkipListElement create_node(size_t index, SkipListElement* left, SkipListElement* right, uintE val) {
         rng.fork(index);
         auto rand_val = rng.rand() % UINT_E_MAX;
+        rng = rng.next();
 
         size_t cur_height = 1;
         while (rand_val & 1) {
@@ -90,10 +90,20 @@ struct SkipList {
     SkipListElement* find_left_parent(size_t level, SkipListElement* this_element) {
             SkipListElement* cur_element = this_element;
             SkipListElement* start_element = this_element;
+            if (cur_element->height > level + 1)
+                return cur_element;
+            std::cout << "elements size: " << cur_element->elements.size() << std::endl;
+            auto pairs = cur_element->elements[level];
+            std::cout << "found pair" << std::endl;
+            cur_element = cur_element->elements[level].first;
+            std::cout << "found pair first" << std::endl;
+            if (cur_element != nullptr)
+                std::cout << "new cur element: " << cur_element->values[0] << std::endl;
+
             while (cur_element != nullptr && cur_element != start_element) {
                 if (cur_element->height > level + 1)
                     return cur_element;
-                cur_element->elements[level].first;
+                cur_element = cur_element->elements[level].first;
             }
             return nullptr;
     }
@@ -101,10 +111,15 @@ struct SkipList {
     SkipListElement* find_right_parent(size_t level, SkipListElement* this_element) {
             SkipListElement* cur_element = this_element;
             SkipListElement* start_element = this_element;
+
+            if (cur_element->height > level+1)
+                return cur_element;
+            cur_element = cur_element->elements[level].second;
+
             while (cur_element != nullptr && cur_element != start_element) {
                 if (cur_element->height > level + 1)
                     return cur_element;
-                cur_element->elements[level].second;
+                cur_element = cur_element->elements[level].second;
             }
             return nullptr;
     }
@@ -141,12 +156,17 @@ struct SkipList {
     void join(SkipListElement* left, SkipListElement* right) {
             size_t level = 0;
             while(left != nullptr && right != nullptr) {
+                    std::cout << "pointers are not null" << std::endl;
                     if (left->elements[level].second == nullptr &&
                                 left->CASright(level, nullptr, right)) {
+                            std::cout << "left" << std::endl;
                             right->CASleft(level, nullptr, left);
                             left = find_left_parent(level, left);
+                            std::cout << "found left parent" << std::endl;
                             right = find_right_parent(level, right);
+                            std::cout << "found right parent" << std::endl;
                             level++;
+                            std::cout << "new level: " << level << std::endl;
                     } else {
                             return;
                     }
@@ -328,8 +348,7 @@ struct SkipList {
                     curr = curr->elements[level].second;
             }
 
-            if (curr == nullptr) {
-                // the list is not circular
+            if (curr == nullptr) { // the list is not circular
                     curr = root;
                     while(true) {
                             while(level > 0 && curr->elements[level].first == nullptr) {
@@ -351,13 +370,39 @@ struct SkipList {
 
 inline void RunSkipList(uintE n) {
     std::cout << "Creating skip list" << std::endl;
-    auto skip_list = SkipList(n);
-    std::cout << "Creating node" << std::endl;
-    auto curr_node = skip_list.create_node(10, nullptr, nullptr, (uintE) 10);
-    std::cout << "Node height" << std::endl;
-    std::cout << curr_node.height << std::endl;
-    std::cout << "Printing node value" << std::endl;
-    std::cout << curr_node.values[0] << std::endl;
+    auto skip_list = SkipList(10);
+    sequence<SkipList::SkipListElement> skip_list_elements = sequence<SkipList::SkipListElement>(10);
+
+    std::cout << "creating nodes" << std::endl;
+    auto curr_node = skip_list.create_node(2, nullptr, nullptr, (uintE) 2);
+
+    skip_list_elements[2] = curr_node;
+    auto curr_node2 = skip_list.create_node(3, nullptr, nullptr, (uintE) 3);
+    skip_list_elements[3] = curr_node2;
+    std::cout << "created nodes" << std::endl;
+
+    std::cout << "joining nodes" << std::endl;
+    skip_list.join(&skip_list_elements[2], &skip_list_elements[3]);
+
+    std::cout << "printing answers" << std::endl;
+    std::cout << "node 2 height: " << skip_list_elements[2].height << std::endl;
+    std::cout << "node 2 value: " << skip_list_elements[2].values[0] << std::endl;
+
+    std::cout << "node 3 height: " << skip_list_elements[3].height << std::endl;
+    std::cout << "node 3 value: " << skip_list_elements[3].values[0] << std::endl;
+
+    if (skip_list_elements[2].elements[0].first != nullptr)
+        std::cout << "node 2 left: " << skip_list_elements[2].elements[0].first -> values[0] << std::endl;
+    if (skip_list_elements[2].elements[0].second != nullptr)
+        std::cout << "node 2 right: " << skip_list_elements[2].elements[0].second -> values[0] << std::endl;
+    if (skip_list_elements[3].elements[0].first != nullptr)
+        std::cout << "node 3 left: " << skip_list_elements[3].elements[0].first -> values[0] << std::endl;
+    if (skip_list_elements[3].elements[0].second != nullptr)
+        std::cout << "node 3 right: " << skip_list_elements[3].elements[0].second -> values[0] << std::endl;
+
+    auto left_parent = skip_list.find_left_parent(0, &skip_list_elements[3]);
+    if (left_parent != nullptr)
+        std::cout << "node 3 left parent: " << left_parent->values[0] << std::endl;
 }
 
 }  // namespace gbbs
