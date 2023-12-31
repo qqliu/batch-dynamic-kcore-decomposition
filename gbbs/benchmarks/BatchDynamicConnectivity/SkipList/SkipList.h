@@ -19,14 +19,19 @@ struct SkipList {
 
         using pointers = std::pair<SkipListElement*, SkipListElement*>;
         using height_array = parlay::sequence<pointers>;
+        using values_array = parlay::sequence<uintE>;
 
         height_array elements;
+        values_array values;
+        uintE update_level;
 
-        SkipListElement(): height(0), lowest_needs_update(0) {}
+        SkipListElement(): height(0), lowest_needs_update(0) { update_level = UINT_E_MAX; }
 
         SkipListElement(size_t _h, SkipListElement* _r, SkipListElement* _l, uintE _val):
             height(_h), lowest_needs_update(_h) {
                 elements.resize(_h);
+                values.resize(_h);
+                update_level = UINT_E_MAX;
                 elements[0].first = _l;
                 elements[0].second = _r;
                 val = _val;
@@ -169,7 +174,50 @@ struct SkipList {
             return successor;
     }
 
-    /* The augmented skip list can take any arbitrary associative, commutative function */
+    /* The augmented skip list can take any arbitrary associative, commutative function. Here, it is
+     * implemented using the XOR function. */
+    void update_top_down_sequential(size_t level, SkipListElement* this_element) {
+            if (level == 0) {
+                    if (this_element->height == 1) {
+                        this_element->update_level = UINT_E_MAX;
+                    }
+                    return;
+            }
+
+            if (this_element->update_level < level) {
+                    update_top_down_sequential(level - 1, this_element);
+            }
+
+            uintE xor_total = this_element->values[level-1];
+            SkipListElement* curr = this_element->elements[level-1].second;
+            while (curr != nullptr && curr->height < level + 1) {
+                    if (curr->update_level != UINT_E_MAX && curr->update_level < level) {
+                            update_top_down_sequential(level-1, curr);
+                    }
+                    xor_total ^= curr->values[level-1];
+                    curr = curr->elements[level-1].second;
+            }
+            this_element->values[level] = xor_total;
+
+            if(this_element->height == level+1) {
+                    this_element->update_level = UINT_E_MAX;
+            }
+    }
+
+    void update_top_down(size_t level, SkipListElement* this_element) {
+            if (level <= 6) {
+                    update_top_down_sequential(level, this_element);
+                    return;
+            }
+
+            SkipListElement* curr = this_element;
+            while(curr != nullptr && curr->height < level + 1) {
+                    if (curr->update_level != UINT_E_MAX && curr->update_level < level) {
+                            // can do this in parallel somehow; STOP HERE
+                    }
+            }
+    }
+
 };
 
 template <class Graph, class W>
