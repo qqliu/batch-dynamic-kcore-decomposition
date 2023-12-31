@@ -93,7 +93,6 @@ struct SkipList {
             if (cur_element->height > level + 1)
                 return cur_element;
             std::cout << "elements size: " << cur_element->elements.size() << std::endl;
-            auto pairs = cur_element->elements[level];
             std::cout << "found pair" << std::endl;
             cur_element = cur_element->elements[level].first;
             std::cout << "found pair first" << std::endl;
@@ -370,39 +369,114 @@ struct SkipList {
 
 inline void RunSkipList(uintE n) {
     std::cout << "Creating skip list" << std::endl;
-    auto skip_list = SkipList(10);
+    auto skip_list = SkipList(3);
     sequence<SkipList::SkipListElement> skip_list_elements = sequence<SkipList::SkipListElement>(10);
 
     std::cout << "creating nodes" << std::endl;
     auto curr_node = skip_list.create_node(2, nullptr, nullptr, (uintE) 2);
 
-    skip_list_elements[2] = curr_node;
+    skip_list_elements[1] = curr_node;
     auto curr_node2 = skip_list.create_node(3, nullptr, nullptr, (uintE) 3);
-    skip_list_elements[3] = curr_node2;
+    skip_list_elements[2] = curr_node2;
+    skip_list_elements[0] = skip_list.create_node(1, nullptr, nullptr, (uintE) 1);
     std::cout << "created nodes" << std::endl;
 
     std::cout << "joining nodes" << std::endl;
-    skip_list.join(&skip_list_elements[2], &skip_list_elements[3]);
+    skip_list.join(&skip_list_elements[1], &skip_list_elements[2]);
+    skip_list.join(&skip_list_elements[0], &skip_list_elements[1]);
+    skip_list.join(&skip_list_elements[2], &skip_list_elements[0]);
 
     std::cout << "printing answers" << std::endl;
-    std::cout << "node 2 height: " << skip_list_elements[2].height << std::endl;
-    std::cout << "node 2 value: " << skip_list_elements[2].values[0] << std::endl;
 
-    std::cout << "node 3 height: " << skip_list_elements[3].height << std::endl;
-    std::cout << "node 3 value: " << skip_list_elements[3].values[0] << std::endl;
+    std::cout << "node 1 height: " << skip_list_elements[0].height << std::endl;
+    std::cout << "node 1 value: " << skip_list_elements[0].values[0] << std::endl;
 
+    std::cout << "node 2 height: " << skip_list_elements[1].height << std::endl;
+    std::cout << "node 2 value: " << skip_list_elements[1].values[0] << std::endl;
+
+    std::cout << "node 3 height: " << skip_list_elements[2].height << std::endl;
+    std::cout << "node 3 value: " << skip_list_elements[2].values[0] << std::endl;
+
+    if (skip_list_elements[1].elements[0].first != nullptr)
+        std::cout << "node 2 left: " << skip_list_elements[1].elements[0].first -> values[0] << std::endl;
+    if (skip_list_elements[1].elements[0].second != nullptr)
+        std::cout << "node 2 right: " << skip_list_elements[1].elements[0].second -> values[0] << std::endl;
     if (skip_list_elements[2].elements[0].first != nullptr)
-        std::cout << "node 2 left: " << skip_list_elements[2].elements[0].first -> values[0] << std::endl;
+        std::cout << "node 3 left: " << skip_list_elements[2].elements[0].first -> values[0] << std::endl;
     if (skip_list_elements[2].elements[0].second != nullptr)
-        std::cout << "node 2 right: " << skip_list_elements[2].elements[0].second -> values[0] << std::endl;
-    if (skip_list_elements[3].elements[0].first != nullptr)
-        std::cout << "node 3 left: " << skip_list_elements[3].elements[0].first -> values[0] << std::endl;
-    if (skip_list_elements[3].elements[0].second != nullptr)
-        std::cout << "node 3 right: " << skip_list_elements[3].elements[0].second -> values[0] << std::endl;
+        std::cout << "node 3 right: " << skip_list_elements[2].elements[0].second -> values[0] << std::endl;
 
-    auto left_parent = skip_list.find_left_parent(0, &skip_list_elements[3]);
-    if (left_parent != nullptr)
-        std::cout << "node 3 left parent: " << left_parent->values[0] << std::endl;
+    std::cout << "height values" << std::endl;
+
+    auto node_1_height = skip_list_elements[0].height - 1;
+    auto node_2_height = skip_list_elements[1].height - 1;
+    auto node_3_height = skip_list_elements[2].height - 1;
+
+    std::cout << "printing height values" << std::endl;
+
+    if (skip_list_elements[0].elements[node_1_height].first != nullptr) {
+       std::cout << "node 1 left pointer" << std::endl;
+       auto left_neighbor = skip_list_elements[0].elements[node_1_height].first;
+       std::cout << "node 1 height left: " <<
+           skip_list_elements[0].elements[node_1_height].first -> values[left_neighbor->height - 1] << std::endl;
+    }
+
+    if (skip_list_elements[0].elements[node_1_height].second != nullptr) {
+       auto right_neighbor = skip_list_elements[0].elements[node_1_height].second;
+       std::cout << "node 1 height right: " <<
+           skip_list_elements[0].elements[node_1_height].second -> values[right_neighbor->height - 1] << std::endl;
+    }
+
+    std::cout << "node 1 done" << std::endl;
+
+    if (skip_list_elements[1].elements[node_2_height].first != nullptr) {
+       auto left_neighbor = skip_list_elements[1].elements[node_2_height].first;
+       std::cout << "node 2 height left: " <<
+           skip_list_elements[1].elements[node_2_height].first -> values[left_neighbor->height - 1] << std::endl;
+    }
+
+    if (skip_list_elements[1].elements[node_2_height].second != nullptr) {
+       auto right_neighbor = skip_list_elements[1].elements[node_2_height].second;
+       std::cout << "node 2 height right: " <<
+           skip_list_elements[1].elements[node_2_height].second -> values[right_neighbor->height - 1] << std::endl;
+    }
+
+    if (skip_list_elements[2].elements[node_3_height].first != nullptr) {
+       auto left_neighbor = skip_list_elements[2].elements[node_3_height].first;
+       std::cout << "node 3 height left: " <<
+           skip_list_elements[2].elements[node_3_height].first -> values[left_neighbor->height - 1] << std::endl;
+    }
+
+    if (skip_list_elements[2].elements[node_3_height].second != nullptr) {
+       auto right_neighbor = skip_list_elements[2].elements[node_3_height].second;
+       std::cout << "node 3 height right: " <<
+           skip_list_elements[2].elements[node_3_height].second -> values[right_neighbor->height - 1] << std::endl;
+    }
+
+    auto one_left_parent = skip_list.find_left_parent(0, &skip_list_elements[0]);
+    if (one_left_parent != nullptr)
+        std::cout << "node 1 left parent: " << one_left_parent->values[0] << std::endl;
+
+    auto one_right_parent = skip_list.find_right_parent(0, &skip_list_elements[0]);
+    if (one_right_parent != nullptr)
+        std::cout << "node 1 right parent: " << one_right_parent->values[0] << std::endl;
+
+    auto two_left_parent = skip_list.find_left_parent(0, &skip_list_elements[1]);
+    if (two_left_parent != nullptr)
+        std::cout << "node 2 left parent: " << two_left_parent->values[0] << std::endl;
+
+    auto two_right_parent = skip_list.find_right_parent(0, &skip_list_elements[1]);
+    if (two_right_parent != nullptr)
+        std::cout << "node 2 right parent: " << two_right_parent->values[0] << std::endl;
+
+    auto three_right_parent = skip_list.find_right_parent(0, &skip_list_elements[2]);
+    if (three_right_parent != nullptr)
+        std::cout << "node 3 right parent: " << three_right_parent->values[0] << std::endl;
+
+    auto three_left_parent = skip_list.find_left_parent(0, &skip_list_elements[2]);
+    if (three_left_parent != nullptr)
+        std::cout << "node 3 left parent: " << three_left_parent->values[0] << std::endl;
+
 }
 
 }  // namespace gbbs
