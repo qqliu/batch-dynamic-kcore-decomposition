@@ -92,12 +92,7 @@ struct SkipList {
             SkipListElement* start_element = this_element;
             if (cur_element->height > level + 1)
                 return cur_element;
-            std::cout << "elements size: " << cur_element->elements.size() << std::endl;
-            std::cout << "found pair" << std::endl;
             cur_element = cur_element->elements[level].first;
-            std::cout << "found pair first" << std::endl;
-            if (cur_element != nullptr)
-                std::cout << "new cur element: " << cur_element->values[0] << std::endl;
 
             while (cur_element != nullptr && cur_element != start_element) {
                 if (cur_element->height > level + 1)
@@ -155,17 +150,12 @@ struct SkipList {
     void join(SkipListElement* left, SkipListElement* right) {
             size_t level = 0;
             while(left != nullptr && right != nullptr) {
-                    std::cout << "pointers are not null" << std::endl;
                     if (left->elements[level].second == nullptr &&
                                 left->CASright(level, nullptr, right)) {
-                            std::cout << "left" << std::endl;
                             right->CASleft(level, nullptr, left);
                             left = find_left_parent(level, left);
-                            std::cout << "found left parent" << std::endl;
                             right = find_right_parent(level, right);
-                            std::cout << "found right parent" << std::endl;
                             level++;
-                            std::cout << "new level: " << level << std::endl;
                     } else {
                             return;
                     }
@@ -369,7 +359,7 @@ struct SkipList {
 
 inline void RunSkipList(uintE n) {
     std::cout << "Creating skip list" << std::endl;
-    auto skip_list = SkipList(3);
+    auto skip_list = SkipList(6);
     sequence<SkipList::SkipListElement> skip_list_elements = sequence<SkipList::SkipListElement>(10);
 
     std::cout << "creating nodes" << std::endl;
@@ -379,12 +369,21 @@ inline void RunSkipList(uintE n) {
     auto curr_node2 = skip_list.create_node(3, nullptr, nullptr, (uintE) 3);
     skip_list_elements[2] = curr_node2;
     skip_list_elements[0] = skip_list.create_node(1, nullptr, nullptr, (uintE) 1);
+    skip_list_elements[3] = skip_list.create_node(4, nullptr, nullptr, (uintE) 4);
+    skip_list_elements[4] = skip_list.create_node(5, nullptr, nullptr, (uintE) 5);
+    skip_list_elements[5] = skip_list.create_node(6, nullptr, nullptr, (uintE) 6);
+
     std::cout << "created nodes" << std::endl;
 
     std::cout << "joining nodes" << std::endl;
-    skip_list.join(&skip_list_elements[1], &skip_list_elements[2]);
-    skip_list.join(&skip_list_elements[0], &skip_list_elements[1]);
-    skip_list.join(&skip_list_elements[2], &skip_list_elements[0]);
+    sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>> join_updates
+        = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(5);
+    join_updates[0] = std::make_pair(&skip_list_elements[1], &skip_list_elements[2]);
+    join_updates[1] = std::make_pair(&skip_list_elements[0], &skip_list_elements[1]);
+    join_updates[2] = std::make_pair(&skip_list_elements[2], &skip_list_elements[0]);
+    join_updates[3] = std::make_pair(&skip_list_elements[3], &skip_list_elements[4]);
+    join_updates[4] = std::make_pair(&skip_list_elements[4], &skip_list_elements[3]);
+    skip_list.batch_join(&join_updates);
 
     std::cout << "printing answers" << std::endl;
 
@@ -476,6 +475,108 @@ inline void RunSkipList(uintE n) {
     auto three_left_parent = skip_list.find_left_parent(0, &skip_list_elements[2]);
     if (three_left_parent != nullptr)
         std::cout << "node 3 left parent: " << three_left_parent->values[0] << std::endl;
+
+    std::cout << "total sum 2, 3: " << skip_list.get_subsequence_sum(&skip_list_elements[1],
+            &skip_list_elements[2]) << std::endl;
+    std::cout << "total sum 1, 2: " << skip_list.get_subsequence_sum(&skip_list_elements[0],
+            &skip_list_elements[1]) << std::endl;
+    std::cout << "total sum 1, 3: " << skip_list.get_subsequence_sum(&skip_list_elements[0],
+            &skip_list_elements[2]) << std::endl;
+    std::cout << "total sum shouldn't work: " << skip_list.get_subsequence_sum(&skip_list_elements[2],
+            &skip_list_elements[0]) << std::endl;
+    std::cout << "total sum shouldn't work 4, 5: " << skip_list.get_subsequence_sum(&skip_list_elements[3],
+            &skip_list_elements[4]) << std::endl;
+
+    std::cout << "representative node 1: " << skip_list.find_representative(&skip_list_elements[0])->values[0]
+        << std::endl;
+    std::cout << "representative node 2: " << skip_list.find_representative(&skip_list_elements[1])->values[0]
+        << std::endl;
+    std::cout << "representative node 3: " << skip_list.find_representative(&skip_list_elements[2])->values[0]
+        << std::endl;
+    std::cout << "representative node 4: " << skip_list.find_representative(&skip_list_elements[3])->values[0]
+        << std::endl;
+    std::cout << "representative node 5: " << skip_list.find_representative(&skip_list_elements[4])->values[0]
+        << std::endl;
+    std::cout << "representative node 6: " << skip_list.find_representative(&skip_list_elements[5])->values[0]
+        << std::endl;
+
+    std::cout << "total sum subtree 1: " << skip_list.get_sum(&skip_list_elements[0]) << ", "
+        << skip_list.get_sum(&skip_list_elements[1]) << ", " << skip_list.get_sum(&skip_list_elements[2])
+        << std::endl;
+
+    std::cout << "total sum subtree 2: " << skip_list.get_sum(&skip_list_elements[3]) << ", "
+        << skip_list.get_sum(&skip_list_elements[4])
+        << std::endl;
+
+    std::cout << "total sum subtree 3: " << skip_list.get_sum(&skip_list_elements[5]) << std::endl;
+
+    std::cout << "splitting some nodes" << std::endl;
+    sequence<SkipList::SkipListElement*> splits
+        = sequence<SkipList::SkipListElement*>(4);
+    splits[0] = &skip_list_elements[2];
+    splits[1] = &skip_list_elements[4];
+    splits[2] = &skip_list_elements[5];
+    splits[3] = &skip_list_elements[1];
+    skip_list.batch_split(&splits);
+
+    std::cout << "representative node 1: " << skip_list.find_representative(&skip_list_elements[0])->values[0]
+        << std::endl;
+    std::cout << "representative node 2: " << skip_list.find_representative(&skip_list_elements[1])->values[0]
+        << std::endl;
+    std::cout << "representative node 3: " << skip_list.find_representative(&skip_list_elements[2])->values[0]
+        << std::endl;
+    std::cout << "representative node 4: " << skip_list.find_representative(&skip_list_elements[3])->values[0]
+        << std::endl;
+    std::cout << "representative node 5: " << skip_list.find_representative(&skip_list_elements[4])->values[0]
+        << std::endl;
+    std::cout << "representative node 6: " << skip_list.find_representative(&skip_list_elements[5])->values[0]
+        << std::endl;
+
+    std::cout << "total sum subtree 1: " << skip_list.get_sum(&skip_list_elements[0]) << ", "
+        << skip_list.get_sum(&skip_list_elements[1]) << std::endl;
+
+    std::cout << "total sum subtree 2: "  << skip_list.get_sum(&skip_list_elements[2])
+        << std::endl;
+
+    std::cout << "total sum subtree 3: " << skip_list.get_sum(&skip_list_elements[3]) << ", "
+        << skip_list.get_sum(&skip_list_elements[4])
+        << std::endl;
+
+    std::cout << "total sum subtree 6: " << skip_list.get_sum(&skip_list_elements[5]) << std::endl;
+
+    std::cout << "total sum 1, 2: " << skip_list.get_subsequence_sum(&skip_list_elements[0],
+            &skip_list_elements[1]) << std::endl;
+    std::cout << "total sum 4, 5: " << skip_list.get_subsequence_sum(&skip_list_elements[3],
+            &skip_list_elements[4]) << std::endl;
+
+    std::cout << "joining more nodes" << std::endl;
+    sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>> join_updates_1
+        = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(3);
+    join_updates_1[0] = std::make_pair(&skip_list_elements[1], &skip_list_elements[2]);
+    join_updates_1[1] = std::make_pair(&skip_list_elements[5], &skip_list_elements[0]);
+    join_updates_1[2] = std::make_pair(&skip_list_elements[2], &skip_list_elements[5]);
+    skip_list.batch_join(&join_updates_1);
+
+    std::cout << "representative node 1: " << skip_list.find_representative(&skip_list_elements[0])->values[0]
+        << std::endl;
+    std::cout << "representative node 2: " << skip_list.find_representative(&skip_list_elements[1])->values[0]
+        << std::endl;
+    std::cout << "representative node 3: " << skip_list.find_representative(&skip_list_elements[2])->values[0]
+        << std::endl;
+    std::cout << "representative node 4: " << skip_list.find_representative(&skip_list_elements[3])->values[0]
+        << std::endl;
+    std::cout << "representative node 5: " << skip_list.find_representative(&skip_list_elements[4])->values[0]
+        << std::endl;
+    std::cout << "representative node 6: " << skip_list.find_representative(&skip_list_elements[5])->values[0]
+        << std::endl;
+
+    std::cout << "total sum subtree 1: " << skip_list.get_sum(&skip_list_elements[0]) << ", "
+        << skip_list.get_sum(&skip_list_elements[1]) << ", " << skip_list.get_sum(&skip_list_elements[2])
+        << ", " << skip_list.get_sum(&skip_list_elements[5]) << std::endl;
+
+    std::cout << "total sum subtree 2: " << skip_list.get_sum(&skip_list_elements[3]) << ", "
+        << skip_list.get_sum(&skip_list_elements[4])
+        << std::endl;
 
 }
 
