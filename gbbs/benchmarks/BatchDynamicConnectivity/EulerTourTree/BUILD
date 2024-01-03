@@ -1,15 +1,15 @@
 cc_library(
-  name = "LDS",
-  hdrs = ["LDS.h"],
+  name = "ETTree",
+  hdrs = ["ETTree.h"],
   deps = [
   "//gbbs:gbbs",
   ]
 )
 
 cc_binary(
-  name = "LDS_main",
-  srcs = ["LDS.cc"],
-  deps = [":LDS"]
+  name = "ETTree_main",
+  srcs = ["ETTree.cc"],
+  deps = [":ETTree"]
 )
 
 package(
