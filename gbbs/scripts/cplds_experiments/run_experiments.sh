@@ -1,5 +1,9 @@
 #!/bin/bash
 
+(cd ../../benchmarks/EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/ && make)
+(cd ../../benchmarks/EdgeOrientation/ConcurrentPLDS/NonlinearizableReads/ && make)
+(cd ../../benchmarks/EdgeOrientation/ConcurrentPLDS/SynchronizedReads/ && make)
+
 echo "Running experiments";
 echo "-------------------------------";
 
