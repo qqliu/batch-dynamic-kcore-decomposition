@@ -1,7 +1,7 @@
 Input graph directory: ../
 Dynamic graphs: dblp_insertion_edges, youtube_insertion_edges, wiki_insertion_edges
 Output directory: ../outputs/
-Benchmarks: CLDS, Delayed, Nonlin
+Benchmarks: CLDS, SyncReads, NonSync
 Numbers of workers: 1, 2, 4, 8, 15
 Num Reader Threads: 15
 Deltas: 0.2

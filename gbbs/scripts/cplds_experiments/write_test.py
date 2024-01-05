@@ -25,16 +25,16 @@ def appendToFile(out, filename):
 def benchmarkToProgramPath(benchmark):
   benchmark_dict = {
     "CLDS" : "EdgeOrientation/ConcurrentPLDS/ConcurrentLDS/LDS",
-    "Delayed" : "EdgeOrientation/ConcurrentPLDS/SynchronizedReads/LDS",
-    "Nonlin" : "EdgeOrientation/ConcurrentPLDS/NonlinearizableReads/LDS"
+    "SyncReads" : "EdgeOrientation/ConcurrentPLDS/SynchronizedReads/LDS",
+    "NonSync" : "EdgeOrientation/ConcurrentPLDS/NonlinearizableReads/LDS"
   }
   return benchmark_dict.get(benchmark)
 
 def benchmarkToIsDynamic(benchmark):
   benchmark_dict = {
     "CLDS" : True,
-    "Delayed" : True,
-    "Nonlin" : True
+    "SyncReads" : True,
+    "NonSync" : True
   }
   return benchmark_dict.get(benchmark)
 
