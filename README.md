@@ -178,8 +178,8 @@ mixed batch experiments. `_batch` contain the batch of edge updates used
 in our mixed batch (1/2 insertions and 1/2 deletions) experiments.
 
 
-ConcurrentLDS Algorithm and Experiments
+CLDS Algorithm and Experiments
 --------
 
-A description for how to run the experimentsusing teh CLDS code is given in the
+A description for how to run the experiments using the CLDS code is given in the
 [ConcurrentLDS directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation/ConcurrentPLDS).
