@@ -31,6 +31,10 @@ struct ETTree {
                 twin = twin_;
         }
     };
+
+    void cut(uintE u, uintE v) {
+            SkipList::SkipListElement
+    }
 };
 
 void RunETTree() {
