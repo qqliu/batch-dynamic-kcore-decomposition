@@ -11,7 +11,9 @@ namespace gbbs {
 
 struct ETTree {
 
+
     struct ETTreeBase {
+        SkipList skip_list = SkipList();
         SkipList::SkipListElement edge; // edge (u, v)
         SkipList::SkipListElement* twin; // edge (v, u)
 
@@ -25,15 +27,15 @@ struct ETTree {
         }
 
         ETTreeBase(uintE u, uintE v, SkipList::SkipListElement* twin_) {
-                // TODO: make the value take two values: u and v
-                edge = SkipList::SkipListElement(u, nullptr, nullptr, v);
+                edge = skip_list.create_node(u, nullptr, nullptr, std::make_pair(u, v));
                 skip_mark = false;
                 twin = twin_;
         }
     };
 
     void cut(uintE u, uintE v) {
-            SkipList::SkipListElement
+            // Stopped here, needs edge map
+            SkipList::SkipListElement*
     }
 };
 
