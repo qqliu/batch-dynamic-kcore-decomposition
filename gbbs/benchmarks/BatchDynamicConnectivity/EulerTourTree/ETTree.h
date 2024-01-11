@@ -92,6 +92,41 @@ struct ETTree {
             edge_table.remove(std::make_pair(u, v));
             edge_table.remove(std::make_pair(v, u));
 
+            auto u_left = uv->get_left(0);
+            auto v_left = vu->get_left(0);
+            auto v_right = skip_list.split(uv);
+            auto u_right = skip_list.split(vu);
+
+            skip_list.split(u_left);
+            skip_list.split(v_left);
+            uv->edge = nullptr;
+            vu->edge = nullptr;
+            uv->twin = nullptr;
+            vu->twin = nullptr;
+
+            skip_list.join(u_left, u_right);
+            skip_list.join(v_left, v_right);
+    }
+
+    void batch_link_sequential(sequence<std::pair<uintE, uintE>>links) {
+            for(size_t i = 0; i < links.size(); i++) {
+                    link(links[i].first, links[i].second);
+            }
+    }
+
+    void batch_link(sequence<std::pair<uintE, uintE>>links) {
+        if (links.size() <= 75) {
+                batch_link_sequential(links);
+                return;
+        }
+
+        sequence<std::pair<uintE, uintE>> links_both_dirs = sequence<std::pair<uintE, uintE>>(2 * links.size());
+        parallel_for(size_t i = 0; i < links.size(); i++) {
+                links_both_dirs[2 * i] = links[i];
+                links_both_dirs[2 * i + 1] = std::make_pair(links[i].second, links[i].first);
+        }
+
+
     }
 };
 
