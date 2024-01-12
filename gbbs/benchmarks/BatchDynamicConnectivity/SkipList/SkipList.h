@@ -23,10 +23,14 @@ struct SkipList {
         height_array elements;
         values_array values;
         uintE update_level;
+        bool split_mark;
+        SkipListElement* twin;
 
-        SkipListElement(): height(0), lowest_needs_update(0) { update_level = UINT_E_MAX; }
+        SkipListElement(): height(0), lowest_needs_update(0) { update_level = UINT_E_MAX; split_mark = false;
+            twin = nullptr;}
 
-        SkipListElement(size_t _h, SkipListElement* _r, SkipListElement* _l, std::pair<uintE, uintE> _val):
+        SkipListElement(size_t _h, SkipListElement* _r, SkipListElement* _l, std::pair<uintE, uintE> _val,
+                SkipListElement* twin_ = nullptr):
             height(_h), lowest_needs_update(_h) {
                 elements.resize(_h);
                 values.resize(_h);
@@ -34,6 +38,8 @@ struct SkipList {
                 elements[0].first = _l;
                 elements[0].second = _r;
                 values[0] = _val;
+                split_mark = false;
+                twin = twin_;
         }
 
         inline void set_left_pointer(size_t height, SkipListElement* left) {
@@ -71,7 +77,7 @@ struct SkipList {
     SkipList(size_t _n): n(_n) {}
 
     SkipListElement create_node(size_t index, SkipListElement* left, SkipListElement* right,
-            std::pair<uintE, uintE> val) {
+            std::pair<uintE, uintE> val, SkipListElement* twin = nullptr) {
         rng.fork(index);
         auto rand_val = rng.rand() % UINT_E_MAX;
         rng = rng.next();
