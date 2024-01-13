@@ -34,10 +34,13 @@ struct ETTree {
                    SkipList::SkipListElement*>(n * n, empty, hash_pair);
 
         vertices = sequence<SkipList::SkipListElement>(n);
+        auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(n);
         parallel_for(0, n, [&] (size_t i) {
             vertices[i] = skip_list.create_node(i, nullptr, nullptr, std::make_pair(i, i));
-            skip_list.join(&vertices[i], &vertices[i]);
+            joins[i] = std::make_pair(&vertices[i], &vertices[i]);
         });
+
+        skip_list.batch_join(&joins);
     }
 
     bool is_connected(int u, int v) {
@@ -55,13 +58,22 @@ struct ETTree {
         auto u_left = &vertices[u];
         auto v_left = &vertices[v];
 
-        auto u_right = skip_list.split(u_left);
-        auto v_right = skip_list.split(v_left);
+        auto splits = sequence<SkipList::SkipListElement*>(2);
+        splits[0] = u_left;
+        splits[1] = v_left;
+        auto results = skip_list.batch_split(&splits);
 
-        skip_list.join(u_left, &uv);
-        skip_list.join(&uv, v_right);
-        skip_list.join(v_left, &vu);
-        skip_list.join(&vu, u_right);
+        auto u_right = results[0];
+        auto v_right = results[1];
+
+        auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(4);
+
+        joins[0] = std::make_pair(u_left, &uv);
+        joins[1] = std::make_pair(&uv, v_right);
+        joins[2] = std::make_pair(v_left, &vu);
+        joins[3] = std::make_pair(&vu, u_right);
+
+        skip_list.batch_join(&joins);
     }
 
     void cut(int u, int v){
@@ -72,18 +84,31 @@ struct ETTree {
 
             auto u_left = uv->get_left(0);
             auto v_left = vu->get_left(0);
-            auto v_right = skip_list.split(uv);
-            auto u_right = skip_list.split(vu);
 
-            skip_list.split(u_left);
-            skip_list.split(v_left);
+            auto splits = sequence<SkipList::SkipListElement*>(2);
+            splits[0] = uv;
+            splits[1] = vu;
+            auto results = skip_list.batch_split(&splits);
+
+            auto v_right = splits[0];
+            auto u_right = splits[1];
+
+            splits = sequence<SkipList::SkipListElement*>(2);
+            splits[0] = u_left;
+            splits[1] = v_left;
+            results = skip_list.batch_split(&splits);
+
             uv->edge = nullptr;
             vu->edge = nullptr;
             uv->twin = nullptr;
             vu->twin = nullptr;
 
-            skip_list.join(u_left, u_right);
-            skip_list.join(v_left, v_right);
+            auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(2);
+
+            joins[0] = std::make_pair(u_left, u_right);
+            joins[1] = std::make_pair(v_left, v_right);
+
+            skip_list.batch_join(&joins);
     }
 
     void batch_link_sequential(sequence<std::pair<uintE, uintE>>links) {
@@ -108,6 +133,7 @@ struct ETTree {
         parlay::integer_sort_inplace(parlay::make_slice(links_both_dirs), get_key);
 
         auto split_successors = sequence<SkipList::SkipListElement*>(2 * links.size());
+        auto splits = sequence<SkipList::SkipListElement*>(2 * links.size(), nullptr);
 
         parallel_for(0, 2 * links.size(), [&] (size_t i) {
             uintE u, v;
@@ -115,7 +141,7 @@ struct ETTree {
             v = links_both_dirs[i].second;
 
             if (i == 2 * links.size() - 1 || u != links_both_dirs[i+1].first) {
-                    split_successors[i] = skip_list.split(&vertices[u]);
+                    splits[i] = &vertices[u];
             }
 
             if (u < v) {
@@ -128,6 +154,26 @@ struct ETTree {
             }
         });
 
+        auto bool_seq = parlay::delayed_seq<bool>(splits.size(), [&] (size_t i) {
+                return (splits[i] != nullptr);
+        });
+
+        auto element_indices = parlay::pack_index(bool_seq);
+        auto filtered_splits = sequence<SkipList::SkipListElement*>(element_indices.size());
+        auto results = sequence<uintE>(filtered_splits.size());
+        parallel_for(0, filtered_splits.size(), [&] (size_t i) {
+            filtered_splits[i] = splits[element_indices[i]];
+        });
+
+        results = skip_list.batch_split(&filtered_splits);
+
+        parallel_for(0, results.size(), [&] (size_t i) {
+            auto split_index = element_indices[i];
+            split_successors[split_index] = results[i];
+        });
+
+        auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(2 * links.size(),
+                std::make_pair(nullptr, nullptr));
         parallel_for(0, 2 * links.size(), [&] (size_t i) {
             uintE u, v;
             u = links_both_dirs[i].first;
@@ -137,19 +183,26 @@ struct ETTree {
             SkipList::SkipListElement* vu = uv -> twin;
 
             if (i == 0 || u != links_both_dirs[i-1].first) {
-                skip_list.join(&vertices[u], uv);
+                joins[2*i] = std::make_pair(&vertices[u], uv);
             }
 
             if (i == 2 * links.size() - 1 || u != links_both_dirs[i+1].first) {
-                skip_list.join(vu, split_successors[i]);
+                joins[2*i + 1] = std::make_pair(vu, split_successors[i]);
             } else {
                 uintE u2, v2;
                 u2 = links_both_dirs[i+1].first;
                 v2 = links_both_dirs[i+1].second;
 
-                skip_list.join(vu, edge_table.find(std::make_tuple(u2, v2)).orig);
+                joins[2*i + 1] = std::make_pair(vu, edge_table.find(std::make_tuple(u2, v2)).orig);
             }
         });
+
+        sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>> filtered =
+            parlay::filter(joins, [&] (const std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>& e) {
+                return e.first != nullptr || e.second != nullptr;
+            });
+
+        skip_list.batch_join(&filtered);
     }
 
     void batch_cut_sequential(sequence<std::pair<uintE, uintE>> cuts) {
@@ -223,26 +276,37 @@ struct ETTree {
                     }
             });
 
+            auto splits = sequence<SkipList::SkipListElement*>(4 * cuts.size());
             parallel_for(0, cuts.size(), [&] (size_t i) {
                     if (!ignored[i]) {
                         SkipList::SkipListElement* uv = edge_elements[i];
                         SkipList::SkipListElement* vu = uv->twin;
 
-                        skip_list.split(uv);
-                        skip_list.split(vu);
+                        splits[4 * i] = uv;
+                        splits[4 * i + 1] = vu;
 
                         SkipList::SkipListElement* predecessor = uv->get_left(0);
                         if (predecessor != nullptr) {
-                            skip_list.split(predecessor);
+                            splits[4 * i + 2] = predecessor;
                         }
 
                         predecessor = vu->get_left(0);
                         if (predecessor != nullptr) {
-                            skip_list.split(predecessor);
+                            splits[4 * i + 3] = predecessor;
                         }
+
                     }
            });
 
+           sequence<SkipList::SkipListElement*> filtered =
+                parlay::filter(splits, [&] (const SkipList::SkipListElement* e) {
+                    return e != nullptr;
+                });
+           skip_list.batch_split(&filtered);
+
+           auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(
+                join_targets.size() / 2,
+                std::make_pair(nullptr, nullptr));
            parallel_for(0, cuts.size(), [&] (size_t i) {
                     if (!ignored[i]) {
                         uintE u, v;
@@ -252,14 +316,21 @@ struct ETTree {
                         edge_table.remove(std::make_pair(u, v));
 
                         if (join_targets[4 * i] != nullptr) {
-                            skip_list.join(join_targets[4 * i], join_targets[4 * i + 1]);
+                            joins[2 * i] = std::make_pair(join_targets[4 * i], join_targets[4 * i + 1]);
                         }
 
                         if (join_targets[4 * i + 2] != nullptr) {
-                            skip_list.join(join_targets[4 * i + 2], join_targets[4 * i + 3]);
+                            joins[2 * i + 1] = std::make_pair(join_targets[4 * i + 2], join_targets[4 * i + 3]);
                         }
                     }
             });
+            sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>> filtered_joins =
+                parlay::filter(joins, [&] (const std::pair<SkipList::SkipListElement*,
+                            SkipList::SkipListElement*>& e) {
+                    return e.first != nullptr || e.second != nullptr;
+            });
+
+            skip_list.batch_join(&filtered_joins);
 
             auto element_indices = parlay::pack_index(ignored);
             auto next_cuts_seq = sequence<std::pair<uintE, uintE>>(element_indices.size());
@@ -276,6 +347,15 @@ struct ETTree {
             }
 
             batch_cut_recurse(cuts);
+    }
+
+    uintE get_subsequence_sum(uintE v, uintE parent) {
+        auto edge = edge_table(std::make_pair(parent, v));
+        auto twin = edge->twin;
+
+        auto result =  skip_list.get_subsequence_sum(edge, twin);
+        auto final_result = result.first ^ result.second;
+        return final_result;
     }
 };
 

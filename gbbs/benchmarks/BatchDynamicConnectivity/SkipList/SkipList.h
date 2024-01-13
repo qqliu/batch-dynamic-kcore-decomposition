@@ -280,10 +280,11 @@ struct SkipList {
             batch_update(&join_lefts);
     }
 
-    void batch_split(sequence<SkipListElement*>* splits) {
+    sequence<SkipListElement*> batch_split(sequence<SkipListElement*>* splits) {
             sequence<SkipListElement*>& splits_ref = *splits;
+            sequence<SkipListElement*> results = sequence<SkipListElement*>(splits->size());
             parallel_for(0, splits->size(), [&](size_t i){
-                split(splits_ref[i]);
+                results[i] = split(splits_ref[i]);
             });
 
             // Perform updates but only if some other thread hasn't already performed the update
@@ -315,6 +316,7 @@ struct SkipList {
             parallel_for(0, splits->size(), [&](size_t i) {
                 splits_ref[i]->update_level = UINT_E_MAX;
             });
+            return results;
     }
 
     std::pair<uintE, uintE> get_subsequence_sum(SkipListElement* left, SkipListElement* right) {
