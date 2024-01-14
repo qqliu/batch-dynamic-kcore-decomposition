@@ -171,22 +171,26 @@ struct SkipList {
     }
 
     SkipListElement* split(SkipListElement* this_element) {
-            SkipListElement* successor = nullptr;
+            SkipListElement* successor = nullptr; //this_element->get_right(0);
             SkipListElement* cur_element = this_element;
 
             size_t level = 0;
 
-            while(cur_element != nullptr) {
+            //SkipListElement* next;
+            while(cur_element != nullptr) { // && (next = cur_element->elements[level].second) != nullptr) {
                 SkipListElement* next = cur_element->elements[level].second;
-                if (next != nullptr && cur_element->CASright(level, next, nullptr)) {
+                if (next != nullptr && //(next = cur_element->elements[level].second) != nullptr) {
+                        cur_element->CASright(level, next, nullptr)) {
                         if (level == 0)
-                            successor = next;
+                           successor = next;
+                        //cur_element->elements[level].second = nullptr;
                         next->elements[level].first = nullptr;
                         cur_element = find_left_parent(level, cur_element);
                         level++;
-                } else {
+               }
+               else {
                         break;
-                }
+               }
             }
             return successor;
     }
