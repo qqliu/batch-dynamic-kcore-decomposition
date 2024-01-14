@@ -38,7 +38,6 @@ double LDS_runner(Graph& G, commandLine P) {
   double tt = t.stop();
 
   std::cout << "### Running Time: " << tt << std::endl;
-  RunETTree();
   return tt;
 }
 }  // namespace gbbs

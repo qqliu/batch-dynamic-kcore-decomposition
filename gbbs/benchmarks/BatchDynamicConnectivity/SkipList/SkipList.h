@@ -79,6 +79,7 @@ struct SkipList {
     SkipListElement create_node(size_t index, SkipListElement* left, SkipListElement* right,
             std::pair<uintE, uintE> val, SkipListElement* twin = nullptr) {
         rng.fork(index);
+        rng = rng.next();
         auto rand_val = rng.rand() % UINT_E_MAX;
         rng = rng.next();
 
