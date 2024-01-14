@@ -10,9 +10,21 @@
 
 namespace gbbs {
 
-template <class H>
+  uintE hash_function_parlay(std::tuple<uintE, uintE>& t) {
+            size_t l = std::get<0>(t);
+            size_t r = std::get<1>(t);
+            size_t key = (l << 32) + r;
+
+            return parlay::hash64_2(key);
+  }
+
 struct ETTree {
-   pbbslib::sparse_table<std::tuple<uintE, uintE>, SkipList::SkipListElement*, H> edge_table;
+   std::tuple<std::tuple<uintE, uintE>, SkipList::SkipListElement*> empty =
+          std::make_tuple(std::make_tuple(UINT_E_MAX, UINT_E_MAX), nullptr);
+   using table_type = decltype(pbbslib::make_sparse_table<std::tuple<uintE, uintE>,
+          SkipList::SkipListElement*>(10, empty, hash_function_parlay));
+   table_type edge_table;
+   //pbbslib::sparse_table<std::tuple<uintE, uintE>, SkipList::SkipListElement*, H> edge_table;
    SkipList skip_list;
    sequence<SkipList::SkipListElement> vertices;
 
@@ -20,18 +32,16 @@ struct ETTree {
 
    ETTree(size_t n) {
         skip_list = SkipList(n);
-        std::tuple<std::tuple<uintE, uintE>, SkipList::SkipListElement*> empty =
-            std::make_tuple(std::make_tuple(UINT_E_MAX, UINT_E_MAX), nullptr);
-        auto hash_pair = [](const std::tuple<uintE, uintE>& t) {
+        /*auto hash_pair = [](const std::tuple<uintE, uintE>& t) {
             size_t l = std::get<0>(t);
             size_t r = std::get<1>(t);
             size_t key = (l << 32) + r;
 
             return parlay::hash64_2(key);
-        };
+        };*/
 
         edge_table = pbbslib::make_sparse_table<std::tuple<uintE, uintE>,
-                   SkipList::SkipListElement*>(n * n, empty, hash_pair);
+                   SkipList::SkipListElement*>(2 * n * n, empty, hash_function_parlay);
 
         vertices = sequence<SkipList::SkipListElement>(n);
         auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(n);
@@ -52,8 +62,8 @@ struct ETTree {
         auto vu = skip_list.create_node(v, nullptr, nullptr, std::make_pair(v, u), &uv);
         uv.twin = &vu;
 
-        edge_table.insert(std::make_tuple(u, v), &uv);
-        edge_table.insert(std::make_tuple(v, u), &vu);
+        edge_table.insert(std::make_tuple(std::make_tuple(u, v), &uv));
+        edge_table.insert(std::make_tuple(std::make_tuple(v, u), &vu));
 
         auto u_left = &vertices[u];
         auto v_left = &vertices[v];
@@ -77,10 +87,10 @@ struct ETTree {
     }
 
     void cut(int u, int v){
-            auto uv = edge_table.find(std::make_pair(u, v));
+            auto uv = edge_table.find(std::make_tuple(u, v), nullptr);
             auto vu = uv->twin;
-            edge_table.remove(std::make_pair(u, v));
-            edge_table.remove(std::make_pair(v, u));
+            //edge_table.remove(std::make_pair(u, v));
+            //edge_table.remove(std::make_pair(v, u));
 
             auto u_left = uv->get_left(0);
             auto v_left = vu->get_left(0);
@@ -98,8 +108,8 @@ struct ETTree {
             splits[1] = v_left;
             results = skip_list.batch_split(&splits);
 
-            uv->edge = nullptr;
-            vu->edge = nullptr;
+            /*uv->orig = nullptr;
+            vu->orig = nullptr;*/
             uv->twin = nullptr;
             vu->twin = nullptr;
 
@@ -149,8 +159,8 @@ struct ETTree {
                     auto vu = skip_list.create_node(v, nullptr, nullptr, std::make_pair(v, u), &uv);
                     uv.twin = &vu;
 
-                    edge_table.insert(std::make_tuple(u, v), &uv);
-                    edge_table.insert(std::make_tuple(v, u), &vu);
+                    edge_table.insert(std::make_tuple(std::make_tuple(u, v), &uv));
+                    edge_table.insert(std::make_tuple(std::make_tuple(v, u), &vu));
             }
         });
 
@@ -160,12 +170,11 @@ struct ETTree {
 
         auto element_indices = parlay::pack_index(bool_seq);
         auto filtered_splits = sequence<SkipList::SkipListElement*>(element_indices.size());
-        auto results = sequence<uintE>(filtered_splits.size());
         parallel_for(0, filtered_splits.size(), [&] (size_t i) {
             filtered_splits[i] = splits[element_indices[i]];
         });
 
-        results = skip_list.batch_split(&filtered_splits);
+        auto results = skip_list.batch_split(&filtered_splits);
 
         parallel_for(0, results.size(), [&] (size_t i) {
             auto split_index = element_indices[i];
@@ -179,7 +188,7 @@ struct ETTree {
             u = links_both_dirs[i].first;
             v = links_both_dirs[i].second;
 
-            SkipList::SkipListElement* uv = edge_table.find(std::make_tuple(u, v));
+            SkipList::SkipListElement* uv = edge_table.find(std::make_tuple(u, v), nullptr);
             SkipList::SkipListElement* vu = uv -> twin;
 
             if (i == 0 || u != links_both_dirs[i-1].first) {
@@ -193,7 +202,8 @@ struct ETTree {
                 u2 = links_both_dirs[i+1].first;
                 v2 = links_both_dirs[i+1].second;
 
-                joins[2*i + 1] = std::make_pair(vu, edge_table.find(std::make_tuple(u2, v2)).orig);
+                auto found_element = edge_table.find(std::make_tuple(u2, v2), nullptr);
+                joins[2*i + 1] = std::make_pair(vu, found_element);
             }
         });
 
@@ -234,7 +244,7 @@ struct ETTree {
                     u = cuts[i].first;
                     v = cuts[i].second;
 
-                    SkipList::SkipListElement* uv = edge_table.find(std::make_pair(u, v));
+                    SkipList::SkipListElement* uv = edge_table.find(std::make_pair(u, v), nullptr);
                     SkipList::SkipListElement* vu = uv->twin;
 
                     edge_elements[i] = uv;
@@ -309,11 +319,11 @@ struct ETTree {
                 std::make_pair(nullptr, nullptr));
            parallel_for(0, cuts.size(), [&] (size_t i) {
                     if (!ignored[i]) {
-                        uintE u, v;
+                        /*uintE u, v;
                         u = cuts[i].first;
-                        v = cuts[i].second;
+                        v = cuts[i].second;*/
 
-                        edge_table.remove(std::make_pair(u, v));
+                        //edge_table.remove(std::make_pair(u, v));
 
                         if (join_targets[4 * i] != nullptr) {
                             joins[2 * i] = std::make_pair(join_targets[4 * i], join_targets[4 * i + 1]);
@@ -335,7 +345,7 @@ struct ETTree {
             auto element_indices = parlay::pack_index(ignored);
             auto next_cuts_seq = sequence<std::pair<uintE, uintE>>(element_indices.size());
             parallel_for(0, next_cuts_seq.size(), [&] (size_t i){
-                next_cuts_seq = cuts[element_indices[i]];
+                next_cuts_seq[i] = cuts[element_indices[i]];
             });
             batch_cut_recurse(next_cuts_seq);
     }
@@ -350,17 +360,36 @@ struct ETTree {
     }
 
     uintE get_subsequence_sum(uintE v, uintE parent) {
-        auto edge = edge_table(std::make_pair(parent, v));
+        auto edge = edge_table.find(std::make_tuple(parent, v), nullptr);
         auto twin = edge->twin;
 
         auto result =  skip_list.get_subsequence_sum(edge, twin);
         auto final_result = result.first ^ result.second;
         return final_result;
     }
+
+    bool is_connected(uintE u, uintE v) {
+            auto uu = vertices[u];
+            auto vv = vertices[v];
+
+            return skip_list.find_representative(&uu) == skip_list.find_representative(&vv);
+    }
 };
 
 void RunETTree() {
         std::cout << "ET tree" << std::endl;
+        auto tree = ETTree((size_t) 10);
+
+        sequence<std::pair<uintE, uintE>> links = sequence<std::pair<uintE, uintE>>(5);
+        links[0] = std::make_pair(2, 3);
+        links[1] = std::make_pair(3, 4);
+        links[2] = std::make_pair(0, 1);
+        links[3] = std::make_pair(0, 8);
+        links[4] = std::make_pair(7, 9);
+
+        tree.batch_link(links);
+        std::cout << "Connected 2, 3: " << tree.is_connected(2, 3) << std::endl;
+
 }
 
 }  // namespace gbbs
