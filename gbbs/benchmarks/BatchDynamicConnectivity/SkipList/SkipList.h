@@ -215,8 +215,12 @@ struct SkipList {
                     if (curr->update_level != UINT_E_MAX && curr->update_level < level) {
                             update_top_down(level-1, curr);
                     }
-                    xor_total.first ^= curr->values[level-1].first;
-                    xor_total.second ^= curr->values[level-1].second;
+
+                    /*auto first_level_values = curr->values[0];
+                    if (level-1 != 0 || (level-1 == 0 && first_level_values.first != first_level_values.second)) {*/
+                        xor_total.first ^= curr->values[level-1].first;
+                        xor_total.second ^= curr->values[level-1].second;
+                    //}
                     curr = curr->elements[level-1].second;
             }
             this_element->values[level] = xor_total;
@@ -310,8 +314,12 @@ struct SkipList {
                             if (curr == nullptr) {
                                 break;
                             } else {
-                                xor_sum.first ^= curr->values[level].first;
-                                xor_sum.second ^= curr->values[level].second;
+                                /*auto first_level_values = curr->values[0];
+                                if (level != 0 || (level == 0 &&
+                                            first_level_values.first != first_level_values.second)) {*/
+                                    xor_sum.first ^= curr->values[level].first;
+                                    xor_sum.second ^= curr->values[level].second;
+                                //}
                             }
                         }
                     }
@@ -331,13 +339,19 @@ struct SkipList {
             while(left != right) {
                     level = std::min(left->height, right->height) - 1;
                     if (level == left->height-1) {
+                        /*auto first_level_values = left->values[0];
+                        if (level != 0 || (level == 0 && first_level_values.first != first_level_values.second)) {*/
                             xor_sum.first ^= left->values[level].first;
                             xor_sum.second ^= left->values[level].second;
-                            left = left->elements[level].second;
+                        // }
+                        left = left->elements[level].second;
                     } else {
-                            right = right->elements[level].first;
+                        right = right->elements[level].first;
+                        /*auto first_level_values = right->values[0];
+                        if (level != 0 || (level == 0 && first_level_values.first != first_level_values.second)) {*/
                             xor_sum.first ^= right->values[level].first;
                             xor_sum.second ^= right->values[level].second;
+                        //}
                     }
             }
             return xor_sum;
@@ -351,9 +365,12 @@ struct SkipList {
 
             SkipListElement* curr = root->elements[level].second;
             while (curr != nullptr && curr != root) {
+                /*auto first_level_values = curr->values[0];
+                if (level != 0 || (level == 0 && first_level_values.first != first_level_values.second)) {*/
                     xor_sum.first ^= curr->values[level].first;
                     xor_sum.second ^= curr->values[level].second;
-                    curr = curr->elements[level].second;
+                //}
+                curr = curr->elements[level].second;
             }
 
             if (curr == nullptr) { // the list is not circular
@@ -368,8 +385,12 @@ struct SkipList {
 
                             while(curr->elements[level].first != nullptr) {
                                 curr = curr->elements[level].first;
-                                xor_sum.first ^= curr->values[level].first;
-                                xor_sum.second ^= curr->values[level].second;
+                                /*auto first_level_values = curr->values[0];
+                                if (level != 0 || (level == 0
+                                            && first_level_values.first != first_level_values.second)) {*/
+                                    xor_sum.first ^= curr->values[level].first;
+                                    xor_sum.second ^= curr->values[level].second;
+                                //}
                             }
                     }
             }

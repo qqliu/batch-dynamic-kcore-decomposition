@@ -1,15 +1,15 @@
 cc_library(
-  name = "LDS",
-  hdrs = ["LDS.h"],
+  name = "Connectivity",
+  hdrs = ["Connectivity.h"],
   deps = [
   "//gbbs:gbbs",
   ]
 )
 
 cc_binary(
-  name = "LDS_main",
-  srcs = ["LDS.cc"],
-  deps = [":LDS"]
+  name = "Connectivity_main",
+  srcs = ["Connectivity.cc"],
+  deps = [":Connectivity"]
 )
 
 package(

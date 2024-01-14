@@ -79,10 +79,10 @@ struct ETTree {
         joins[3] = std::make_pair(vu, u_right);
 
         skip_list.batch_join(&joins);
-        auto new_u_right = u_left->get_right(0);
-        /*print_value("u_right new: ", new_u_right);
-        print_value("uv new: ", uv);*/
-        auto new_uv = uv->get_right(0);
+        /*auto new_u_right = u_left->get_right(0);
+        print_value("u_right new: ", new_u_right);
+        print_value("uv new: ", uv);
+        auto new_uv = uv->get_right(0);*/
         //print_value("uv new: ", new_uv);
     }
 
@@ -146,11 +146,11 @@ struct ETTree {
                     /*std::cout << "u: " << links[i].first << std::endl;
                     std::cout << "v: " << links[i].second << std::endl;*/
 
-                    auto u_right = vertices[links[i].first].get_right(0);
+                    /*auto u_right = vertices[links[i].first].get_right(0);
                     auto v_right = vertices[links[i].second].get_right(0);
                     auto uv_right = u_right->get_right(0);
                     auto vu_right = v_right->get_right(0);
-                    /*if (vu_right == nullptr)
+                    if (vu_right == nullptr)
                         std::cout << "NOOOO" << std::endl;
 
                     std::cout << "u right: " << u_right->values[0].first << ", " << u_right->values[0].second << std::endl;
