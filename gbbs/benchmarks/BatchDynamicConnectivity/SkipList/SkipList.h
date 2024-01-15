@@ -17,29 +17,48 @@ struct SkipList {
         size_t lowest_needs_update = 0;
 
         using pointers = std::pair<SkipListElement*, SkipListElement*>;
-        using height_array = parlay::sequence<pointers>;
-        using values_array = parlay::sequence<std::pair<uintE, uintE>>;
+        using height_array = sequence<pointers>;
+        using values_array = sequence<sequence<sequence<std::pair<uintE, uintE>>>>;
 
         height_array elements;
         values_array values;
         uintE update_level;
         bool split_mark;
         SkipListElement* twin;
+        bool is_vertex;
+        std::pair<uintE, uintE> id;
+        double probability_base;
+        int num_duplicates;
 
         SkipListElement(): height(0), lowest_needs_update(0) { update_level = UINT_E_MAX; split_mark = false;
-            twin = nullptr;}
+            twin = nullptr;
+            is_vertex = false;
+            id = std::make_pair(UINT_E_MAX, UINT_E_MAX);
+            probability_base = 2;
+            num_duplicates = 2;
+        }
 
         SkipListElement(size_t _h, SkipListElement* _r, SkipListElement* _l, std::pair<uintE, uintE> _val,
-                SkipListElement* twin_ = nullptr):
+                SkipListElement* twin_ = nullptr, bool is_vertex_ = false, std::pair<uintE, uintE>id_ =
+                std::make_pair(UINT_E_MAX, UINT_E_MAX), double pb = 2, int num_dup = 2, size_t m):
             height(_h), lowest_needs_update(_h) {
                 elements.resize(_h);
-                values.resize(_h);
                 update_level = UINT_E_MAX;
                 elements[0].first = _l;
                 elements[0].second = _r;
                 values[0] = _val;
                 split_mark = false;
                 twin = twin_;
+                is_vertex = is_vertex_;
+                id = id_;
+                probability_base = pb;
+                num_duplicates = num_dup;
+                values.resize(_h);
+
+                parallel_for(0, _h, [&](size_t i){
+                    values[i] = sequence<sequence<std::pair<uintE, uintE>>>(num_duplicates,
+                            sequence<std::pair<uintE, uintE>>(log(m), std::make_pair(0, 0)));
+                });
         }
 
         inline void set_left_pointer(size_t height, SkipListElement* left) {
@@ -60,6 +79,12 @@ struct SkipList {
                return pbbslib::atomic_compare_and_swap(&elements[level].second, old_right, new_right);
         }
 
+        /*inline bool CASvalue(std::pair<uintE, uintE> old_value, std::pair<uintE, uintE> new_value) {
+               return pbbslib::atomic_compare_and_swap(&values[0], old_value, new_value);
+               values[0] = new_value;
+               return true;
+        }*/
+
         inline SkipListElement* get_left(size_t height) {
                 return elements[height].first;
         }
@@ -77,7 +102,8 @@ struct SkipList {
     SkipList(size_t _n): n(_n) {}
 
     SkipListElement create_node(size_t index, SkipListElement* left, SkipListElement* right,
-            std::pair<uintE, uintE> val, SkipListElement* twin = nullptr) {
+            std::pair<uintE, uintE> val, SkipListElement* twin = nullptr, bool is_vertex = false,
+            std::pair<uintE, uintE> id = std::make_pair(UINT_E_MAX, UINT_E_MAX)) {
         rng.fork(index);
         rng = rng.next();
         auto rand_val = rng.rand() % UINT_E_MAX;
@@ -91,7 +117,7 @@ struct SkipList {
 
         auto height = std::min(cur_height, (size_t) 32);
 
-        auto node = SkipListElement(height, left, right, val);
+        auto node = SkipListElement(height, left, right, val, twin, is_vertex, id);
         return node;
     }
 
@@ -155,6 +181,22 @@ struct SkipList {
         }
     }
 
+    /*void update_edge_values(sequence<SkipListElement*> nodes) {
+            parallel_for(0, nodes.size(), [&](size_t i) {
+                if (!nodes[i]->is_vertex && nodes[i] != nullptr) {
+                    auto left = nodes[i]->get_left(0);
+                    while (left->is_vertex && left != nodes[i]) {
+                        left = left->get_left(0);
+                    }
+                    if (left != nodes[i]) {
+                        nodes[i] -> CASvalue(nodes[i]->values[0],
+                           std::make_pair(left->id.first ^ nodes[i]->id.first,
+                                left->id.second ^ nodes[i]->id.second));
+                   }
+                }
+            });
+    }*/
+
     void join(SkipListElement* left, SkipListElement* right) {
             size_t level = 0;
             while(left != nullptr && right != nullptr) {
@@ -181,8 +223,11 @@ struct SkipList {
                 SkipListElement* next = cur_element->elements[level].second;
                 if (next != nullptr && //(next = cur_element->elements[level].second) != nullptr) {
                         cur_element->CASright(level, next, nullptr)) {
-                        if (level == 0)
+                        if (level == 0) {
                            successor = next;
+                           /*if (cur_element->is_vertex)
+                                cur_element->values[0] = std::make_pair(0, 0);*/
+                        }
                         //cur_element->elements[level].second = nullptr;
                         next->elements[level].first = nullptr;
                         cur_element = find_left_parent(level, cur_element);
@@ -209,7 +254,7 @@ struct SkipList {
                     update_top_down(level - 1, this_element);
             }
 
-            std::pair<uintE, uintE> xor_total = this_element->values[level-1];
+            sequence<sequence<std::pair<uintE, uintE>>> xor_total = this_element->values[level-1];
             SkipListElement* curr = this_element->elements[level-1].second;
             while (curr != nullptr && curr->height < level + 1) {
                     if (curr->update_level != UINT_E_MAX && curr->update_level < level) {
@@ -218,8 +263,12 @@ struct SkipList {
 
                     /*auto first_level_values = curr->values[0];
                     if (level-1 != 0 || (level-1 == 0 && first_level_values.first != first_level_values.second)) {*/
-                        xor_total.first ^= curr->values[level-1].first;
-                        xor_total.second ^= curr->values[level-1].second;
+                    parallel_for(0, xor_total.size(), [&] (size_t xi) {
+                            parallel_for(0, xor_total[xi].size(), [&] (size_t yi) {
+                                xor_total[xi][yi].first ^= curr->values[level-1][xi].first;
+                                xor_total[xi][yi].second ^= curr->values[level-1][yi].second;
+                            });
+                    });
                     //}
                     curr = curr->elements[level-1].second;
             }
@@ -230,8 +279,8 @@ struct SkipList {
             }
     }
 
-    void batch_update(sequence<std::pair<SkipListElement*, std::pair<uintE, uintE>>>* new_values) {
-        auto top_nodes = sequence<SkipListElement*>(new_values->size(), nullptr);
+    void batch_update(sequence<sequence<std::pair<SkipListElement*, std::pair<uintE, uintE>>>>* new_values) {
+        auto top_nodes = sequence<SkipListElement*>(new_values->size(), nullptr); //STOPPED HERE WITH UPDATING NODE VALUES
         sequence<std::pair<SkipListElement*, std::pair<uintE, uintE>>>& new_values_ref = *new_values;
         if (new_values != nullptr) {
             parallel_for(0, new_values->size(), [&](size_t i){
@@ -280,11 +329,22 @@ struct SkipList {
 
     void batch_join(sequence<std::pair<SkipListElement*, SkipListElement*>>* joins) {
             sequence<std::pair<SkipListElement*, SkipListElement*>>& joins_ref = *joins;
+            //auto update_nodes = sequence<SkipListElement*>(2 * joins->size());
             auto join_lefts = sequence<std::pair<SkipListElement*, std::pair<uintE, uintE>>>(joins->size());
-            parallel_for(0, joins->size(), [&] (size_t i){
+            parallel_for(0, joins->size(), [&] (size_t i) {
+                /*auto left = joins_ref[i].first;
+                auto right = joins_ref[i].second;*/
                 join(joins_ref[i].first, joins_ref[i].second);
+                //update_nodes[2 * i] = left;
+                //update_nodes[2 * i + 1] = right;
                 join_lefts[i] = std::make_pair(joins_ref[i].first, joins_ref[i].first->values[0]);
             });
+
+            //update_edge_values(update_nodes);
+
+            /*parallel_for(0, joins->size(), [&] (size_t i) {
+                join_lefts[i] = std::make_pair(joins_ref[i].first, joins_ref[i].first->values[0]);
+            });*/
 
             batch_update(&join_lefts);
     }

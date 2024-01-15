@@ -32,7 +32,8 @@ struct ETTree {
         vertices = sequence<SkipList::SkipListElement>(n);
         auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(n);
         parallel_for(0, n, [&] (size_t i) {
-            vertices[i] = skip_list.create_node(i, nullptr, nullptr, std::make_pair(i, i));
+            vertices[i] = skip_list.create_node(i, nullptr, nullptr, std::make_pair(0, 0), nullptr, true,
+                    std::make_pair(i, i));
             joins[i] = std::make_pair(&vertices[i], &vertices[i]);
         });
 
@@ -40,13 +41,16 @@ struct ETTree {
     }
 
     void print_value(std::string label, SkipList::SkipListElement* v) {
-            std::cout << label << v->values[0].first << ", " << v->values[0].second << std::endl;
+            std::cout << label << ", id: " << v->id.first << ", " << v->id.second <<
+            ", values: " << v->values[0].first << ", " << v->values[0].second << std::endl;
     }
 
     void link(uintE u, uintE v) {
-        edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, std::make_pair(u, v));
+        edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, std::make_pair(0, 0), nullptr, false,
+                std::make_pair(u, v));
         auto uv = &edge_table[u][v];
-        edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, std::make_pair(v, u), uv);
+        edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, std::make_pair(0, 0), uv, false,
+                std::make_pair(v, u));
         auto vu = &edge_table[v][u];
         uv->twin = vu;
         vu->twin = uv;
@@ -192,9 +196,11 @@ struct ETTree {
             }
 
             if (u < v) {
-                    edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, std::make_pair(u, v));
+                    edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, std::make_pair(0, 0), nullptr,
+                            false, std::make_pair(u, v));
                     auto uv = &edge_table[u][v];
-                    edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, std::make_pair(v, u), uv);
+                    edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, std::make_pair(0, 0), uv,
+                            false, std::make_pair(v, u));
                     auto vu = &edge_table[v][u];
                     vu->twin = uv;
                     uv->twin = vu;
@@ -294,7 +300,7 @@ struct ETTree {
             parlay::random rng = parlay::random(time(0));
             //std::cout << "cuts size: !!!!!!!!!!!" << cuts.size() << std::endl;
 
-            if (cuts.size() <= 1) {
+            if (cuts.size() <= 75) {
                 //std::cout << "PASSED IF 2" << std::endl;
                     batch_cut_sequential(cuts);
                     return;
@@ -423,7 +429,7 @@ struct ETTree {
     }
 
     void batch_cut(sequence<std::pair<uintE, uintE>> cuts) {
-            if (cuts.size() <=  1) {
+            if (cuts.size() <=  75) {
                 //std::cout << "PASSED IF 1" << std::endl;
                     batch_cut_sequential(cuts);
                     return;
@@ -436,7 +442,23 @@ struct ETTree {
         auto edge = &edge_table[parent][v];
         auto twin = edge->twin;
 
+        /*print_value("v: ", edge);
+        print_value("parent: ", twin);
+        auto right = edge->get_right(0);
+        while (right != twin) {
+                print_value("right: ", right);
+                right = right->get_right(0);
+        }*/
+
         auto result =  skip_list.get_subsequence_sum(edge, twin);
+        /*auto left_v = edge->get_left(0);
+        while(left_v->is_vertex && left_v != edge) {
+                left_v = left_v -> get_left(0);
+        }*/
+        /*result.first = result.first ^ left_v->id.first ^ twin->id.first;
+        result.second = result.second ^ left_v->id.second ^ twin->id.second;*/
+        /*print_value("left_v ", left_v);
+        print_value("twin ", twin);*/
         /*print_value("edge: ", edge);
         print_value("twin: ", twin);
         auto right = edge->get_right(0);
