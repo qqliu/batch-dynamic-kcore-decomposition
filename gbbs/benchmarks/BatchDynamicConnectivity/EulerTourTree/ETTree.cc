@@ -34,7 +34,7 @@ template <class Graph>
 double LDS_runner(Graph& G, commandLine P) {
   // Run LDS
   timer t; t.start();
-  RunETTree();
+  RunETTree(2, 2, 10);
   double tt = t.stop();
 
   std::cout << "### Running Time: " << tt << std::endl;

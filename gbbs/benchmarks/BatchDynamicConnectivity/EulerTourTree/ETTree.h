@@ -18,22 +18,33 @@ namespace gbbs {
             return parlay::hash64_2(key);
   }
 
+sequence<sequence<std::pair<uintE, uintE>>> make_values(uintE a, uintE b, double pb, int copies, size_t m) {
+        return sequence<sequence<std::pair<uintE, uintE>>>(copies, sequence<std::pair<uintE, uintE>>(
+                    ceil(log(m)/log(pb)), std::make_pair(a, b)));
+}
+
 struct ETTree {
    sequence<sequence<SkipList::SkipListElement>> edge_table;
    SkipList skip_list;
    sequence<SkipList::SkipListElement> vertices;
+   int copies;
+   size_t m;
+   double pb;
 
    ETTree() {}
 
-   ETTree(size_t n) {
+   ETTree(size_t n, int copies_, size_t m_, double pb_) {
         skip_list = SkipList(n);
         edge_table = sequence<sequence<SkipList::SkipListElement>>(n, sequence<SkipList::SkipListElement>(n));
+        pb = pb_;
+        m = m_;
+        copies = copies_;
 
         vertices = sequence<SkipList::SkipListElement>(n);
         auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(n);
         parallel_for(0, n, [&] (size_t i) {
-            vertices[i] = skip_list.create_node(i, nullptr, nullptr, std::make_pair(0, 0), nullptr, true,
-                    std::make_pair(i, i));
+            vertices[i] = skip_list.create_node(i, nullptr, nullptr, make_values(0, 0, pb, copies, m), nullptr, true,
+                    std::make_pair(i, i), pb, copies, m);
             joins[i] = std::make_pair(&vertices[i], &vertices[i]);
         });
 
@@ -42,15 +53,15 @@ struct ETTree {
 
     void print_value(std::string label, SkipList::SkipListElement* v) {
             std::cout << label << ", id: " << v->id.first << ", " << v->id.second <<
-            ", values: " << v->values[0].first << ", " << v->values[0].second << std::endl;
+            ", values: " << v->values[0][0][0].first << ", " << v->values[0][0][0].second << std::endl;
     }
 
     void link(uintE u, uintE v) {
-        edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, std::make_pair(0, 0), nullptr, false,
-                std::make_pair(u, v));
+        edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, make_values(0, 0, pb, copies, m), nullptr, false,
+                std::make_pair(u, v), pb, copies, m);
         auto uv = &edge_table[u][v];
-        edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, std::make_pair(0, 0), uv, false,
-                std::make_pair(v, u));
+        edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, make_values(0, 0, pb, copies, m), uv, false,
+                std::make_pair(v, u), pb, copies, m);
         auto vu = &edge_table[v][u];
         uv->twin = vu;
         vu->twin = uv;
@@ -196,11 +207,11 @@ struct ETTree {
             }
 
             if (u < v) {
-                    edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, std::make_pair(0, 0), nullptr,
-                            false, std::make_pair(u, v));
+                    edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, make_values(0, 0, pb, copies, m),
+                            nullptr, false, std::make_pair(u, v), pb, copies, m);
                     auto uv = &edge_table[u][v];
-                    edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, std::make_pair(0, 0), uv,
-                            false, std::make_pair(v, u));
+                    edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, make_values(0, 0, pb, copies, m),
+                            uv, false, std::make_pair(v, u), pb, copies, m);
                     auto vu = &edge_table[v][u];
                     vu->twin = uv;
                     uv->twin = vu;
@@ -438,7 +449,7 @@ struct ETTree {
             batch_cut_recurse(cuts);
     }
 
-    std::pair<uintE, uintE> get_subtree_sum(uintE v, uintE parent) {
+    sequence<sequence<std::pair<uintE, uintE>>> get_subtree_sum(uintE v, uintE parent) {
         auto edge = &edge_table[parent][v];
         auto twin = edge->twin;
 
@@ -471,7 +482,7 @@ struct ETTree {
         //return final_result;
     }
 
-    std::pair<uintE, uintE> get_tree_sum(uintE v) {
+    sequence<sequence<std::pair<uintE, uintE>>> get_tree_sum(uintE v) {
         auto edge = &vertices[v];
         auto edge_sum = skip_list.get_sum(edge);
         return edge_sum;
@@ -490,9 +501,9 @@ struct ETTree {
     }
 };
 
-void RunETTree() {
+void RunETTree(double pb, int copies, size_t m) {
         std::cout << "ET tree" << std::endl;
-        auto tree = ETTree((size_t) 10);
+        auto tree = ETTree((size_t) 10, pb, copies, m);
 
         sequence<std::pair<uintE, uintE>> links = sequence<std::pair<uintE, uintE>>(8);
         links[0] = std::make_pair(2, 3);
@@ -520,10 +531,10 @@ void RunETTree() {
         auto c = tree.get_tree_sum(2);
         auto d = tree.get_tree_sum(5);
 
-        std::cout << "v: 2, parent: 3: " << a.first << ", " << a.second << std::endl;
-        std::cout << "v: 6, parent: 5: " << b.first << ", " << b.second << std::endl;
-        std::cout << "v: 2, parent: 2: " << c.first << ", " << c.second << std::endl;
-        std::cout << "v: 5, parent: 5: " << d.first << ", " << d.second << std::endl;
+        std::cout << "v: 2, parent: 3: " << a[0][0].first << ", " << a[0][0].second << std::endl;
+        std::cout << "v: 6, parent: 5: " << b[0][0].first << ", " << b[0][0].second << std::endl;
+        std::cout << "v: 2, parent: 2: " << c[0][0].first << ", " << c[0][0].second << std::endl;
+        std::cout << "v: 5, parent: 5: " << d[0][0].first << ", " << d[0][0].second << std::endl;
 
         sequence<std::pair<uintE, uintE>> cuts = sequence<std::pair<uintE, uintE>>(4);
         cuts[0] = std::make_pair(0, 8);
@@ -547,8 +558,8 @@ void RunETTree() {
         a = tree.get_subtree_sum(4, 3);
         b = tree.get_subtree_sum(6, 5);
 
-        std::cout << "v: 4, parent: 3: " << a.first << ", " << a.second << std::endl;
-        std::cout << "v: 6, parent: 5: " << b.first << ", " << b.second << std::endl;
+        std::cout << "v: 4, parent: 3: " << a[0][0].first << ", " << a[0][0].second << std::endl;
+        std::cout << "v: 6, parent: 5: " << b[0][0].first << ", " << b[0][0].second << std::endl;
 }
 
 }  // namespace gbbs

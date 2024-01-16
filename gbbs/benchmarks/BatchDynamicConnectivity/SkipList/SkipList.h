@@ -105,7 +105,8 @@ struct SkipList {
     SkipListElement create_node(size_t index, SkipListElement* left, SkipListElement* right,
             sequence<sequence<std::pair<uintE, uintE>>> vals,
             SkipListElement* twin = nullptr, bool is_vertex = false,
-            std::pair<uintE, uintE> id = std::make_pair(UINT_E_MAX, UINT_E_MAX)) {
+            std::pair<uintE, uintE> id = std::make_pair(UINT_E_MAX, UINT_E_MAX),
+            double pb = 2, int num_dup = 2, size_t m = 10) {
         rng.fork(index);
         rng = rng.next();
         auto rand_val = rng.rand() % UINT_E_MAX;
