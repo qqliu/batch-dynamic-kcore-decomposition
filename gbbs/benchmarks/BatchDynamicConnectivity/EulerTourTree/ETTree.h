@@ -449,16 +449,14 @@ struct ETTree {
             batch_cut_recurse(cuts);
     }
 
-    void add_edge_to_cutsets(sequence<std::pair<uintE, uintE>> edges) {
+    void add_edge_to_cutsets(std::pair<uintE, uintE> edge) {
         parlay::random rng = parlay::random(time(0));
-        parallel_for(0, edges.size(), [&](size_t i) {
-            auto min_edge = std::min(edges[i].first, edges[i].second);
-            auto max_edge = std::max(edges[i].first, edges[i].second);
-            auto u = vertices[min_edge];
-            auto v = vertices[max_edge];
+        auto min_edge = std::min(edge.first, edge.second);
+        auto max_edge = std::max(edge.first, edge.second);
+        auto u = vertices[edge.first];
 
-            parallel_for(0, u.values[0].size(), [&](size_t ii) {
-                parallel_for(0, u.values[0][ii].size(), [&](size_t ij) {
+        parallel_for(0, u.values[0].size(), [&](size_t ii) {
+            parallel_for(0, u.values[0][ii].size(), [&](size_t ij) {
                     rng.fork(min_edge);
                     rng = rng.next();
                     auto rand_val_u = rng.rand() % uintE(floor(pow(pb, ij)));
@@ -466,15 +464,7 @@ struct ETTree {
                         u.values[0][ii][ij] = std::make_pair(u.values[0][ii][ij].first ^ min_edge,
                                 u.values[0][ii][ij].second ^ max_edge);
 
-                    rng.fork(max_edge);
                     rng = rng.next();
-                    auto rand_val_v = rng.rand() % uintE(floor(pow(pb, ij)));
-
-                    if (rand_val_v <= 1)
-                        v.values[0][ii][ij] = std::make_pair(v.values[0][ii][ij].first ^ min_edge,
-                                v.values[0][ii][ij].second ^ max_edge);
-                    rng = rng.next();
-                });
             });
         });
     }

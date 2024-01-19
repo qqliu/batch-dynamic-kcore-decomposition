@@ -23,16 +23,46 @@ struct Connectivity {
 
     template <class Seq>
     void batch_insertion(const Seq& insertions) {
-            sequence<SkipList::SkipListElement*> representative_nodes =
-                sequence<SkipList::SkipListElement*>(2 * insertions.size());
+            sequence<std::pair<uintE, uintE>> edges_both_directions =
+                sequence<std::pair<uintE, uintE>>(2 * insertions.size());
 
             parallel_for(0, insertions.size(), [&](size_t i) {
-                tree.add_edge_to_cutsets(insertions[i]);
-                representative_nodes[2 * i] =
-                    tree.skip_list.find_representative(tree.vertices[insertions[i].first]);
-                representative_nodes[2 * i + 1] =
-                    tree.skip_list.find_representative(tree.vertices[insertions[i].second]);
+                auto [u, v] = insertions[i];
+                edges_both_directions[2 * i] = std::make_pair(u, v);
+                edges_both_directions[2 * i + 1] = std::make_pair(v, u);
             });
+
+            auto compare_tup = [&] (const std::pair<uintE, uintE> l, const std::pair<uintE, uintE> r) {
+                    return l.first < r.first;
+            };
+            parlay::sort_inplace(parlay::make_slice(edges_both_directions), compare_tup);
+
+            auto bool_seq = sequence<bool>(edges_both_directions.size());
+            parallel_for(0, edges_both_directions.size() + 1, [&](size_t i) {
+                bool_seq[i] = (i == 0) || (i == edges_both_directions.size()) ||
+                       (insertions[i-1].first != insertions[i].first);
+            });
+            auto starts = parlay::pack_index(bool_seq);
+
+            sequence<SkipList::SkipListElement*> representative_nodes =
+                sequence<SkipList::SkipListElement*>(starts.size()-1);
+            sequence<SkipList::SkipListElement*> nodes_to_update =
+                sequence<SkipList::SkipListElement*>(starts.size()-1);
+            auto update_seq =
+                sequence<std::pair<SkipList::SkipListElement*,
+                sequence<sequence<std::pair<uintE, uintE>>>>>(starts.size()- 1);
+
+            parallel_for(0, starts.size() - 1, [&](size_t i) {
+                for (size_t j = starts[i]; j < starts[i+1]; j++) {
+                    tree.add_edge_to_cutsets(insertions[j]);
+                }
+                SkipList::SkipListElement* our_vertex = tree.vertices[edges_both_directions[starts[i]].first];
+                representative_nodes[i] =
+                    tree.skip_list.find_representative(our_vertex);
+                update_seq[i] = std::make_pair(our_vertex, our_vertex->values[0]);
+            });
+
+            tree.skip_list.batch_update(&update_seq);
     }
 
     template <class Seq>
