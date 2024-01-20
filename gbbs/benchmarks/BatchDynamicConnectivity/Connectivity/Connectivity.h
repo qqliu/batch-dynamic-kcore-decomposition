@@ -1,11 +1,11 @@
 #include <unordered_set>
 #include <stack>
+#include <limits>
 
 #include "gbbs/gbbs.h"
 #include "gbbs/dynamic_graph_io.h"
 #include "gbbs/pbbslib/sparse_table.h"
 #include "benchmarks/KCore/JulienneDBS17/KCore.h"
-#include "benchmarks/EdgeOrientation/ParallelLDS/sparse_set.h"
 #include "benchmarks/BatchDynamicConnectivity/EulerTourTree/ETTree.h"
 
 namespace gbbs {
@@ -63,6 +63,20 @@ struct Connectivity {
             });
 
             tree.skip_list.batch_update(&update_seq);
+            sequence<std::pair<uintE, uintE>> found_possible_edges =
+                sequence<std::pair<uintE, uintE>>(representative_nodes.size());
+            sequence<bool> is_edge = sequence<bool>(representative_nodes.size());
+
+            parallel_for(0, representative_nodes.size(), [&](size_t i) {
+                found_possible_edges[i] = tree.get_tree_sum(representative_nodes[i]->id.first);
+                auto possible_edge =
+                    tree.edge_table[found_possible_edges[i].first][found_possible_edges[i].second];
+                bool is_present = possible_edge.id.first != UINT_E_MAX && possible_edge.id.second != UINT_E_MAX;
+                is_edge[i] = is_present;
+            });
+
+            auto real_edges = parlay::pack(found_possible_edges, is_edge);
+
     }
 
     template <class Seq>
