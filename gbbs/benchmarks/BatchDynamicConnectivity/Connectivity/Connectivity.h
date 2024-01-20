@@ -76,11 +76,24 @@ struct Connectivity {
             });
 
             auto real_edges = parlay::pack(found_possible_edges, is_edge);
+            auto representative_edges = sequence<std::pair<uintE, uintE>>(real_edges.size());
+
+            parallel_for(0, real_edges.size(), [&](size_t i) {
+                auto u = tree.vertices[edges_both_directions[real_edges[i].first]];
+                auto v = tree.vertices[edges_both_directions[real_edges[i].second]];
+                auto node_a = tree.skip_list.find_representative(u);
+                auto node_b = tree.skip_list.find_representative(v);
+                auto node_a_id = std::min(node_a->id.first, node_a->id.second);
+                auto node_b_id = std::min(node_b->id.first, node_b->id.second);
+
+                representative_edges[i] = std::make(node_a_id, node_b_id);
+            });
+
 
     }
 
     template <class Seq>
-    void batch_deletion(const Seq& insertions) {
+    void batch_deletion(const Seq& deletions) {
     }
 };
 
