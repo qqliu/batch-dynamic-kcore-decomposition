@@ -179,8 +179,8 @@ struct Connectivity {
         tree = ETTree(n_, copies_, m_, pb_);
     }
 
-    template <class Seq>
-    void batch_insertion(const Seq& insertions) {
+    template <class Seq, class KY, class VL, class HH>
+    void batch_insertion(const Seq& insertions, pbbslib::sparse_table<KY, VL, HH> edge_table) {
         auto non_empty_spanning_tree = true;
         auto first = true;
         sequence<std::pair<uintE, uintE>> edges_both_directions;
@@ -364,8 +364,8 @@ struct Connectivity {
          }
     }
 
-    template <class Seq>
-    void batch_deletion(const Seq& deletions) {
+    template <class Seq, class KY, class VL, class HH>
+    void batch_deletion(const Seq& deletions, pbbslib::sparse_table<KY, VL, HH> edge_table) {
     }
 };
 
@@ -379,6 +379,25 @@ inline void RunConnectivity(BatchDynamicEdges<W>& batch_edge_list, long batch_si
         auto cutset = Connectivity(n, copies, m, pb);
         auto batch = batch_edge_list.edges;
         std::cout << "batch size: " << batch.size() << std::endl;
+
+        using K = std::pair<uintE, uintE>;
+        using V = bool;
+        using KV = std::pair<K, V>;
+
+        KV empty =
+            std::make_pair(std::make_pair(UINT_E_MAX, UINT_E_MAX), false);
+
+        auto hash_pair = [](const std::pair<uintE, uintE>& t) {
+            size_t l = std::min(std::get<0>(t), std::get<1>(t));
+            size_t r = std::max(std::get<0>(t), std::get<1>(t));
+            size_t key = (l << 32) + r;
+            return parlay::hash64_2(key);
+        };
+
+        auto edge_table =
+            pbbslib::make_sparse_table<K, V>(batch.size(), empty, hash_pair);
+
+        bool abort = false;
 
         if (offset != 0) {
             for (size_t i = 0; i < offset; i += 1000000) {
@@ -395,16 +414,29 @@ inline void RunConnectivity(BatchDynamicEdges<W>& batch_edge_list, long batch_si
                     [&] (size_t i) {
                     uintE vert1 = insertions[i].from;
                     uintE vert2 = insertions[i].to;
+
+                    edge_table.insert_check(std::make_pair(std::make_pair(vert1,
+                        vert2), true), &abort);
+                    edge_table.insert_check(std::make_pair(std::make_pair(vert2,
+                        vert1), true), &abort);
+
                     return std::make_pair(vert1, vert2);
                 });
+
                 auto batch_deletions = parlay::delayed_seq<std::pair<uintE, uintE>>(deletions.size(),
                 [&] (size_t i) {
                     uintE vert1 = deletions[i].from;
                     uintE vert2 = deletions[i].to;
+
+                    edge_table.insert_check(std::make_pair(std::make_pair(vert1,
+                        vert2), false), &abort);
+                    edge_table.insert_check(std::make_pair(std::make_pair(vert2,
+                        vert1), false), &abort);
+
                     return std::make_pair(vert1, vert2);
                 });
-                cutset.batch_insertion(batch_insertions);
-                cutset.batch_deletion(batch_deletions);
+                cutset.batch_insertion(batch_insertions, edge_table);
+                cutset.batch_deletion(batch_deletions, edge_table);
             }
         }
 
@@ -426,6 +458,12 @@ inline void RunConnectivity(BatchDynamicEdges<W>& batch_edge_list, long batch_si
                 [&] (size_t i) {
                 uintE vert1 = insertions[i].from;
                 uintE vert2 = insertions[i].to;
+
+                edge_table.insert_check(std::make_pair(std::make_pair(vert1,
+                    vert2), true), &abort);
+                edge_table.insert_check(std::make_pair(std::make_pair(vert2,
+                    vert1), true), &abort);
+
                 return std::make_pair(vert1, vert2);
             });
 
@@ -434,10 +472,16 @@ inline void RunConnectivity(BatchDynamicEdges<W>& batch_edge_list, long batch_si
                 [&] (size_t i) {
                 uintE vert1 = deletions[i].from;
                 uintE vert2 = deletions[i].to;
+
+                edge_table.insert_check(std::make_pair(std::make_pair(vert1,
+                    vert2), false), &abort);
+                edge_table.insert_check(std::make_pair(std::make_pair(vert2,
+                    vert1), false), &abort);
+
                 return std::make_pair(vert1, vert2);
             });
 
-            cutset.batch_insertion(batch_insertions);
+            cutset.batch_insertion(batch_insertions, edge_table);
 
         /*num_insertion_flips += layers.batch_insertion(batch_insertions);
         double insertion_time = t.stop();
