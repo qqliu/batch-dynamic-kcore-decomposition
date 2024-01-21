@@ -485,8 +485,8 @@ struct ETTree {
                                 u->values[0][ii][ij].second ^ max_edge);
 
                     cutset_rng = cutset_rng.next();
-                    std::cout << "new values: " << u->values[0][ii][ij].first << ", " << u->values[0][ii][ij].second
-                        << std::endl;
+                    /*std::cout << "new values: " << u->values[0][ii][ij].first << ", " << u->values[0][ii][ij].second
+                        << std::endl;*/
             });
         });
     }

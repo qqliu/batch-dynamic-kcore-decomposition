@@ -116,7 +116,7 @@ sequence<edge_mst_type> parallel_spanning_forest(sequence<edge_mst_type> edges, 
         auto edge = roots[i];
         auto u = std::get<0>(edge);
         auto v = std::get<1>(edge);
-        std::cout << "rep edges: " << u << ", " << v << std::endl;
+        //std::cout << "root edges: " << u << ", " << v << std::endl;
 
         bool abort = false;
         root_edge_to_original.insert_check(std::make_pair(std::make_pair(u,
@@ -181,39 +181,47 @@ struct Connectivity {
 
     template <class Seq>
     void batch_insertion(const Seq& insertions) {
-            std::cout << "number of edges in insertions: " << insertions.size() << std::endl;
-            sequence<std::pair<uintE, uintE>> edges_both_directions =
-                sequence<std::pair<uintE, uintE>>(2 * insertions.size());
+        auto non_empty_spanning_tree = true;
+        auto first = true;
+        sequence<std::pair<uintE, uintE>> edges_both_directions;
+        sequence<size_t> starts;
+        sequence<SkipList::SkipListElement*> representative_nodes;
 
-            parallel_for(0, insertions.size(), [&](size_t i) {
-                std::cout << "original edge: " << insertions[i].first << ", " << insertions[i].second << std::endl;
-                auto [u, v] = insertions[i];
-                tree.create_edge_in_edge_table(u, v);
-                edges_both_directions[2 * i] = std::make_pair(u, v);
-                edges_both_directions[2 * i + 1] = std::make_pair(v, u);
-            });
+        while(non_empty_spanning_tree) {
 
-            auto compare_tup = [&] (const std::pair<uintE, uintE> l, const std::pair<uintE, uintE> r) {
+            //std::cout << "number of edges in insertions: " << insertions.size() << std::endl;
+            if (first) {
+                edges_both_directions =  sequence<std::pair<uintE, uintE>>(2 * insertions.size());
+
+                parallel_for(0, insertions.size(), [&](size_t i) {
+                    //std::cout << "original edge: " << insertions[i].first << ", " << insertions[i].second << std::endl;
+                    auto [u, v] = insertions[i];
+                    tree.create_edge_in_edge_table(u, v);
+                    edges_both_directions[2 * i] = std::make_pair(u, v);
+                    edges_both_directions[2 * i + 1] = std::make_pair(v, u);
+                });
+
+                auto compare_tup = [&] (const std::pair<uintE, uintE> l, const std::pair<uintE, uintE> r) {
                     return l.first < r.first;
-            };
-            parlay::sort_inplace(parlay::make_slice(edges_both_directions), compare_tup);
+                };
+                parlay::sort_inplace(parlay::make_slice(edges_both_directions), compare_tup);
 
-            auto bool_seq = sequence<bool>(edges_both_directions.size() + 1);
-            parallel_for(0, edges_both_directions.size() + 1, [&](size_t i) {
-                bool_seq[i] = (i == 0) || (i == edges_both_directions.size()) ||
+                auto bool_seq = sequence<bool>(edges_both_directions.size() + 1);
+                parallel_for(0, edges_both_directions.size() + 1, [&](size_t i) {
+                    bool_seq[i] = (i == 0) || (i == edges_both_directions.size()) ||
                        (edges_both_directions[i-1].first != edges_both_directions[i].first);
-            });
-            auto starts = parlay::pack_index(bool_seq);
+                });
+                starts = parlay::pack_index(bool_seq);
 
-            sequence<SkipList::SkipListElement*> representative_nodes =
-                sequence<SkipList::SkipListElement*>(starts.size()-1);
-            sequence<SkipList::SkipListElement*> nodes_to_update =
-                sequence<SkipList::SkipListElement*>(starts.size()-1);
-            auto update_seq =
-                sequence<std::pair<SkipList::SkipListElement*,
-                sequence<sequence<std::pair<uintE, uintE>>>>>(starts.size()- 1);
+                representative_nodes =
+                    sequence<SkipList::SkipListElement*>(starts.size()-1);
+                sequence<SkipList::SkipListElement*> nodes_to_update =
+                    sequence<SkipList::SkipListElement*>(starts.size()-1);
+                auto update_seq =
+                    sequence<std::pair<SkipList::SkipListElement*,
+                    sequence<sequence<std::pair<uintE, uintE>>>>>(starts.size()- 1);
 
-            std::cout << "starts size: " << starts.size() << std::endl;
+            /*std::cout << "starts size: " << starts.size() << std::endl;
             std::cout << "edges both directions size: " << edges_both_directions.size() << std::endl;
             for (int i = 0; i < starts.size(); i++) {
                     std::cout << "starts: " << starts[i] << std::endl;
@@ -222,27 +230,36 @@ struct Connectivity {
             for (int i = 0; i < edges_both_directions.size(); i++) {
                     std::cout << "edge: " << edges_both_directions[i].first << ", " << edges_both_directions[i].second
                         << std::endl;
+            }*/
+
+                parallel_for(0, starts.size() - 1, [&](size_t i) {
+                    for (size_t j = starts[i]; j < starts[i+1]; j++) {
+                    /*std::cout << "starts for " << i <<
+                        ": " << edges_both_directions[j].first << ", "
+                        << edges_both_directions[j].second << std::endl;*/
+
+                        tree.add_edge_to_cutsets(edges_both_directions[j]);
+                    }
+                    SkipList::SkipListElement* our_vertex = &tree.vertices[edges_both_directions[starts[i]].first];
+                    representative_nodes[i] =
+                        tree.skip_list.find_representative(our_vertex);
+                    update_seq[i] = std::make_pair(our_vertex, our_vertex->values[0]);
+                });
+                tree.skip_list.batch_update(&update_seq);
+            }
+            first = false;
+            if (!first) {
+                parallel_for(0, starts.size() - 1, [&](size_t i) {
+                    SkipList::SkipListElement* our_vertex = &tree.vertices[edges_both_directions[starts[i]].first];
+                    representative_nodes[i] =
+                        tree.skip_list.find_representative(our_vertex);
+                });
             }
 
-            parallel_for(0, starts.size() - 1, [&](size_t i) {
-                for (size_t j = starts[i]; j < starts[i+1]; j++) {
-                    std::cout << "starts for " << i <<
-                        ": " << edges_both_directions[j].first << ", "
-                        << edges_both_directions[j].second << std::endl;
-
-                    tree.add_edge_to_cutsets(edges_both_directions[j]);
-                }
-                SkipList::SkipListElement* our_vertex = &tree.vertices[edges_both_directions[starts[i]].first];
-                representative_nodes[i] =
-                    tree.skip_list.find_representative(our_vertex);
-                update_seq[i] = std::make_pair(our_vertex, our_vertex->values[0]);
-            });
-
-            std::cout << "doing update" << std::endl;
-            tree.skip_list.batch_update(&update_seq);
+            //std::cout << "doing update" << std::endl;
 
             sequence<std::pair<uintE, uintE>> found_possible_edges =
-                sequence<std::pair<uintE, uintE>>(representative_nodes.size());
+                    sequence<std::pair<uintE, uintE>>(representative_nodes.size());
             sequence<bool> is_edge = sequence<bool>(representative_nodes.size());
 
             parallel_for(0, representative_nodes.size(), [&](size_t i) {
@@ -255,16 +272,16 @@ struct Connectivity {
                 if (!is_real_edge) {
                     for (size_t ij = 0; ij < sum[ii].size(); ij++) {
                         if (!is_real_edge) {
-                            std::cout << "rep values for " << id << ": " << sum[ii][ij].first << ", " << sum[ii][ij].second
-                                << std::endl;
+                            //std::cout << "rep values for " << id << ": " << sum[ii][ij].first << ", " << sum[ii][ij].second
+                                //<< std::endl;
                             is_present = sum[ii][ij].first != UINT_E_MAX && sum[ii][ij].second != UINT_E_MAX;
                             auto u = sum[ii][ij].first;
                             auto v = sum[ii][ij].second;
                             if (is_present) {
                                 if (u < n && v < n) {
                                     auto element = &tree.edge_table[u][v];
-                                    std::cout << "element: " << element->id.first << ", " << element->id.second <<
-                                        std::endl;
+                                    /*std::cout << "element: " << element->id.first << ", " << element->id.second <<
+                                        std::endl;*/
 
                                     if (element->id.first != UINT_E_MAX && element->id.second != UINT_E_MAX) {
                                         is_real_edge = true;
@@ -320,7 +337,7 @@ struct Connectivity {
                 auto edge = representative_edges[i];
                 auto u = std::get<0>(edge);
                 auto v = std::get<1>(edge);
-                std::cout << "rep edges: " << u << ", " << v << std::endl;
+                //std::cout << "rep edges: " << u << ", " << v << std::endl;
 
                 bool abort = false;
                 representative_edge_to_original.insert_check(std::make_pair(std::make_pair(u,
@@ -328,19 +345,23 @@ struct Connectivity {
             });
 
             auto spanning_forest = parallel_spanning_forest(representative_edges, n);
+            if(spanning_forest.size() == 0)
+                non_empty_spanning_tree = false;
 
             auto original_edges = sequence<std::pair<uintE, uintE>>(spanning_forest.size());
             parallel_for(0, spanning_forest.size(), [&](size_t i) {
                 auto u = std::get<0>(spanning_forest[i]);
                 auto v = std::get<1>(spanning_forest[i]);
-                std::cout << "spanning tree edges: " << u << ", " << v << std::endl;
+                //std::cout << "spanning tree edges: " << u << ", " << v << std::endl;
 
                 auto original_edge = representative_edge_to_original.find(std::make_pair(u, v), std::make_pair(UINT_E_MAX, UINT_E_MAX));
+                //std::cout << "original edges: "<< original_edge.first << ", " << original_edge.second << std::endl;
                 if (original_edge.first == UINT_E_MAX || original_edge.second == UINT_E_MAX)
                     std::cout << "FAILURE: THERE IS A BUG" << std::endl;
                 original_edges[i] = std::make_pair(original_edge.first, original_edge.second);
             });
             tree.batch_link(original_edges);
+         }
     }
 
     template <class Seq>

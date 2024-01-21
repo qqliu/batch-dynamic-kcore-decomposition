@@ -42,7 +42,7 @@ double Connectivity_runner(Graph& G, commandLine P) {
   BatchDynamicEdges<W> batch_edge_list = use_dynamic ?
     read_batch_dynamic_edge_list<W>(input_file) : BatchDynamicEdges<W>{};
 
-  RunConnectivity(batch_edge_list, 5, false, 0, 10, 2, 15, 2);
+  RunConnectivity(batch_edge_list, 1000, false, 0, 20000, 20, 15, 1.5);
 
   std::cout << "### Running Time: " << tt << std::endl;
   return tt;
