@@ -31,14 +31,22 @@
 
 namespace gbbs {
 template <class Graph>
-double LDS_runner(Graph& G, commandLine P) {
+double Connectivity_runner(Graph& G, commandLine P) {
   timer t; t.start();
-  RunConnectivityTest();
   double tt = t.stop();
+  using W = typename Graph::weight_type;
+  const std::string kInputFlag{"-i"};
+  const char* const input_file{P.getOptionValue(kInputFlag)};
+
+  bool use_dynamic = (input_file && input_file[0]);
+  BatchDynamicEdges<W> batch_edge_list = use_dynamic ?
+    read_batch_dynamic_edge_list<W>(input_file) : BatchDynamicEdges<W>{};
+
+  RunConnectivity(batch_edge_list, 5, false, 0, 10, 2, 15, 2);
 
   std::cout << "### Running Time: " << tt << std::endl;
   return tt;
 }
 }  // namespace gbbs
 
-generate_symmetric_main(gbbs::LDS_runner, false);
+generate_symmetric_main(gbbs::Connectivity_runner, false);

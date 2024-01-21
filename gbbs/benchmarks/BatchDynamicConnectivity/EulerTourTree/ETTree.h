@@ -29,6 +29,7 @@ struct ETTree {
    sequence<SkipList::SkipListElement> vertices;
    int copies;
    size_t m;
+   parlay::random cutset_rng = parlay::random(time(0));
    double pb;
 
    ETTree() {}
@@ -56,13 +57,29 @@ struct ETTree {
             ", values: " << v->values[0][0][0].first << ", " << v->values[0][0][0].second << std::endl;
     }
 
-    void link(uintE u, uintE v) {
-        edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, make_values(0, 0, pb, copies, m), nullptr, false,
+    void create_edge_in_edge_table(uintE u, uintE v) {
+        if (edge_table[u][v].id.first == UINT_E_MAX) {
+            edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, make_values(0, 0, pb, copies, m), nullptr, false,
                 std::make_pair(u, v), pb, copies, m);
-        auto uv = &edge_table[u][v];
-        edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, make_values(0, 0, pb, copies, m), uv, false,
+            auto uv = &edge_table[u][v];
+            edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, make_values(0, 0, pb, copies, m), uv, false,
                 std::make_pair(v, u), pb, copies, m);
+            auto vu = &edge_table[v][u];
+        }
+    }
+
+    void link(uintE u, uintE v) {
+        auto uv = &edge_table[u][v];
         auto vu = &edge_table[v][u];
+
+        if (edge_table[u][v].id.first == UINT_E_MAX) {
+            edge_table[u][v] = skip_list.create_node(u, nullptr, nullptr, make_values(0, 0, pb, copies, m), nullptr, false,
+                std::make_pair(u, v), pb, copies, m);
+            uv = &edge_table[u][v];
+            edge_table[v][u] = skip_list.create_node(v, nullptr, nullptr, make_values(0, 0, pb, copies, m), uv, false,
+                std::make_pair(v, u), pb, copies, m);
+            vu = &edge_table[v][u];
+        }
         uv->twin = vu;
         vu->twin = uv;
         /*print_value("uv value: ", uv);
@@ -450,21 +467,26 @@ struct ETTree {
     }
 
     void add_edge_to_cutsets(std::pair<uintE, uintE> edge) {
-        parlay::random rng = parlay::random(time(0));
         auto min_edge = std::min(edge.first, edge.second);
         auto max_edge = std::max(edge.first, edge.second);
-        auto u = vertices[edge.first];
+        auto u = &vertices[edge.first];
 
-        parallel_for(0, u.values[0].size(), [&](size_t ii) {
-            parallel_for(0, u.values[0][ii].size(), [&](size_t ij) {
-                    rng.fork(min_edge);
-                    rng = rng.next();
-                    auto rand_val_u = rng.rand() % uintE(floor(pow(pb, ij)));
-                    if (rand_val_u <= 1)
-                        u.values[0][ii][ij] = std::make_pair(u.values[0][ii][ij].first ^ min_edge,
-                                u.values[0][ii][ij].second ^ max_edge);
+        parallel_for(0, u->values[0].size(), [&](size_t ii) {
+            parallel_for(0, u->values[0][ii].size(), [&](size_t ij) {
+                    cutset_rng.fork(edge.first + ii * ij);
+                    cutset_rng = cutset_rng.next();
+                    auto base = uintE(floor(pow(pb, ij)));
+                    if (base == 1)
+                        base = pb;
+                    auto rand_val_u = cutset_rng.rand() % base;
+                    //std::cout << "rand_val " << rand_val_u << ", base: " << base << std::endl;
+                    if (rand_val_u <= 0)
+                        u->values[0][ii][ij] = std::make_pair(u->values[0][ii][ij].first ^ min_edge,
+                                u->values[0][ii][ij].second ^ max_edge);
 
-                    rng = rng.next();
+                    cutset_rng = cutset_rng.next();
+                    std::cout << "new values: " << u->values[0][ii][ij].first << ", " << u->values[0][ii][ij].second
+                        << std::endl;
             });
         });
     }

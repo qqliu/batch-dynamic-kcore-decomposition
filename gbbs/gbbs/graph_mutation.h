@@ -263,7 +263,7 @@ inline edge_array<typename Graph::weight_type> filter_edges(Graph& G, P& pred, c
   std::cout << "# G.m is now = " << G.m << "\n";
 
   auto arr_size = arr.size();
-  return edge_array<W>(arr.to_array(), n, n, arr_size);
+  return edge_array<W>(std::move(arr), n, n, arr_size);
 }
 
 // Used by MaximalMatching.
@@ -306,7 +306,7 @@ inline edge_array<typename Graph::weight_type> filter_all_edges(Graph& G, P& p, 
   //  std::cout << "G.m = " << G.m << "arr.size = " << arr.size() << "\n";
   G.m = 0;
   auto arr_size = arr.size();
-  return edge_array<W>(arr.to_array(), n, n, arr_size);
+  return edge_array<W>(std::move(arr), n, n, arr_size);
 }
 
 // Similar to filter_edges, except we only filter (no packing). Any edge s.t.
@@ -363,7 +363,7 @@ edge_array<typename Graph::weight_type> sample_edges(Graph& G, P& pred) {
     }, 1);
   }
   auto output_arr_size = output_arr.size();
-  return edge_array<W>(output_arr.to_array(), n, n, output_arr_size);
+  return edge_array<W>(std::move(output_arr), n, n, output_arr_size);
 }
 
 
