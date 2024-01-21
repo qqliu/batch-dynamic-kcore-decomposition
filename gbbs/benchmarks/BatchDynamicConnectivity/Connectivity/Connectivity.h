@@ -180,7 +180,7 @@ struct Connectivity {
     }
 
     template <class Seq, class KY, class VL, class HH>
-    void batch_insertion(const Seq& insertions, pbbslib::sparse_table<KY, VL, HH> edge_table) {
+    void batch_insertion(const Seq& insertions, pbbslib::sparse_table<KY, VL, HH>& edge_table) {
         auto non_empty_spanning_tree = true;
         auto first = true;
         sequence<std::pair<uintE, uintE>> edges_both_directions;
@@ -196,7 +196,7 @@ struct Connectivity {
                 parallel_for(0, insertions.size(), [&](size_t i) {
                     //std::cout << "original edge: " << insertions[i].first << ", " << insertions[i].second << std::endl;
                     auto [u, v] = insertions[i];
-                    tree.create_edge_in_edge_table(u, v);
+                    //tree.create_edge_in_edge_table(u, v);
                     edges_both_directions[2 * i] = std::make_pair(u, v);
                     edges_both_directions[2 * i + 1] = std::make_pair(v, u);
                 });
@@ -279,11 +279,13 @@ struct Connectivity {
                             auto v = sum[ii][ij].second;
                             if (is_present) {
                                 if (u < n && v < n) {
-                                    auto element = &tree.edge_table[u][v];
+                                    //auto element = &tree.edge_table[u][v];
+                                    auto element  = edge_table.find(std::make_pair(u, v), false);
                                     /*std::cout << "element: " << element->id.first << ", " << element->id.second <<
                                         std::endl;*/
 
-                                    if (element->id.first != UINT_E_MAX && element->id.second != UINT_E_MAX) {
+                                    if (element != false) {
+                                        //if (element->id.first != UINT_E_MAX && element->id.second != UINT_E_MAX) {
                                         is_real_edge = true;
                                         found_possible_edges[i] = std::make_pair(u, v);
                                     }
@@ -294,8 +296,8 @@ struct Connectivity {
                 }
                 }
 
-                auto possible_edge =
-                    tree.edge_table[found_possible_edges[i].first][found_possible_edges[i].second];
+                /*auto possible_edge =
+                    tree.edge_table[found_possible_edges[i].first][found_possible_edges[i].second];*/
                 is_edge[i] = is_real_edge;
             });
 
@@ -365,7 +367,7 @@ struct Connectivity {
     }
 
     template <class Seq, class KY, class VL, class HH>
-    void batch_deletion(const Seq& deletions, pbbslib::sparse_table<KY, VL, HH> edge_table) {
+    void batch_deletion(const Seq& deletions, pbbslib::sparse_table<KY, VL, HH>& edge_table) {
     }
 };
 

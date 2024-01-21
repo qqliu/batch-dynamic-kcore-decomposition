@@ -50,7 +50,7 @@ double LDS_runner(Graph& G, commandLine P) {
   };
 
   auto edge_table =
-    pbbslib::make_sparse_table<K, V>(8, empty, hash_pair);
+    pbbslib::make_sparse_table<K, V>(16, empty, hash_pair);
 
 
   RunETTree(2, 2, 8, edge_table);

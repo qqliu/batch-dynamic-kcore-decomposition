@@ -34,8 +34,9 @@ struct ETTree {
 
    ETTree() {}
 
-   ETTree(size_t n, int copies_, size_t m_, double pb_) {
+   ETTree(size_t n, double pb_, int copies_, size_t m_) {
         skip_list = SkipList(n);
+        //std::cout << "number of edges: " << m_ << std::endl;
         edge_table = sequence<SkipList::SkipListElement>(2 * m_);
         pb = pb_;
         m = m_;
@@ -58,7 +59,8 @@ struct ETTree {
     }
 
     void create_edge_in_edge_table(uintE u, uintE v, size_t i) {
-        if (edge_table[i].id.first == UINT_E_MAX) {
+        if (edge_table[2 * i].id.first == UINT_E_MAX) {
+            //std::cout << "creating edge: " << u << ", " << v << ", " << i << std::endl;
             edge_table[2 * i] =
                 skip_list.create_node(u, nullptr, nullptr, make_values(0, 0, pb, copies, m), nullptr, false,
                 std::make_pair(u, v), pb, copies, m);
@@ -66,7 +68,7 @@ struct ETTree {
             edge_table[2 * i + 1] =
                 skip_list.create_node(v, nullptr, nullptr, make_values(0, 0, pb, copies, m), uv, false,
                 std::make_pair(v, u), pb, copies, m);
-            auto vu = &edge_table[2 * i];
+            auto vu = &edge_table[2 * i + 1];
             uv->twin = vu;
             vu->twin = uv;
         }
@@ -74,14 +76,20 @@ struct ETTree {
 
     template <class KY, class VL, class HH>
     void link(uintE u, uintE v, pbbslib::sparse_table<KY, VL, HH>& edge_index_table) {
+        //std::cout << "starting another link: " << u << ", " << v << std::endl;
         auto element  = edge_index_table.find(std::make_pair(u, v), std::make_pair(false, UINT_E_MAX));
         auto index = element.second;
 
+        //std::cout << "found index: " << index << std::endl;
         if (index == UINT_E_MAX)
             std::cout << "THERE IS A BUG!" << std::endl;
 
-        auto uv = &edge_table[2 * index];
+        //std::cout << "edge_table size: " << edge_table.size() << std::endl;
+
+        auto uv = &edge_table[index];
+        print_value("uv value: ", uv);
         auto vu = uv->twin;
+        print_value("vu value: ", vu);
         //&edge_table[2 * index + 1];
 
         /*if (edge_table[u][v].id.first == UINT_E_MAX) {
@@ -94,8 +102,6 @@ struct ETTree {
         }
         uv->twin = vu;
         vu->twin = uv;
-        print_value("uv value: ", uv);
-        print_value("vu value: ", vu);
         std::cout << "uv twin value ";
         print_value("uv twin value: ", uv->twin);*/
 
@@ -123,22 +129,24 @@ struct ETTree {
         joins[3] = std::make_pair(vu, u_right);
 
         skip_list.batch_join(&joins);
-        /*auto new_u_right = u_left->get_right(0);
+        auto new_u_right = u_left->get_right(0);
         print_value("u_right new: ", new_u_right);
         print_value("uv new: ", uv);
-        auto new_uv = uv->get_right(0);*/
-        //print_value("uv new: ", new_uv);
+        auto new_uv = uv->get_right(0);
+        print_value("uv new: ", new_uv);
     }
     template <class KY, class VL, class HH>
     void cut(int u, int v,
         pbbslib::sparse_table<KY, VL, HH>& edge_index_table){
             auto element  = edge_index_table.find(std::make_pair(u, v), std::make_pair(false, UINT_E_MAX));
             auto index = element.second;
+            auto element2  = edge_index_table.find(std::make_pair(v, u), std::make_pair(false, UINT_E_MAX));
+            auto index2 = element2.second;
 
-            if (index == UINT_E_MAX)
+            if (index == UINT_E_MAX || index2 == UINT_E_MAX)
                 std::cout << "THERE IS A BUG!" << std::endl;
 
-            auto uv = &edge_table[2 * index];
+            auto uv = &edge_table[index];
             auto vu = uv->twin;
             /*print_value("cut uv: ", uv);
             print_value("cut vu: ", vu);*/
@@ -185,9 +193,9 @@ struct ETTree {
             skip_list.batch_join(&joins);
 
             //std::cout << "inserted first" << std::endl;
-            edge_table[2 * index] = SkipList::SkipListElement();
+            edge_table[index] = SkipList::SkipListElement();
             //std::cout << "inserted second" << std::endl;
-            edge_table[2 * index + 1] = SkipList::SkipListElement();
+            edge_table[index2] = SkipList::SkipListElement();
     }
 
     template <class KY, class VL, class HH>
@@ -217,7 +225,7 @@ struct ETTree {
     template <class KY, class VL, class HH>
     void batch_link(sequence<std::pair<uintE, uintE>>links,
             pbbslib::sparse_table<KY, VL, HH>& edge_index_table) {
-        if (links.size() <= 75) {
+        if (links.size() <= 2) {
                 batch_link_sequential(links, edge_index_table);
                 return;
         }
@@ -291,23 +299,24 @@ struct ETTree {
             if (index == UINT_E_MAX)
                 std::cout << "THERE IS A BUG!" << std::endl;
 
-            SkipList::SkipListElement* uv = &edge_table[2 * index];
+            SkipList::SkipListElement* uv = &edge_table[index];
             //print_value("uv value: ", uv);
             SkipList::SkipListElement* vu = uv -> twin;
+            //print_value("vu value: ", vu);
 
             if (i == 0 || u != links_both_dirs[i-1].first) {
-                /*if (&vertices[u] == nullptr)
+                if (&vertices[u] == nullptr)
                     std::cout << "One has error" << std::endl;
                 if (uv == nullptr)
-                    std::cout << "Two has error" << std::endl;*/
+                    std::cout << "Two has error" << std::endl;
                 joins[2*i] = std::make_pair(&vertices[u], uv);
             }
 
             if (i == 2 * links.size() - 1 || u != links_both_dirs[i+1].first) {
-                /*if (vu == nullptr)
+                if (vu == nullptr)
                     std::cout << "Three has error" << std::endl;
                 if (split_successors[i] == nullptr)
-                    std::cout << "Four has error" << std::endl;*/
+                    std::cout << "Four has error" << std::endl;
                 joins[2*i + 1] = std::make_pair(vu, split_successors[i]);
             } else {
                 uintE u2, v2;
@@ -320,11 +329,13 @@ struct ETTree {
                 if (index2 == UINT_E_MAX)
                     std::cout << "THERE IS A BUG!" << std::endl;
 
-                auto found_element = &edge_table[2 * index2];
-                /*if (vu == nullptr)
+                auto found_element = &edge_table[index2];
+                //print_value("found element: ", found_element);
+
+                if (vu == nullptr)
                     std::cout << "Five has error" << std::endl;
                 if (found_element == nullptr)
-                    std::cout << "Six has error" << std::endl;*/
+                    std::cout << "Six has error" << std::endl;
                 joins[2*i + 1] = std::make_pair(vu, found_element);
             }
         });
@@ -367,7 +378,7 @@ struct ETTree {
             parlay::random rng = parlay::random(time(0));
             //std::cout << "cuts size: !!!!!!!!!!!" << cuts.size() << std::endl;
 
-            if (cuts.size() <= 75) {
+            if (cuts.size() <= 0) {
                 //std::cout << "PASSED IF 2" << std::endl;
                     batch_cut_sequential(cuts, edge_index_table);
                     return;
@@ -391,7 +402,7 @@ struct ETTree {
                     if (index == UINT_E_MAX)
                         std::cout << "THERE IS A BUG!" << std::endl;
 
-                    SkipList::SkipListElement* uv = &edge_table[2 * index];
+                    SkipList::SkipListElement* uv = &edge_table[index];
                     SkipList::SkipListElement* vu = uv->twin;
 
                     edge_elements[i] = uv;
@@ -472,13 +483,15 @@ struct ETTree {
 
                         auto element  = edge_index_table.find(std::make_pair(u, v), std::make_pair(false, UINT_E_MAX));
                         auto index = element.second;
+                        auto element2  = edge_index_table.find(std::make_pair(v, u), std::make_pair(false, UINT_E_MAX));
+                        auto index2 = element2.second;
 
-                        if (index == UINT_E_MAX)
+                        if (index == UINT_E_MAX || index2 == UINT_E_MAX)
                             std::cout << "THERE IS A BUG!" << std::endl;
 
                         //edge_table.remove(std::make_pair(u, v));
-                        edge_table[2 * index] = SkipList::SkipListElement();
-                        edge_table[2 * index + 1] = SkipList::SkipListElement();
+                        edge_table[index] = SkipList::SkipListElement();
+                        edge_table[index2] = SkipList::SkipListElement();
 
                         if (join_targets[4 * i] != nullptr) {
                             joins[2 * i] = std::make_pair(join_targets[4 * i], join_targets[4 * i + 1]);
@@ -510,7 +523,7 @@ struct ETTree {
     template <class KY, class VL, class HH>
     void batch_cut(sequence<std::pair<uintE, uintE>> cuts,
         pbbslib::sparse_table<KY, VL, HH>& edge_index_table) {
-            if (cuts.size() <=  75) {
+            if (cuts.size() <=  2) {
                 //std::cout << "PASSED IF 1" << std::endl;
                     batch_cut_sequential(cuts, edge_index_table);
                     return;
@@ -533,7 +546,7 @@ struct ETTree {
                         base = pb;
                     auto rand_val_u = cutset_rng.rand() % base;
                     //std::cout << "rand_val " << rand_val_u << ", base: " << base << std::endl;
-                    if (rand_val_u <= 0)
+                    if (rand_val_u <= 2)
                         u->values[0][ii][ij] = std::make_pair(u->values[0][ii][ij].first ^ min_edge,
                                 u->values[0][ii][ij].second ^ max_edge);
 
@@ -547,17 +560,20 @@ struct ETTree {
     template <class KY, class VL, class HH>
     sequence<sequence<std::pair<uintE, uintE>>> get_subtree_sum(uintE v, uintE parent,
             pbbslib::sparse_table<KY, VL, HH>& edge_index_table) {
+        //std::cout << "getting subtree sum: " << parent << ", " << v << std::endl;
         auto element  = edge_index_table.find(std::make_pair(parent, v), std::make_pair(false, UINT_E_MAX));
         auto index = element.second;
+        //std::cout << "found subtree index: " << index << std::endl;
 
         if (index == UINT_E_MAX)
             std::cout << "THERE IS A BUG!" << std::endl;
 
-        auto edge = &edge_table[2 * index];
+        auto edge = &edge_table[index];
+        //print_value("v: ", edge);
+
         auto twin = edge->twin;
 
-        /*print_value("v: ", edge);
-        print_value("parent: ", twin);
+        /*print_value("parent: ", twin);
         auto right = edge->get_right(0);
         while (right != twin) {
                 print_value("right: ", right);
@@ -605,10 +621,10 @@ struct ETTree {
 };
 
 template <class KY, class VL, class HH>
-void RunETTree(double pb, int copies, size_t m,
+void RunETTree(double pb_, int copies_, size_t m_,
     pbbslib::sparse_table<KY, VL, HH>& edge_index_table) {
         std::cout << "ET tree" << std::endl;
-        auto tree = ETTree((size_t) 10, pb, copies, m);
+        auto tree = ETTree((size_t) 10, pb_, copies_, m_);
         bool abort = false;
         std::cout << "ET tree initialized" << std::endl;
 
@@ -616,41 +632,48 @@ void RunETTree(double pb, int copies, size_t m,
         links[0] = std::make_pair(2, 3);
         edge_index_table.insert_check(std::make_pair(std::make_pair(2,
                         3), std::make_pair(true, 0)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(3, 2), std::make_pair(true, 1)), &abort);
         tree.create_edge_in_edge_table(2, 3, 0);
 
         links[1] = std::make_pair(3, 4);
         edge_index_table.insert_check(std::make_pair(std::make_pair(3,
-                        4), std::make_pair(true, 1)), &abort);
+                        4), std::make_pair(true, 2)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(4, 3), std::make_pair(true, 3)), &abort);
         tree.create_edge_in_edge_table(3, 4, 1);
 
         links[2] = std::make_pair(0, 1);
         edge_index_table.insert_check(std::make_pair(std::make_pair(0,
-                        1), std::make_pair(true, 2)), &abort);
+                        1), std::make_pair(true, 4)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(1, 0), std::make_pair(true, 5)), &abort);
         tree.create_edge_in_edge_table(0, 1, 2);
 
         links[3] = std::make_pair(0, 8);
-        edge_index_table.insert_check(std::make_pair(std::make_pair(0,
-                        8), std::make_pair(true, 3)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(0, 8), std::make_pair(true, 6)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(8, 0), std::make_pair(true, 7)), &abort);
         tree.create_edge_in_edge_table(0, 8, 3);
 
         links[4] = std::make_pair(7, 2);
         edge_index_table.insert_check(std::make_pair(std::make_pair(7,
-                        2), std::make_pair(true, 4)), &abort);
+                        2), std::make_pair(true, 8)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(2, 7), std::make_pair(true, 9)), &abort);
         tree.create_edge_in_edge_table(7, 2, 4);
 
         links[5] = std::make_pair(1, 2);
         edge_index_table.insert_check(std::make_pair(std::make_pair(1,
-                        2), std::make_pair(true, 5)), &abort);
+                        2), std::make_pair(true, 10)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(2, 1), std::make_pair(true, 11)), &abort);
         tree.create_edge_in_edge_table(1, 2, 5);
 
         links[6] = std::make_pair(6, 5);
         edge_index_table.insert_check(std::make_pair(std::make_pair(6,
-                        5), std::make_pair(true, 6)), &abort);
+                        5), std::make_pair(true, 12)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(5, 6), std::make_pair(true, 13)), &abort);
         tree.create_edge_in_edge_table(6, 5, 6);
 
         links[7] = std::make_pair(6, 9);
         edge_index_table.insert_check(std::make_pair(std::make_pair(6,
-                        9), std::make_pair(true, 7)), &abort);
+                        9), std::make_pair(true, 14)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(9, 6), std::make_pair(true, 15)), &abort);
         tree.create_edge_in_edge_table(6, 9, 7);
         std::cout << "edges inserted" << std::endl;
 
@@ -684,6 +707,15 @@ void RunETTree(double pb, int copies, size_t m,
         cuts[3] = std::make_pair(0, 1);
 
         tree.batch_cut(cuts, edge_index_table);
+
+        edge_index_table.insert_check(std::make_pair(std::make_pair(0, 8), std::make_pair(false, UINT_E_MAX)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(8, 0), std::make_pair(false, UINT_E_MAX)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(3, 2), std::make_pair(false, UINT_E_MAX)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(2, 3), std::make_pair(false, UINT_E_MAX)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(6, 9), std::make_pair(false, UINT_E_MAX)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(9, 6), std::make_pair(false, UINT_E_MAX)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(0, 1), std::make_pair(false, UINT_E_MAX)), &abort);
+        edge_index_table.insert_check(std::make_pair(std::make_pair(1, 0), std::make_pair(false, UINT_E_MAX)), &abort);
         std::cout << "After Batch Cut" << std::endl;
         std::cout << "Connected 2, 3: " << tree.is_connected(2, 3) << std::endl;
         std::cout << "Connected 2, 0: " << tree.is_connected(2, 0) << std::endl;
