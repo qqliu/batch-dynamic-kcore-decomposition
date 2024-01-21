@@ -34,7 +34,26 @@ template <class Graph>
 double LDS_runner(Graph& G, commandLine P) {
   // Run LDS
   timer t; t.start();
-  RunETTree(2, 2, 10);
+
+  using K = std::pair<uintE, uintE>;
+  using V = std::pair<bool, uintE>;
+  using KV = std::pair<K, V>;
+
+  KV empty =
+       std::make_pair(std::make_pair(UINT_E_MAX, UINT_E_MAX), std::make_pair(false, UINT_E_MAX));
+
+  auto hash_pair = [](const std::pair<uintE, uintE>& t) {
+    size_t l = std::min(std::get<0>(t), std::get<1>(t));
+    size_t r = std::max(std::get<0>(t), std::get<1>(t));
+    size_t key = (l << 32) + r;
+    return parlay::hash64_2(key);
+  };
+
+  auto edge_table =
+    pbbslib::make_sparse_table<K, V>(8, empty, hash_pair);
+
+
+  RunETTree(2, 2, 8, edge_table);
   double tt = t.stop();
 
   std::cout << "### Running Time: " << tt << std::endl;
