@@ -87,9 +87,9 @@ struct ETTree {
         //std::cout << "edge_table size: " << edge_table.size() << std::endl;
 
         auto uv = &edge_table[index];
-        print_value("uv value: ", uv);
+        //print_value("uv value: ", uv);
         auto vu = uv->twin;
-        print_value("vu value: ", vu);
+        //print_value("vu value: ", vu);
         //&edge_table[2 * index + 1];
 
         /*if (edge_table[u][v].id.first == UINT_E_MAX) {
@@ -130,10 +130,10 @@ struct ETTree {
 
         skip_list.batch_join(&joins);
         auto new_u_right = u_left->get_right(0);
-        print_value("u_right new: ", new_u_right);
-        print_value("uv new: ", uv);
-        auto new_uv = uv->get_right(0);
-        print_value("uv new: ", new_uv);
+        /*print_value("u_right new: ", new_u_right);
+        print_value("uv new: ", uv);*/
+        /*auto new_uv = uv->get_right(0);
+        print_value("uv new: ", new_uv);*/
     }
     template <class KY, class VL, class HH>
     void cut(int u, int v,
@@ -230,20 +230,20 @@ struct ETTree {
                 return;
         }
 
-        //std::cout << "start batch links" << std::endl;
+        std::cout << "start batch links" << std::endl;
         sequence<std::pair<uintE, uintE>> links_both_dirs = sequence<std::pair<uintE, uintE>>(2 * links.size());
         parallel_for(0, links.size(), [&] (size_t i) {
                 links_both_dirs[2 * i] = links[i];
                 links_both_dirs[2 * i + 1] = std::make_pair(links[i].second, links[i].first);
         });
-        // std::cout << "get bidirectional links" << std::endl;
+        std::cout << "get bidirectional links" << std::endl;
 
         auto get_key = [&] (const std::pair<uintE, uintE>& elm) { return elm.first; };
         parlay::integer_sort_inplace(parlay::make_slice(links_both_dirs), get_key);
 
         auto split_successors = sequence<SkipList::SkipListElement*>(2 * links.size());
         auto splits = sequence<SkipList::SkipListElement*>(2 * links.size(), nullptr);
-        //std::cout << "initialize successors" << std::endl;
+        std::cout << "initialize successors" << std::endl;
 
         parallel_for(0, 2 * links.size(), [&] (size_t i) {
             uintE u; //, v;
@@ -265,7 +265,7 @@ struct ETTree {
                     uv->twin = vu;
             }*/
         });
-        //std::cout << "successfully inserted splits" << std::endl;
+        std::cout << "successfully inserted splits" << std::endl;
 
         auto bool_seq = parlay::delayed_seq<bool>(splits.size(), [&] (size_t i) {
                 return (splits[i] != nullptr);
@@ -276,7 +276,7 @@ struct ETTree {
         parallel_for(0, filtered_splits.size(), [&] (size_t i) {
             filtered_splits[i] = splits[element_indices[i]];
         });
-        //std::cout << "succesfully obtain filtered splits" << std::endl;
+        std::cout << "succesfully obtain filtered splits" << std::endl;
 
         auto results = skip_list.batch_split(&filtered_splits);
 
@@ -284,7 +284,7 @@ struct ETTree {
             auto split_index = element_indices[i];
             split_successors[split_index] = results[i];
         });
-        //std::cout << "succesfully obtained successors" << std::endl;
+        std::cout << "succesfully obtained successors" << std::endl;
 
         auto joins = sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>>(4 * links.size(),
                 std::make_pair(nullptr, nullptr));
@@ -294,13 +294,13 @@ struct ETTree {
             v = links_both_dirs[i].second;
 
             auto element  = edge_index_table.find(std::make_pair(u, v), std::make_pair(false, UINT_E_MAX));
-            auto index = element.second;
+            auto index = 2 * floor(element.second/2);
 
             if (index == UINT_E_MAX)
                 std::cout << "THERE IS A BUG!" << std::endl;
 
             SkipList::SkipListElement* uv = &edge_table[index];
-            //print_value("uv value: ", uv);
+            //print_value("uv value: ", uv) + 1;
             SkipList::SkipListElement* vu = uv -> twin;
             //print_value("vu value: ", vu);
 
@@ -324,13 +324,13 @@ struct ETTree {
                 v2 = links_both_dirs[i+1].second;
 
                 auto element2  = edge_index_table.find(std::make_pair(u2, v2), std::make_pair(false, UINT_E_MAX));
-                auto index2 = element2.second;
+                auto index2 = 2 * floor(element2.second/2);
 
                 if (index2 == UINT_E_MAX)
                     std::cout << "THERE IS A BUG!" << std::endl;
 
                 auto found_element = &edge_table[index2];
-                //print_value("found element: ", found_element);
+                print_value("found element: ", found_element);
 
                 if (vu == nullptr)
                     std::cout << "Five has error" << std::endl;
@@ -340,21 +340,23 @@ struct ETTree {
             }
         });
 
-        //std::cout << "successfully compute joins" << std::endl;
+        std::cout << "successfully compute joins" << std::endl;
 
         sequence<std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>> filtered =
             parlay::filter(joins, [&] (const std::pair<SkipList::SkipListElement*, SkipList::SkipListElement*>& e) {
-                    /*if (e.first != nullptr && e.second != nullptr) {
+                    if (e.first != nullptr && e.second != nullptr) {
                         std::cout << "works" << std::endl;
                         print_value("first " , e.first);
                         print_value("second ", e.second);
                      } else if ((e.first == nullptr || e.second == nullptr)
                              && (e.first != nullptr || e.second != nullptr)) {
                         std::cout << "IMPOSSIBLE" << std::endl;
-                     }*/
+                     }
 
                 return e.first != nullptr && e.second != nullptr;
             });
+
+        std::cout << "started batch join" << std::endl;
 
         skip_list.batch_join(&filtered);
     }
@@ -397,7 +399,7 @@ struct ETTree {
                     v = cuts[i].second;
 
                     auto element  = edge_index_table.find(std::make_pair(u, v), std::make_pair(false, UINT_E_MAX));
-                    auto index = element.second;
+                    auto index = 2 * floor(element.second/2);
 
                     if (index == UINT_E_MAX)
                         std::cout << "THERE IS A BUG!" << std::endl;
@@ -482,9 +484,9 @@ struct ETTree {
                         v = cuts[i].second;
 
                         auto element  = edge_index_table.find(std::make_pair(u, v), std::make_pair(false, UINT_E_MAX));
-                        auto index = element.second;
+                        auto index = 2 * floor(element.second/2);
                         auto element2  = edge_index_table.find(std::make_pair(v, u), std::make_pair(false, UINT_E_MAX));
-                        auto index2 = element2.second;
+                        auto index2 = 2 * floor(element2.second/2) + 1;
 
                         if (index == UINT_E_MAX || index2 == UINT_E_MAX)
                             std::cout << "THERE IS A BUG!" << std::endl;

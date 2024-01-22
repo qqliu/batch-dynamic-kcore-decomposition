@@ -261,6 +261,8 @@ struct SkipList {
             sequence<sequence<std::pair<uintE, uintE>>> xor_total = this_element->values[level-1];
             SkipListElement* curr = this_element->elements[level-1].second;
             while (curr != nullptr && curr->height < level + 1) {
+                    std::cout << "update top down while loop: height: " << curr->height << ", level: " <<
+                       level << ", id: " << curr->id.first << ", " << curr->id.second << std::endl;
                     if (curr->update_level != UINT_E_MAX && curr->update_level < level) {
                             update_top_down(level-1, curr);
                     }
@@ -303,9 +305,12 @@ struct SkipList {
                     size_t level = 0;
                     SkipListElement* curr = this_element;
                     while(true) {
+                        std::cout << "continuing with updates" << std::endl;
                         uintE curr_update_level = curr->update_level;
+                        std::cout << "started outer compare and swap" << std::endl;
                         if (curr_update_level == UINT_E_MAX && pbbslib::atomic_compare_and_swap(&curr->update_level,
                                 UINT_E_MAX, (uintE) level)) {
+                            std::cout << "started if" << std::endl;
                             level = curr->height-1;
                             SkipListElement* parent = find_left_parent(level, curr);
 
@@ -316,22 +321,29 @@ struct SkipList {
                                 curr = parent;
                                 level++;
                             }
+                            std::cout << "ended if" << std::endl;
                         } else {
+                            std::cout << "started else" << std::endl;
                             // Some other execution claimed this ancestor
                             if (curr_update_level > level) {
                                 uintE c = curr->update_level;
+                                std::cout << "started compare and swap" << std::endl;
                                 while(c > level && !pbbslib::atomic_compare_and_swap(&curr->update_level, (uintE)c,
                                             (uintE)level))
                                     c = curr->update_level;
+                                std::cout << "ended compare and swap" << std::endl;
                             }
                             top_nodes[i] = nullptr;
                             break;
                         }
+                        std::cout << "ended outer compare and swap" << std::endl;
                     }
+                    std::cout << "broke out of while statement" << std::endl;
             });
 
             parallel_for(0, new_values->size(), [&](size_t i){
                     if (top_nodes[i] != nullptr) {
+                        std::cout << "started update top down" << std::endl;
                         update_top_down(top_nodes[i]->height-1, top_nodes[i]);
                     }
             });
@@ -358,6 +370,7 @@ struct SkipList {
                 join_lefts[i] = std::make_pair(joins_ref[i].first, joins_ref[i].first->values[0]);
             });*/
 
+            std::cout << "started update in join" << std::endl;
             batch_update(&join_lefts);
     }
 
