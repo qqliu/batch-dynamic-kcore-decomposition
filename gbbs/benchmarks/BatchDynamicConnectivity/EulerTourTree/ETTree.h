@@ -86,18 +86,18 @@ struct ETTree {
         vu->twin = uv;
         /*print_value("uv value: ", uv);
         print_value("vu value: ", vu);
-        std::cout << "uv twin value ";
         print_value("uv twin value: ", uv->twin);*/
 
         auto u_left = &vertices[u];
         auto v_left = &vertices[v];
 
-        /*print_value("u_left: ", u_left);
-        print_value("v_left: ", v_left);*/
+       /*print_value("u_left: ", u_left);
+       print_value("v_left: ", v_left);*/
 
         auto splits = sequence<SkipList::SkipListElement*>(2);
         splits[0] = u_left;
         splits[1] = v_left;
+        //std::cout << "starting split" << std::endl;
         auto results = skip_list.batch_split(&splits);
 
         auto u_right = results[0];
@@ -113,11 +113,20 @@ struct ETTree {
         joins[3] = std::make_pair(vu, u_right);
 
         skip_list.batch_join(&joins);
-        /*auto new_u_right = u_left->get_right(0);
-        print_value("u_right new: ", new_u_right);
-        print_value("uv new: ", uv);
-        auto new_uv = uv->get_right(0);*/
-        //print_value("uv new: ", new_uv);
+        auto new_u_right = u_left->get_right(0);
+        //print_value("u_left right: ", new_u_right);
+        auto new_rr = new_u_right->get_right(0);
+        //print_value("new right right: ", new_rr);
+        auto rrr = new_rr->get_right(0);
+        auto rrrr = rrr->get_right(0);
+        /*print_value("rrr: ", rrr);
+        print_value("rrrr: ", rrrr);*/
+        auto rrrrr = rrrr->get_right(0);
+        //print_value("rrrrr: ", rrrrr);
+        auto rrrrrr = rrrrr->get_right(0);
+        //print_value("rrrrrr: ", rrrrrr);
+        auto rrrrrrr = rrrrrr->get_right(0);
+        //print_value("rrrrrrr: ", rrrrrrr);
     }
 
     template <class KY, class VL, class HH>
@@ -183,10 +192,11 @@ struct ETTree {
     void batch_link_sequential(sequence<std::pair<uintE, uintE>>links,
             pbbslib::sparse_table<KY, VL, HH> edge_index_table) {
             for(size_t i = 0; i < links.size(); i++) {
-                    link(links[i].first, links[i].second, edge_index_table);
+                    std::cout << "u: " << links[i].first << ", "
+                        << "v: " << links[i].second << std::endl;
 
-                    /*std::cout << "u: " << links[i].first << std::endl;
-                    std::cout << "v: " << links[i].second << std::endl;*/
+                    link(links[i].first, links[i].second, edge_index_table);
+                    std::cout << "end current link" << std::endl;
 
                     /*auto u_right = vertices[links[i].first].get_right(0);
                     auto v_right = vertices[links[i].second].get_right(0);
@@ -205,7 +215,7 @@ struct ETTree {
 
     template <class KY, class VL, class HH>
     void batch_link(sequence<std::pair<uintE, uintE>>links, pbbslib::sparse_table<KY, VL, HH>& edge_index_table) {
-        if (links.size() <= 10000000) {
+        if (links.size() <= 75) {
                 batch_link_sequential(links, edge_index_table);
                 return;
         }
@@ -360,7 +370,7 @@ struct ETTree {
             parlay::random rng = parlay::random(time(0));
             //std::cout << "cuts size: !!!!!!!!!!!" << cuts.size() << std::endl;
 
-            if (cuts.size() <= 10000000) {
+            if (cuts.size() <= 75) {
                 //std::cout << "PASSED IF 2" << std::endl;
                     batch_cut_sequential(cuts, edge_index_table);
                     return;
@@ -502,7 +512,7 @@ struct ETTree {
 
     template <class KY, class VL, class HH>
     void batch_cut(sequence<std::pair<uintE, uintE>> cuts, pbbslib::sparse_table<KY, VL, HH> edge_index_table) {
-            if (cuts.size() <=  10000000) {
+            if (cuts.size() <=  75) {
                 //std::cout << "PASSED IF 1" << std::endl;
                     batch_cut_sequential(cuts, edge_index_table);
                     return;
@@ -614,7 +624,7 @@ void RunETTree(double pb, int copies, size_t m) {
             pbbslib::make_sparse_table<K, V>(2 * 8, empty, hash_pair);
         bool abort = false;
 
-        auto tree = ETTree((size_t) 10, pb, copies, m);
+        auto tree = ETTree((size_t) 10, copies, m, pb);
 
         sequence<std::pair<uintE, uintE>> links = sequence<std::pair<uintE, uintE>>(8);
         links[0] = std::make_pair(2, 3);

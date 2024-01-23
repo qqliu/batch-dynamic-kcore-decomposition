@@ -157,6 +157,7 @@ struct SkipList {
     }
 
     SkipListElement* find_representative(SkipListElement* this_element) {
+        ///std::cout << "started find representative" << std::endl;
         SkipListElement* cur_element = this_element;
         SkipListElement* seen_element = nullptr;
 
@@ -164,25 +165,37 @@ struct SkipList {
 
         while(cur_element->elements[current_level].second != nullptr &&
                 seen_element != cur_element) {
+                //std::cout << "started while" << std::endl;
                 if (seen_element == nullptr || cur_element < seen_element)
                     seen_element = cur_element;
+                /*std::cout << "start middle while" << std::endl;
+                if (cur_element->elements[current_level].second == nullptr)
+                    std::cout << "found null ptr in while" << std::endl;
+                std::cout << "height: " << cur_element->elements[current_level].second->id.first << std::endl;*/
                 cur_element = cur_element->elements[current_level].second;
+                //std::cout << "end middle while" << std::endl;
                 auto top_level = cur_element->height-1;
+                //std::cout << "top_level: " << top_level << std::endl;
                 if (current_level < top_level) {
                         current_level = top_level;
                         seen_element = nullptr;
                 }
+                //std::cout << "end while" << std::endl;
         }
+        //std::cout << "finished find representative while" << std::endl;
 
         if (seen_element == cur_element) {
+        //std::cout << "finished find representative" << std::endl;
                 return seen_element;
         } else {
                 while (cur_element->elements[current_level].first != nullptr) {
                         cur_element = cur_element->elements[current_level].first;
                         current_level = cur_element->height - 1;
                 }
+        //std::cout << "finished find representative" << std::endl;
                 return cur_element;
         }
+        //std::cout << "finished find representative" << std::endl;
     }
 
     /*void update_edge_values(sequence<SkipListElement*> nodes) {
