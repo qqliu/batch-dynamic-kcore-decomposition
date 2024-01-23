@@ -367,6 +367,13 @@ struct Connectivity {
     template <class Seq>
     void batch_deletion(const Seq& deletions) {
     }
+
+    bool is_connected(uintE u, uintE v) {
+            auto uvert = &tree.vertices[u];
+            auto vvert = &tree.vertices[v];
+            return tree.skip_list.find_representative(uvert)
+                == tree.skip_list.find_representative(vvert);
+    }
 };
 
 void RunConnectivityTest() {
@@ -438,6 +445,15 @@ inline void RunConnectivity(BatchDynamicEdges<W>& batch_edge_list, long batch_si
             });
 
             cutset.batch_insertion(batch_insertions);
+            sequence<int> correct = sequence<int>(batch_insertions.size(), false);
+
+            parallel_for(0, batch_insertions.size(), [&](size_t i) {
+                correct[i] = cutset.is_connected(batch_insertions[i].first, batch_insertions[i].second);
+                std::cout << "CONNECTED: " << correct[i] << std::endl;
+            });
+            auto num_correct = parlay::scan_inplace(correct);
+
+            std::cout << "fraction correct: " << (num_correct * 1.0)/batch_insertions.size() << std::endl;
 
         /*num_insertion_flips += layers.batch_insertion(batch_insertions);
         double insertion_time = t.stop();

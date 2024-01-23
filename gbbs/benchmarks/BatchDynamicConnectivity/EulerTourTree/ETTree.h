@@ -263,7 +263,8 @@ struct ETTree {
             v = links_both_dirs[i].second;
 
             SkipList::SkipListElement* uv = &edge_table[u][v];
-            print_value("uv value: ", uv);
+            //print_value("uv value: ", uv);
+
             SkipList::SkipListElement* vu = uv -> twin;
 
             if (i == 0 || u != links_both_dirs[i-1].first) {
