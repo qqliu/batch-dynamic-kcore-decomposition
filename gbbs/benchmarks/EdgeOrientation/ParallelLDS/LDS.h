@@ -1312,11 +1312,11 @@ inline void RunLDS (BatchDynamicEdges<W>& batch_edge_list, long batch_size, bool
             // Run kcore on graph
             auto cores = KCore(graph, 16);
 
-            /*for (size_t nv = 0; nv < graph.n; nv++)
-                std::cout << nv << " " << cores[nv] << std::endl;*/
+            for (size_t nv = 0; nv < graph.n; nv++)
+                std::cout << nv << " " << cores[nv] << std::endl;
 
             auto max_core = parlay::reduce(cores, parlay::maxm<uintE>());
-            std::cout << "### Coreness Exact: " << max_core << std::endl;
+            //std::cout << "### Coreness Exact: " << max_core << std::endl;
 
             // Compare cores[v] to layers.core(v)
             auto approximation_error = parlay::delayed_seq<float>(batch_edge_list.max_vertex,
