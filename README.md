@@ -39,7 +39,7 @@ This directory contains the source code for two different papers (citations in b
 }
 ```
 
-Code for the parallel batch-dynamic k-core decomposition paper are given in the [ParallelLDS directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation/ParallelLDS) and code for the concurrent-reads CLDS code are given in the
+Code for the parallel batch-dynamic k-core decomposition paper are given in the [ParallelLDS directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation/) and code for the concurrent-reads CLDS code are given in the
 [ConcurrentLDS directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation/ConcurrentPLDS).
 
 PLDS Algorithm and Experiments
