@@ -10,6 +10,37 @@ sh setup.sh
 ```
 to setup the environment for running our experimental code.
 
+Directory Contents
+--------
+
+This directory contains the source code for two different papers (citations in bibtex are included): 
+
+1) Liu, Quanquan C., Jessica Shi, Shangdi Yu, Laxman Dhulipala, and Julian Shun. "Parallel batch-dynamic algorithms for k-core decomposition and related graph problems." In Proceedings of the 34th ACM Symposium on Parallelism in Algorithms and Architectures, pp. 191-204. 2022.
+
+```
+@inproceedings{LSYDS2022parallel,
+  title={Parallel batch-dynamic algorithms for k-core decomposition and related graph problems},
+  author={Liu, Quanquan C and Shi, Jessica and Yu, Shangdi and Dhulipala, Laxman and Shun, Julian},
+  booktitle={Proceedings of the 34th ACM Symposium on Parallelism in Algorithms and Architectures},
+  pages={191--204},
+  year={2022}
+}
+```
+
+2) Liu, Quanquan C., Julian Shun, and Igor Zablotchi. "Parallel k-Core Decomposition with Batched Updates and Asynchronous Reads." In Proceedings of the 29th ACM SIGPLAN Annual Symposium on Principles and Practice of Parallel Programming, pp. 286-300. 2024.
+
+```
+@inproceedings{LSZ2024parallel,
+  title={Parallel k-Core Decomposition with Batched Updates and Asynchronous Reads},
+  author={Liu, Quanquan C and Shun, Julian and Zablotchi, Igor},
+  booktitle={Proceedings of the 29th ACM SIGPLAN Annual Symposium on Principles and Practice of Parallel Programming},
+  pages={286--300},
+  year={2024}
+}
+```
+
+Code for the parallel batch-dynamic k-core decomposition paper are given in the [ParallelLDS directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation/ParallelLDS) and code for the concurrent-reads CLDS code are given in the
+[ConcurrentLDS directory](https://github.com/qqliu/batch-dynamic-kcore-decomposition/tree/master/gbbs/benchmarks/EdgeOrientation/ConcurrentPLDS).
 
 PLDS Algorithm and Experiments
 --------
