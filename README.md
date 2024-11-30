@@ -151,7 +151,7 @@ Obtaining Input Graphs
 You can download the graphs we used in our experiments using the following link:
 
 ```
-wget https://storage.googleapis.com/k-core-decomposition/edge_orientation_exps/<GRAPH_NAME>
+wget https://storage.googleapis.com/graph-files/<GRAPH_NAME>
 ```
 
 The following graphs are available for download:
